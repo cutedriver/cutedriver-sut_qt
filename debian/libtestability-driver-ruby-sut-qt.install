@@ -1,0 +1,4 @@
+xml/behaviour/*xml /etc/tdriver/behaviours
+xml/defaults/*xml /etc/tdriver/defaults
+xml/template/*xml /etc/tdriver/templates
+xml/keymap/*xml /etc/tdriver/keymaps

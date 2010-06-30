@@ -1,0 +1,9 @@
+
+
+<parameters>
+
+	<sut id="sut_qt" template="qt">
+		<!-- use default values -->
+	</sut>
+
+</parameters>

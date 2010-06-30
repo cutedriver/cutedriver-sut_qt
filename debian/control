@@ -1,0 +1,12 @@
+Source: libtestability-driver-ruby-sut-qt
+Section: libs
+Priority: optional
+Maintainer: Tatu Lahtela <ext-tatu.lahtela@nokia.com>
+Build-Depends: cdbs, debhelper (>> 5.0.0), ruby-pkg-tools, ruby1.8, ruby1.8-dev
+Standards-Version: 3.8.0
+
+Package: libtestability-driver-ruby-sut-qt
+Architecture: all
+Depends: ruby1.8, rubygems1.8, libtestability-driver-ruby-config, libhoe-ruby1.8, liblog4r-ruby1.8, libnokogiri-ruby1.8, librubyforge-ruby1.8, librake-ruby1.8, libbuilder-ruby1.8
+Description: TDriver Testing framework - qt sut
+   This package contains the Qt system under test for TDriver.

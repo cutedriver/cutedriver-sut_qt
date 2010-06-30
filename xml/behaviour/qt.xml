@@ -1,0 +1,653 @@
+
+
+<behaviours plugin="testability-driver-qt-sut-plugin">
+
+    <behaviour name="QtSut" object_type="sut" sut_type="QT" input_type="*" version="*">
+
+        <module name="MobyBehaviour::QT::SUT" />
+
+        <methods>
+            <method name="kill_started_processes">
+                <description>Kills all of the application processed started through the server.</description>
+                <example>kill_started_processes</example>
+            </method>
+            <method name="list_apps">
+                <description>Lists all applications known to server running on SUT.</description>
+                <example>list_apps</example>
+            </method>
+            <method name="list_crashed_apps">
+                <description>Returns list of crashed applications running on SUT known to qttasserver.</description>
+                <example>list_crashed_apps</example>
+            </method>
+            <method name="execute_shell_command">
+                <description>Executes the given command as a new process.</description>
+                <example>execute_shell_command</example>
+            </method>
+            <method name="tap_screen">
+                <description>Tap screen on given coordinates.</description>
+                <example>tap_screen(200,20)</example>
+            </method>
+            <method name="close_qttas">
+                <description>Requests the qttasserver to shutdown.</description>
+                <example>close_qttas</example>
+            </method>
+            <method name="system_information">
+                <description>Returns the system information as a state object.</description>
+                <example>system_information</example>
+            </method>
+            <method name="agent_mem_usage">
+                <description>Returns the memory used by qttasserver.</description>
+                <example>agent_mem_usage</example>
+            </method>
+            <method name="system_total_mem">
+                <description>Returns the total memory of target device.</description>
+                <example>system_total_mem</example>
+            </method>
+            <method name="system_available_mem">
+                <description>Returns the available memory of target device.</description>
+                <example>system_available_mem</example>
+            </method>
+            <method name="log_process_mem_start">
+                <description>Start process memory logging.</description>
+                <example>log_process_mem_start('testapp', 'c:\\data\\mem.log', 'absolute', 5)</example>
+            </method>
+            <method name="log_process_mem_stop">
+                <description>Stop process memory logging.</description>
+                <example>log_process_mem_stop('testapp', 'true')</example>
+            </method>
+            <method name="group_behaviours">
+                <description>Group behaviours into a single message.</description>
+                <example>group_behaviours(1, app){app.Node.tap;app.Node1.tap}</example>
+            </method>
+    	    <method name="create_locale_db">
+                <description>Creates locale_db file.</description>
+                <example>create_locale_db("/usr/share", "*.qm", "/path/to/locale_db")</example>
+            </method>
+        </methods>
+
+    </behaviour>
+
+    <behaviour name="QtApplication" object_type="application" sut_type="QT" input_type="*" version="*">
+
+        <module name="MobyBehaviour::QT::Application" />
+
+        <methods>
+            <method name="drag">
+                <description>Drag on screen (start X, start Y, end X, end Y).</description>
+                <example>drag(200, 100, 400, 200)</example>
+            </method>
+
+            <method name="kill">
+                <description>Kills the application process.</description>
+                <example>kill</example>
+            </method>
+
+            <method name="track_popup">
+                <description>Start tracking a popup based on class name.</description>
+                <example>track_popup('PopupClass')</example>
+            </method>
+
+            <method name="verify_popup">
+                <description>Verify that a popup was shown.</description>
+                <example>verify_popup('PopupClass')</example>
+            </method>
+
+            <method name="bring_to_foreground">
+                <description>Bring an application to foreground.</description>
+                <example>bring_to_foreground</example>
+            </method>
+
+            <method name="tap_objects">
+                <description>Tap many objects at the same time</description>
+                <example>tap_objects([object])</example>
+            </method>
+	
+            <method name="tap_down_objects">
+                <description>Tap down many objects at the same time</description>
+                <example>tap_down_objects([object])</example>
+            </method>
+
+            <method name="tap_up_objects">
+                <description>Tap up many objects at the same time</description>
+                <example>tap_up_objects([object])</example>
+            </method>
+
+
+        </methods>
+
+    </behaviour>
+
+    <behaviour name="QtEvents" object_type="*;application" sut_type="QT" input_type="*" version="*">
+
+        <module name="MobyBehaviour::QT::Events" />
+
+        <methods>
+            <method name="enable_events">
+                <description>Enable event listening. You can specify which events you want to listen by including the names of those events separated by comma or integers if using user events. Use ALL if you want to listen for all events but be aware that there will be a lot of events.</description>
+                <example>enable_events('TimerEvent,MouseButtonPress,45677,67889')</example>
+            </method>
+            <method name="disable_events">
+                <description>Disable event listening.</description>
+                <example>disable_events</example>
+            </method>
+            <method name="get_events">
+                <description>Get a list of events as xml that have occurred since events were enabled.</description>
+                <example>get_events</example>
+            </method>
+        </methods>
+
+    </behaviour>
+
+
+    <behaviour name="QtRecord" object_type="application" sut_type="QT" input_type="*" version="*">
+
+        <module name="MobyBehaviour::QT::Record" />
+
+        <methods>
+            <method name="start_recording">
+                <description>Start recording events.</description>
+                <example>start_recording</example>
+            </method>
+            <method name="stop_recording">
+                <description>Stop recording events.</description>
+                <example>stop_recording</example>
+            </method>
+            <method name="print_recordings">
+                <description>Get the recorded events.</description>
+                <example>print_recordings</example>
+            </method>
+        </methods>
+
+    </behaviour>
+
+
+    <behaviour name="QtOs" object_type="sut" sut_type="QT" input_type="*" version="*">
+
+        <module name="MobyBehaviour::QT::Os" />
+
+        <methods>
+            <!--method name="open_file">
+                <description>Open a file using an already active open file dialog.</description>
+                <example>open_file("path/to/file", "name_of_dialog", "button_used_for_opening")</example>
+            </method-->
+            <method name="press_enter">
+                <description>Sends an Enter key stroke to the top most application</description>
+                <example>press_enter()</example>
+            </method>
+        </methods>
+
+    </behaviour>
+
+    <behaviour name="QtWidget" object_type="*" sut_type="QT" input_type="touch" version="*">
+
+        <module name="MobyBehaviour::QT::Widget" />
+
+        <methods>
+            <method name="move_mouse">
+                <description>Moves the mouse to the object it was called on.</description>
+                <example>move_mouse</example>
+            </method>
+            <method name="tap">
+                <description>Tap on the object once using left mouse button and center coordinates.</description>
+                <example>tap(1, :Left, nil, nil)</example>
+            </method>
+            <method name="tap_object">
+                <description>Tap inside the object at the specific point, relative to the object.</description>
+                <example>tap_object(5, 5, 1, :Left)</example>
+            </method>
+            <method name="tap_down_object">
+                <description>Tap down on the screen on the specified coordinates of the object. Given coordinates are relative to the object.</description>
+                <example>tap_down_object(5, 5)</example>
+            </method>
+            <method name="tap_up_object">
+                <description>Tap up on the screen on the specified coordinates of the object. Given coordinates are relative to the object.</description>
+                <example>tap_up_object(5, 5)</example>
+            </method>
+            <method name="long_tap">
+                <description>Tap the object, holding the tap down for a specified time.</description>
+                <example>long_tap(1, :Left)</example>
+            </method>
+            <method name="long_tap_object">
+                <description>Long tap on the screen on the given relative coordinates of the object for the period of time given is seconds.</description>
+                <example>long_tap_object(5, 5, 1, :Left)</example>
+            </method>
+            <method name="tap_up">
+                <description>Release a tap being held down on the object.</description>
+                <example>tap_up(:Left)</example>
+            </method>
+            <method name="tap_down">
+                <description>Tap the object, holding the tap down.</description>
+                <example>tap_down(:Left)</example>
+            </method>
+            <method name="press">
+                <description>Tap the object.</description>
+                <example>press(1, :Left)</example>
+            </method>
+            <method name="long_press">
+                <description>Tap the object, holding the tap down for a specified time.</description>
+                <example>long_press(1, :Left)</example>
+            </method>
+            <method name="hold">
+                <description>Tap the object, holding the tap down.</description>
+                <example>hold(:Left)</example>
+            </method>
+            <method name="release">
+                <description>Release a tap being held down on the object.</description>
+                <example>release(:Left)</example>
+            </method>
+        </methods>
+
+    </behaviour>
+
+    <behaviour name="QtWebkit" object_type="*" sut_type="QT;S60QT" input_type="*" version="*">
+
+        <module name="MobyBehaviour::QT::Webkit" />
+
+        <methods>
+            <method name="execute_javascript">
+                <description>Executes given javascript code on the given object.</description>
+                <example>execute_javascript</example>
+            </method>
+            <method name="execute_javascript_query">
+                <description>Executes given javascript code on the given locator query.</description>
+                <example>execute_javascript_query</example>
+            </method>
+        </methods>
+
+    </behaviour>
+
+
+    <behaviour name="QtSynchronization" object_type="*" sut_type="QT" input_type="touch" version="*">
+
+        <module name="MobyBehaviour::QT::Synchronization" />
+
+        <methods>
+            <method name="wait_for_signal">
+                <description>Synchronizes execution to a signal. The script will wait until the given signal is emitted.</description>
+                <example>wait_for_signal(10, "clicked()")</example>
+            </method>
+        </methods>
+
+    </behaviour>
+
+    <behaviour name="QtFixture" object_type="sut;*" sut_type="QT" input_type="*" version="*">
+
+        <module name="MobyBehaviour::QT::Fixture" />
+
+        <methods>
+            <method name="fixture">
+                <description>For parameters see fixture documentation</description>
+                <example>fixture</example>
+            </method>
+            <method name="async_fixture">
+                <description>For parameters see fixture documentation</description>
+                <example>async_fixture</example>
+            </method>
+        </methods>
+
+    </behaviour>
+
+    <behaviour name="QtFileTransfer" object_type="sut;*" sut_type="QT" input_type="*" version="*">
+
+        <module name="MobyBehaviour::QT::FileTransfer" />
+
+        <methods>
+            <method name="delete_from_sut">
+                <description>Delete files from sut</description>
+                <example>delete_from_sut(:from => 'c:/data/', :file => '*.*')</example>
+            </method>
+            <method name="copy_from_sut">
+                <description>Copy files from sut to host machine</description>
+                <example>copy_from_sut(:from => 'c:/data/', :file => '*.*', :to => 'c:/temp/' )</example>
+            </method>
+            <method name="copy_to_sut">
+                <description>Copy files to sut from host machine</description>
+                <example>copy_to_sut(:from => 'c:/images/', :file => '*.*', :to => 'e:/data/images' )</example>
+            </method>
+            <method name="list_files_from_sut">
+                <description>List files from sut path</description>
+                <example>list_files_from_sut(:from => 'c:/data/', :file => '*.*')</example>
+            </method>
+        </methods>
+
+    </behaviour>
+    
+
+    <behaviour name="QtTypeText" object_type="*" sut_type="QT" input_type="*" version="*">
+
+        <module name="MobyBehaviour::QT::TypeText" />
+
+        <methods>
+            <method name="type_text">
+                <description>Enter the given text into the object.</description>
+                <example>type_text("What would you like to type?")</example>
+            </method>
+        </methods>
+
+    </behaviour>
+
+    <behaviour name="QtKeyPress" object_type="*" sut_type="QT" input_type="*" version="*">
+
+        <module name="MobyBehaviour::QT::KeyPress" />
+
+        <methods>
+            <method name="press_key">
+                <description>Press key on the object. Used key codes are defined in qt_keymap.xml for the sut.</description>
+                <example>press_key(:kDelete)</example>
+            </method>
+        </methods>
+
+    </behaviour>
+
+    <behaviour name="QtAttribute" object_type="*" sut_type="QT" input_type="*" version="*">
+
+        <module name="MobyBehaviour::QT::Attribute" />
+
+        <methods>
+            <method name="set_attribute">
+                <description>Set any writable attribute value. String, number and boolean values supported. Attribute is verified to be writable. Notice that setting the attribute might have no effect in the UI if the UI component is not monitoring the changes to the attribute and therefore will not repaint once the attribute value has changed.</description>
+                <example>set_attribute("toolTip", "myToolTip")</example>
+            </method>
+        </methods>
+
+    </behaviour>
+
+    <behaviour name="QtMethod" object_type="*" sut_type="QT" input_type="*" version="*">
+
+        <module name="MobyBehaviour::QT::Method" />
+
+        <methods>
+            <method name="call_method">
+                <description>Calls selected method on object. At the moment only non parametrized methods are allowed. No other check is done than that method is found</description>
+                <example>call_method("close()")</example>
+            </method>
+        </methods>
+
+    </behaviour>
+
+    <behaviour name="QtGesture" object_type="*" sut_type="QT" input_type="touch" version="*">
+
+        <module name="MobyBehaviour::QT::Gesture" />
+
+        <methods>
+            <method name="flick">
+                <description>Do a flick gesture starting at the object.</description>
+                <example>flick(:Up, :Left)</example>
+            </method>
+            <method name="flick_to">
+                <description>Flick the object to the specified (X, Y) coordinates.</description>
+                <example>flick_to(400, 100)</example>
+            </method>
+            <method name="gesture">
+                <description>Perform a gesture on the object using the given direction, speed, distance and button.</description>
+                <example>gesture(:Up, 2, 200, :Left)</example>
+            </method>
+            <method name="gesture_to">
+                <description>Flick/drag the screen from the given object (touch the object and cause a flick or drag gesture).</description>
+                <example>gesture_to(400, 100)</example>
+            </method>
+            <method name="gesture_to_object">
+                <description>Gesture the object to another test object on the screen.</description>
+                <example>gesture_to_object(another_test_object)</example>
+            </method>
+            <method name="gesture_points">
+                <description>Gesture on specific poinst on the screen. Points have to be passed as a array of hashes.</description>
+                <example>gesture_points([{"x" => 200,"y" => 100, interval => 100},{"x" => 200,"y" => 110, interval => 80}])</example>
+            </method>
+            <method name="drag">
+                <description>Drag the object on the screen.</description>
+                <example>drag(:Up, 200)</example>
+            </method>
+            <method name="drag_to">
+                <description>Drag the object to the specified (X, Y) coordinates.</description>
+                <example>drag_to(400, 100)</example>
+            </method>
+            <method name="drag_to_object">
+                <description>Drag the object to another test object on the screen.</description>
+                <example>drag_to_object(another_test_object)</example>
+            </method>
+            <method name="move">
+                <description>Moves the pointer the given distance to the given direction.</description>
+                <example>move(direction, distance, button = :Left)</example>
+            </method>
+            <method name="object_center_x">
+                <description>Utility function for getting the x coordinate of the center of the object.</description>
+                <example>object_center_x</example>
+            </method>
+            <method name="object_center_y">
+                <description>Utility function for getting the x coordinate of the center of the object.</description>
+                <example>object_center_y</example>
+            </method>
+        </methods>
+
+    </behaviour>
+
+    <behaviour name="QtScreenCapture" object_type="*" sut_type="QT" input_type="*" version="*">
+
+        <module name="MobyBehaviour::QT::ScreenCapture" />
+
+        <methods>
+            <method name="capture_screen">
+                <description>Capture the device display and store it in a file.</description>
+                <example>capture_screen("PNG", "c:/temp/capture.png")</example>
+            </method>
+            <method name="find_on_screen">
+                <description>Checks if and where the given image can be found on the SUT display or inside a widget</description>
+                <example>find_on_screen("c:/some_icon.png", 10)</example>
+            </method>
+            <method name="screen_contains?">
+                <description>Checks if the given image can be found on the SUT display or inside a widget</description>
+                <example>screen_contains?("c:/some_icon.png", 10)</example>
+            </method>
+        </methods>
+
+    </behaviour>
+
+    <behaviour name="QtAction" object_type="QAction" sut_type="QT" input_type="touch" version="*">
+
+        <module name="MobyBehaviour::QT::Action" />
+
+        <methods>
+            <method name="hover">
+                <description>Hover over the action.</description>
+                <example>hover</example>
+            </method>
+            <method name="trigger">
+                <description>Trigger the action.</description>
+                <example>trigger</example>
+            </method>
+        </methods>
+
+    </behaviour>
+
+    <behaviour name="QtFind" object_type="*" sut_type="QT" input_type="touch" version="*">
+
+        <module name="MobyBehaviour::QT::Find" />
+
+        <methods>
+            <method name="find_and_center">
+                <description>Defines methods to find test objects and scroll them to the display.</description>
+                <example>find_and_center</example>
+            </method>
+        </methods>
+
+    </behaviour>
+
+    <behaviour name="QtViewItem" object_type="ItemData" sut_type="QT" input_type="*" version="*">
+
+        <module name="MobyBehaviour::QT::ViewItem" />
+
+        <methods>
+            <method name="select">
+                <description>Select the item.</description>
+                <example>select</example>
+            </method>
+        </methods>
+
+    </behaviour>
+
+    <behaviour name="QtConfigureBehaviour" object_type="sut;application" sut_type="QT" input_type="*" version="*">
+
+        <module name="MobyBehaviour::QT::ConfigureBehaviour" />
+
+        <methods>
+            <method name="clear_log">
+                <description>Clear log on the target.</description>
+                <template>clear_log</template>
+            </method>
+            <method name="enable_logger">
+                <description>Enable logging on the target.</description>
+                <template>enable_logger</template>
+            </method>
+            <method name="disable_logger">
+                <description>Disable logging on the target.</description>
+                <template>disable_logger</template>
+            </method>
+            <method name="set_log_level">
+                <description>Set logging level on the target.</description>
+                <template>set_log_level(:INFO)</template>
+            </method>
+            <method name="set_log_folder">
+                <description>Set logging folder on the target.</description>
+                <template>set_log_folder('/tmp/logs/')</template>
+            </method>
+            <method name="log_to_qdebug">
+                <description>Set logging direct all logging to qDebug or not.</description>
+                <template>log_to_qdebug(true)</template>
+            </method>
+            <method name="log_qdebug">
+                <description>Log all qDebug messages to log files or not.</description>
+                <template>log_qdebug(true)</template>
+            </method>
+            <method name="set_log_size">
+                <description>Set log file size.</description>
+                <template>set_log_size(100000)</template>
+            </method>
+            <method name="configure_logger">
+                <description>Configure the logger..</description>
+                <template>configure_logger({:logEnabled => true, :logLevel => :DEBUG, :logSize => 10000})</template>
+            </method>
+            <method name="log_events">
+                <description>Log events.</description>
+                <template>log_events('MousePress,MouseRelease')</template>
+            </method>
+            <method name="stop_event_logging">
+                <description>Stop logging events.</description>
+                <template>stop_event_logging</template>
+            </method>
+        </methods>
+
+    </behaviour>
+
+
+	<behaviour name="QtMultitouch" object_type="*" sut_type="QT" input_type="touch" version="*">
+
+		<module name="MobyBehaviour::QT::Multitouch" />
+
+		<methods>
+			<method name="pinch_zoom_in">
+				<description>Perform a pinch zoom in on a component.</description>
+				<example>pinch_zoom(2, 100, :Vertical)</example>				
+			</method>				
+			<method name="pinch_zoom_out">
+				<description>Perform a pinch zoom in on a component.</description>
+				<example>pinch_zoom(2, 100, :Vertical)</example>				
+			</method>				
+			<method name="pinch_zoom">
+				<description>Perform a pinch zoom on a component.</description>
+				<example>pinch_zoom({:type => :out, :speed => speed, :distance_1 => distance, :distance_2 => distance, :direction => direction, :differential => 10})</example>
+			</method>
+			<method name="one_point_rotate">
+				<description>Rotate by holding one point down and moving the other.</description>
+				<example>one_point_rotate(100, 0, :Clockwise, 90, 2)</example>				
+			</method>				
+			<method name="two_point_rotate">
+				<description>Rotate by moving both ends.</description>
+				<example>two_point_rotate(100, 0, :Clockwise, 45, 2)</example>				
+			</method>				
+			<method name="rotate">
+				<description>Send a rotate motion t a component.</description>
+				<example>rotate({:type => :one_point, :radius => 100, :rotate_direction => :Clockwise, :distance => 100, :speed => 2, :direction => 0})</example>				
+			</method>				
+		</methods>
+
+	</behaviour>
+
+        <behaviour name="Switchbox" object_type="sut" sut_type="QT" input_type="*" version="*">
+
+        <module name="MobyBehaviour::SwitchboxBehaviour" />
+
+        <methods>
+            <method name="reset">
+                <description>Reboots the device using switchbox</description>
+                <example>reset</example>
+            </method>
+            <method name="power_down">
+                <description>Instructs the switchbox to power up the sut</description>
+                <example>power_down</example>
+            </method>
+            <method name="power_up">
+                <description>Instructs the switchbox to power up the sut</description>
+                <example>power_up</example>
+            </method>
+            <method name="power_status">
+                <description>Gets the current power status of the switchbox</description>
+                <example>power_status</example>
+            </method>
+        </methods>
+
+    </behaviour>
+
+    <behaviour name="Flaxi" object_type="sut" sut_type="QT" input_type="*" version="*">
+
+        <module name="MobyBehaviour::FlaxiBehaviour" />
+
+        <methods>
+            <method name="flash">
+                <description>Flashes the device using flaxi</description>
+                <example>flash</example>
+            </method>
+            <method name="flash_files">
+                <description>Instructs the flaxi to flash defined files</description>
+                <example>flash_files('\tmp\image.bin \tmp\variant.bin')</example>
+            </method>
+        </methods>
+
+    </behaviour>
+
+    <behaviour name="QtInfoLoggerBehaviour" object_type="sut;application" sut_type="QT" input_type="*" version="*">
+
+        <module name="MobyBehaviour::QT::InfoLoggerBehaviour" />
+
+        <methods>
+            <method name="log_cpu">
+                <description>Log the cpu usage of the process</description>
+                <template>log_cpu</template>
+            </method>
+            <method name="stop_cpu_log">
+                <description>Stop cpu logging and get the results.</description>
+                <template>stop_cpu_log</template>
+            </method>
+            <method name="log_mem">
+                <description>Log memory usage.</description>
+                <template>log_mem</template>
+            </method>
+	        <method name="stop_mem_log">
+                <description>Stop mem logging and get the results.</description>
+                <template>stop_mem_log</template>
+            </method>
+            <method name="log_gpu_mem">
+                <description>Log the gpu mem usage</description>
+                <template>log_gpu_mem</template>
+            </method>
+            <method name="stop_gpu_log">
+                <description>Stop gpu logging and get the results.</description>
+                <template>stop_gpu_log</template>
+            </method>
+        </methods>
+
+    </behaviour>
+
+
+
+</behaviours>
