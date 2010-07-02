@@ -41,7 +41,7 @@ module MobyBehaviour
 					command = MobyCommand::WidgetCommand.new
 					command.object_id(self.attribute('viewPort'))
 					command.application_id(get_application_id)    
-					command.object_type(@parent.attribute('objectType').intern)                          
+				    command.object_type(:Standard)                          
 					command.command_name('Tap')    
 
 					mouse_move = @sut.parameter(:in_tap_move_pointer) 
@@ -51,7 +51,6 @@ module MobyBehaviour
 
 					command.command_params(params)
 					@sut.execute_command(command)
-					ret = self.force_refresh( :id => get_application_id )
 
 				rescue Exception => e      
 
