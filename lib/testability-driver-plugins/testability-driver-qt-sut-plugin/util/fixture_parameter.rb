@@ -33,27 +33,42 @@ module MobyUtil
 		end
 
 		def add_parameter( hash )
-			Kernel::raise ArgumentError.new("Argument :value and :type must be defined. Actual hash: #{ hash.inspect }") unless hash.has_key? :type and hash.has_key? :value
+
+			Kernel::raise ArgumentError.new("Argument :value and :type must be defined. Actual hash: #{ hash.inspect }") unless hash.has_key?( :type ) and hash.has_key?( :value )
+
 			@parameters.push( hash )
+
 		end
 
-		def remove_parameter( index_or_range ) 
+		def remove_parameter( index_or_range )
+ 
 			# value can be range or index, or array of ranges or indexes
 			@parameters.slice!( index_or_range )
+
 		end
 
 		def list_parameters
+
 			return @parameters.inspect
+
 		end
 	
 		def to_s
-			MobyUtil::XML::Builder.new(){
+
+			Nokogiri::XML::Builder.new{
+
 				fixture_parameters{
+
 					parameters.each_index{ | index | 
+
 						parameter( parameters[index].merge( :id => index) )
+
 					}
+
 				}
+
 			}.to_xml
+
 		end
 
 	end
