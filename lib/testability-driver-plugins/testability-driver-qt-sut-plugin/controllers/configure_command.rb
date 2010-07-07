@@ -17,8 +17,6 @@
 ## 
 ############################################################################
 
-
-
 module MobyController
 
 	module QT
@@ -34,16 +32,16 @@ module MobyController
 		  def execute
 			
 			@sut_adapter.send_service_request(
-              Comms::MessageGenerator.generate(
-                Nokogiri::XML::Builder.new{
-		          TasCommands( :service => "confService", :id=> application_id ) {
-					Target( :TasId => "Application" ) {
-					  Command( value || "", ( params || {} ).merge( :name => name ) )
-				    }
-			      }
-				}.to_xml
-			  )
-		    )
+			      Comms::MessageGenerator.generate(
+				Nokogiri::XML::Builder.new{
+					  TasCommands( :service => "confService", :id=> application_id ) {
+							Target( :TasId => "Application" ) {
+							  Command( value || "", ( params || {} ).merge( :name => name ) )
+						    }
+					      }
+						}.to_xml
+					  )
+				    )
 
 			end
 
@@ -51,10 +49,12 @@ module MobyController
 				@sut_adapter = adapter
 			end
 
+			# enable hooking for performance measurement & debug logging
+			MobyUtil::Hooking.instance.hook_methods( self ) if defined?( MobyUtil::Hooking )
+
 		end #module ConfigureCommand
 
 	end #module QT
 
 end #module MobyController
 
-MobyUtil::Logger.instance.hook_methods( MobyController::QT::ConfigureCommand )

@@ -542,11 +542,13 @@ module MobyBehaviour
            y.to_s
          end  
 =end  
+
+		# enable hooking for performance measurement & debug logging
+		MobyUtil::Hooking.instance.hook_methods( self ) if defined?( MobyUtil::Hooking )
+
      end # Widget
 
 
    end # QT
 
  end # MobyBehaviour
-
- MobyUtil::Logger.instance.hook_methods( MobyBehaviour::QT::Widget )

@@ -17,8 +17,6 @@
 ## 
 ############################################################################
 
-
- 
 module MobyBehaviour
 
 	module QT
@@ -47,8 +45,9 @@ module MobyBehaviour
 				Kernel::raise RuntimeError.new( "Calling method '%s' failed with error: %s" % [ method_name, returnValue ] ) if ( returnValue != "OK" )
 			end
 
+			# enable hooking for performance measurement & debug logging
+			MobyUtil::Hooking.instance.hook_methods( self ) if defined?( MobyUtil::Hooking )
+
 		end
 	end
 end
-
-MobyUtil::Logger.instance.hook_methods( MobyBehaviour::QT::Method )

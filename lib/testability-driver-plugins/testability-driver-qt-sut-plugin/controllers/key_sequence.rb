@@ -17,10 +17,6 @@
 ## 
 ############################################################################
 
-
-
-#require 'builder'
-
 module MobyController
 
 	module QT
@@ -93,8 +89,11 @@ module MobyController
 
 			end
 
-		end #class
-	end #module QT
-end #module MobyController
+			# enable hooking for performance measurement & debug logging
+			MobyUtil::Hooking.instance.hook_methods( self ) if defined?( MobyUtil::Hooking )
 
-MobyUtil::Logger.instance.hook_methods( MobyController::QT::KeySequence )
+		end #class
+
+	end #module QT
+
+end #module MobyController

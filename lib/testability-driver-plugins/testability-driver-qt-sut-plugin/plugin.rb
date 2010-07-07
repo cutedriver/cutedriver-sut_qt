@@ -17,7 +17,6 @@
 ## 
 ############################################################################
 
-
 # verify that TDriver is loaded
 Kernel::raise RuntimeError.new( "SUT plugin requires TDriver" ) unless (defined?( MATTI ) || defined?( TDriver ))
 
@@ -50,6 +49,9 @@ module MobyPlugin
 
 					# load utility module(s)
 					'util/*.rb', 
+
+					# sut adapter
+					'sut/communication.rb', 
 
 					# sut adapter
 					'sut/adapter.rb', 

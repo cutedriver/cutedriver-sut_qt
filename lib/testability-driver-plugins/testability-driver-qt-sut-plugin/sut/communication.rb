@@ -17,7 +17,6 @@
 ## 
 ############################################################################
 
-
 require 'zlib'
 
 module MobyController
@@ -37,6 +36,10 @@ module MobyController
 					# strip 4 extra bytes written by qt compression, return empty string if no raw data found, otherwise inflate it
 					( raw_data = response[ 4 .. -1 ] ).empty? ? "" : Zlib::Inflate.inflate( raw_data )
 				end
+
+				# enable hooking for performance measurement & debug logging
+				MobyUtil::Hooking.instance.hook_methods( self ) if defined?( MobyUtil::Hooking )
+
 			end
 
 			# Wrapper for protocol message.
@@ -70,6 +73,9 @@ module MobyController
 
 				end
 
+				# enable hooking for performance measurement & debug logging
+				MobyUtil::Hooking.instance.hook_methods( self ) if defined?( MobyUtil::Hooking )
+
 			end #class
 
 			# Message generator for qt tas messages
@@ -80,6 +86,9 @@ module MobyController
 					MobyController::QT::Comms::QtMessage.new( message_flag, message_data )
 
 				end
+
+				# enable hooking for performance measurement & debug logging
+				MobyUtil::Hooking.instance.hook_methods( self ) if defined?( MobyUtil::Hooking )
 
 			end
 
@@ -113,15 +122,12 @@ module MobyController
   		                    Zlib::Deflate.deflate( @data, 9)].pack('C4a*')
 				end			
 
+				# enable hooking for performance measurement & debug logging
+				MobyUtil::Hooking.instance.hook_methods( self ) if defined?( MobyUtil::Hooking )
+
 			end # class
 
 		end # module Comms
 
 	end
 end
-
-MobyUtil::Logger.instance.hook_methods( MobyController::QT::Comms::Inflator )
-MobyUtil::Logger.instance.hook_methods( MobyController::QT::Comms::QTResponse )
-MobyUtil::Logger.instance.hook_methods( MobyController::QT::Comms::MessageGenerator )
-MobyUtil::Logger.instance.hook_methods( MobyController::QT::Comms::QtMessage )
-

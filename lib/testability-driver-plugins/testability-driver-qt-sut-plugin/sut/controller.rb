@@ -17,8 +17,6 @@
 ## 
 ############################################################################
 
-
-
 module MobyController
 
 	module QT
@@ -37,10 +35,12 @@ module MobyController
 
 			end
 
+			# enable hooking for performance measurement & debug logging
+			MobyUtil::Hooking.instance.hook_methods( self ) if defined?( MobyUtil::Hooking )
+
+
 		end # SutController
 
 	end # QT
 
 end # MobyController
-
-MobyUtil::Logger.instance.hook_methods( MobyController::QT::SutController )

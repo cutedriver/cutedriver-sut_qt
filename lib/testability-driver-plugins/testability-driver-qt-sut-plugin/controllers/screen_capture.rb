@@ -17,8 +17,6 @@
 ## 
 ############################################################################
 
-
-
 module MobyController
 
 	module QT
@@ -30,6 +28,7 @@ module MobyController
 			end
 
 			def execute
+
 				@sut_adapter.send_service_request(
 					Comms::MessageGenerator.generate(
 						Nokogiri::XML::Builder.new{
@@ -44,8 +43,12 @@ module MobyController
 
 			end
 
-		end # ScreenCapture
-	end # QT
-end # MobyController
+			# enable hooking for performance measurement & debug logging
+			MobyUtil::Hooking.instance.hook_methods( self ) if defined?( MobyUtil::Hooking )
 
-MobyUtil::Logger.instance.hook_methods( MobyController::QT::ScreenCapture )
+
+		end # ScreenCapture
+
+	end # QT
+
+end # MobyController

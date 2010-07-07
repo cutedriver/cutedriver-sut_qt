@@ -16,8 +16,6 @@
 ## of this file. 
 ## 
 ############################################################################
-
-
  
 module MobyBehaviour
 
@@ -109,9 +107,10 @@ module MobyBehaviour
 			
 			end
 
+			# enable hooking for performance measurement & debug logging
+			MobyUtil::Hooking.instance.hook_methods( self ) if defined?( MobyUtil::Hooking )
+
 		end
 
 	end
 end
-
-MobyUtil::Logger.instance.hook_methods( MobyBehaviour::QT::KeyPress )

@@ -17,11 +17,9 @@
 ## 
 ############################################################################
 
-
 # Find behaviours 
 #
 # Methods for finding test objects on the suttest objet state
-
 module MobyBehaviour
 
 	module QT
@@ -51,12 +49,12 @@ module MobyBehaviour
 			  MobyUtil::Logger.instance.log "behaviour" , "PASS;Test object found and centered.;#{id.to_s};sut;{};application;" << find_hash.inspect  
 			  search_result
 			end
+
+			# enable hooking for performance measurement & debug logging
+			MobyUtil::Hooking.instance.hook_methods( self ) if defined?( MobyUtil::Hooking )
 			
 		end # module Find
 	
 	end # module QT
 	
 end # module MobyBehaviour
-
-MobyUtil::Logger.instance.hook_methods( MobyBehaviour::QT::Find )
-

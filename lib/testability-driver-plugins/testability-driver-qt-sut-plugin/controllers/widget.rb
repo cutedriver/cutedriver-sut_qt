@@ -59,10 +59,12 @@ module MobyController
 				@sut_adapter = adapter
 			end
 
+			# enable hooking for performance measurement & debug logging
+			MobyUtil::Hooking.instance.hook_methods( self ) if defined?( MobyUtil::Hooking )
+
+
 		end #module Action
 
 	end #module QT
 
 end #module MobyController
-
-MobyUtil::Logger.instance.hook_methods( MobyController::QT::WidgetCommand )

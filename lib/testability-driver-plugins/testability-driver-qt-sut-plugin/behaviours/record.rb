@@ -17,9 +17,6 @@
 ## 
 ############################################################################
 
-
-
-# TODO: document 
 module MobyBehaviour
 
 	module QT
@@ -95,10 +92,12 @@ module MobyBehaviour
 
 			end
 
-		end # EventsBehaviour
+			# enable hooking for performance measurement & debug logging
+			MobyUtil::Hooking.instance.hook_methods( self ) if defined?( MobyUtil::Hooking )
+
+
+		end # Record
 
 	end
 
 end # MobyBase
-
-MobyUtil::Logger.instance.hook_methods( MobyBehaviour::QT::Record  )

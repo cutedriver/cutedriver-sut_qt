@@ -17,9 +17,8 @@
 ## 
 ############################################################################
 
-
-
 module MobyController
+
 	module QT
 
 		module Tap 
@@ -29,20 +28,24 @@ module MobyController
 			end
 
 			def execute
-        command_xml = Nokogiri::XML::Builder.new{
-          TasCommands( :service => "uiCommand" ) {
-            Target( :TasId => 1, :type => "Application" ) {
-              Command( :name => "TapScreen", :x => get_x, :y => get_y, :button => 1, :count => 1, :mouseMove => true, :useCoordinates => true, :time_to_hold => get_hold )
-            }
-          }
-        }.to_xml
+
+				command_xml = Nokogiri::XML::Builder.new{
+				  TasCommands( :service => "uiCommand" ) {
+				    Target( :TasId => 1, :type => "Application" ) {
+				      Command( :name => "TapScreen", :x => get_x, :y => get_y, :button => 1, :count => 1, :mouseMove => true, :useCoordinates => true, :time_to_hold => get_hold )
+				    }
+				  }
+				}.to_xml
 
 				@sut_adapter.send_service_request(Comms::MessageGenerator.generate(command_xml))
 
 			end
 
-		end # Tap
-	end # QT
-end # MobyController
+			# enable hooking for performance measurement & debug logging
+			MobyUtil::Hooking.instance.hook_methods( self ) if defined?( MobyUtil::Hooking )
 
-MobyUtil::Logger.instance.hook_methods( MobyController::QT::Tap )
+		end # Tap
+
+	end # QT
+
+end # MobyController

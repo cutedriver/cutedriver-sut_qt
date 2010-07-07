@@ -114,10 +114,12 @@ module MobyBehaviour
               execute_javascript_query( java_script, query, index, webframe_id)
 			end
 
+				# enable hooking for performance measurement & debug logging
+				MobyUtil::Hooking.instance.hook_methods( self ) if defined?( MobyUtil::Hooking )
+
+
 		end # Webkit
 
 	end # QT
 
 end # MobyBehaviour
-
-MobyUtil::Logger.instance.hook_methods( MobyBehaviour::QT::Webkit )

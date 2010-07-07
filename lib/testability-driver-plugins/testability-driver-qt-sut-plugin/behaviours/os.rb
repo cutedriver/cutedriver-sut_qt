@@ -17,8 +17,6 @@
 ## 
 ############################################################################
 
-
-
 module MobyBehaviour
 
 	module QT
@@ -67,9 +65,10 @@ module MobyBehaviour
 				end
 					MobyUtil::Logger.instance.log "behaviour" , "PASS;Successfuly sent an Enter keystroke request to the qttas server;press_enter;"
 				nil			end
+
+			# enable hooking for performance measurement & debug logging
+			MobyUtil::Hooking.instance.hook_methods( self ) if defined?( MobyUtil::Hooking )
 			
 		end
 	end
 end
-
-MobyUtil::Logger.instance.hook_methods( MobyBehaviour::QT::Os )

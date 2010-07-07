@@ -17,7 +17,6 @@
 ## 
 ############################################################################
 
-
 ## DESCRIPTION
 # This script will take .qm or .ts files from SUT
 # to convert those into SQL tables to a server following 
@@ -286,10 +285,11 @@ module MobyBehaviour
         return new_list_of_files
       end
 
+	# enable hooking for performance measurement & debug logging
+	MobyUtil::Hooking.instance.hook_methods( self ) if defined?( MobyUtil::Hooking )
+
     end
 
   end
 
 end
-
-MobyUtil::Logger.instance.hook_methods( MobyBehaviour::QT::SUT )

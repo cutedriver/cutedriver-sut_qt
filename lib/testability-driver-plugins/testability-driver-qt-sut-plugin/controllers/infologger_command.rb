@@ -17,8 +17,6 @@
 ## 
 ############################################################################
 
-
-
 module MobyController
 
 	module QT
@@ -31,30 +29,34 @@ module MobyController
 			# == returns
 			# == raises
 			# NotImplementedError: raised if unsupported command type       
-		  def execute
-			
-			@sut_adapter.send_service_request(
-              Comms::MessageGenerator.generate(
-                Nokogiri::XML::Builder.new{
-		          TasCommands( :service => "infoService", :id=> application_id, :interval => params[:interval] ) {
-					Target( :TasId => "Application" ) {
-					  Command( value || "", ( params || {} ).merge( :name => name ) )
-				    }
-			      }
-				}.to_xml
-			  )
-		    )
+			def execute
+
+				@sut_adapter.send_service_request(
+					Comms::MessageGenerator.generate(
+						Nokogiri::XML::Builder.new{
+							TasCommands( :service => "infoService", :id=> application_id, :interval => params[:interval] ) {
+								Target( :TasId => "Application" ) {
+									Command( value || "", ( params || {} ).merge( :name => name ) )
+								}
+							}
+						}.to_xml
+					)
+				)
 
 			end
 
 			def set_adapter( adapter )
+
 				@sut_adapter = adapter
+
 			end
 
-		end #module ConfigureCommand
+			# enable hooking for performance measurement & debug logging
+			MobyUtil::Hooking.instance.hook_methods( self ) if defined?( MobyUtil::Hooking )
+
+
+		end # InfoLoggerCommand
 
 	end #module QT
 
 end #module MobyController
-
-MobyUtil::Logger.instance.hook_methods( MobyController::QT::InfoLoggerCommand )

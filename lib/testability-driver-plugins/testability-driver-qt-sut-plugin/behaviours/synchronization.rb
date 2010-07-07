@@ -17,12 +17,6 @@
 ## 
 ############################################################################
 
-
-
-#require File.expand_path( File.join( File.dirname( __FILE__ ), '../../../command/lib/fixture' ) )
-#require File.expand_path( File.join( File.dirname( __FILE__ ), '../../../util/lib/logger' ) )
-#require File.expand_path( File.join( File.dirname( __FILE__ ), 'qt_behaviour' ) )
-
 module MobyBehaviour
 module QT
 
@@ -75,8 +69,11 @@ module QT
 
 		end # wait_for_signal
 		
+			# enable hooking for performance measurement & debug logging
+			MobyUtil::Hooking.instance.hook_methods( self ) if defined?( MobyUtil::Hooking )
+
+
 	end	# Synchronization
 
 end # QT
 end # MobyBehaviour
-MobyUtil::Logger.instance.hook_methods( MobyBehaviour::QT::Synchronization )

@@ -17,8 +17,6 @@
 ## 
 ############################################################################
 
-
-
 module MobyBehaviour
 
 	module QT
@@ -79,10 +77,12 @@ module MobyBehaviour
 				nil
 			end
 
-		end
+			# enable hooking for performance measurement & debug logging
+			MobyUtil::Hooking.instance.hook_methods( self ) if defined?( MobyUtil::Hooking )
 
-	end
 
-end
+		end # Action
 
-MobyUtil::Logger.instance.hook_methods( MobyBehaviour::QT::Action )
+	end # QT
+
+end # MobyBehaviour
