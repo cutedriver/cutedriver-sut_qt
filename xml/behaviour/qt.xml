@@ -473,7 +473,7 @@
 
     </behaviour>
 
-    <behaviour name="QtViewItem" object_type="ItemData" sut_type="QT" input_type="*" version="*">
+    <behaviour name="QtViewItem" object_type="ItemData;QTreeWidgetItem;QListWidgetItem;QTableWidgetItem" sut_type="QT" input_type="*" version="*">
 
         <module name="MobyBehaviour::QT::ViewItem" />
 
@@ -485,6 +485,21 @@
         </methods>
 
     </behaviour>
+
+
+    <behaviour name="QtTreeWidgetItemColumn" object_type="TreeWidgetItemColumn" sut_type="QT" input_type="*" version="*">
+
+        <module name="MobyBehaviour::QT::TreeWidgetItemColumn" />
+                                         
+        <methods>
+            <method name="check_state">
+                <description>Set the check state of the column inside treewidget item.</description>
+                <example>check_state(2)</example>
+            </method>
+        </methods>
+
+    </behaviour>
+
 
     <behaviour name="QtConfigureBehaviour" object_type="sut;application" sut_type="QT" input_type="*" version="*">
 

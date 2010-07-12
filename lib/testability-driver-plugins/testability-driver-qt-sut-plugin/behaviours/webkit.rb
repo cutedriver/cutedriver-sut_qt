@@ -43,18 +43,30 @@ module MobyBehaviour
                 begin   
                   
                   command = command_params #in qt_behaviour           
+=begin
                   if(locator_query == nil)
                      command.command_name('ExecuteJavaScriptOnQWebFrame')
                      locator_query=""
                   else  
                      command.command_name('ExecuteJavaScriptOnWebElement')
                   end
-                  
+=end                  
+
+				  if type != "QWebFrame"
+					command.command_name('ExecuteJavaScriptOnWebElement')
+					webframe_id = self.attribute('webFrame') if webframe_id.to_s == "0"				  
+				  else
+					command.command_name('ExecuteJavaScriptOnQWebFrame')
+				  end
+				  
+
+
                   command.service( 'webkitCommand' )
                   params = {
                     'java_script'   => java_script,
                     'locator_query' => locator_query,
                     'index'         => index.to_s,
+				    'elementId'     => self.id.to_s, 
                     'webframe_id'   => webframe_id.to_s
                   }
                   
@@ -104,14 +116,14 @@ module MobyBehaviour
     			    end 
                     query << "[" << param.to_s << "='" << value.to_s << "'" << "]"
     			  }
-    			  #puts query
     		  end
     		  
-    		  if( type != "QWebFrame" && parent_object.type == "QWebFrame")
-    		    webframe_id = parent_object.id
+    		  if type != "QWebFrame" #&& parent_object.type == "QWebFrame")
+    		    #webframe_id = parent_object.id
+				webframe_id = self.attribute('webFrame')
     		  end
 
-              execute_javascript_query( java_script, query, index, webframe_id)
+              execute_javascript_query( java_script, nil, index, webframe_id)
 			end
 
 				# enable hooking for performance measurement & debug logging
