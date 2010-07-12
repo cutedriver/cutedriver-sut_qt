@@ -493,47 +493,47 @@
         <methods>
             <method name="clear_log">
                 <description>Clear log on the target.</description>
-                <template>clear_log</template>
+                <example>clear_log</example>
             </method>
             <method name="enable_logger">
                 <description>Enable logging on the target.</description>
-                <template>enable_logger</template>
+                <example>enable_logger</example>
             </method>
             <method name="disable_logger">
                 <description>Disable logging on the target.</description>
-                <template>disable_logger</template>
+                <example>disable_logger</example>
             </method>
             <method name="set_log_level">
                 <description>Set logging level on the target.</description>
-                <template>set_log_level(:INFO)</template>
+                <example>set_log_level(:INFO)</example>
             </method>
             <method name="set_log_folder">
                 <description>Set logging folder on the target.</description>
-                <template>set_log_folder('/tmp/logs/')</template>
+                <example>set_log_folder('/tmp/logs/')</example>
             </method>
             <method name="log_to_qdebug">
                 <description>Set logging direct all logging to qDebug or not.</description>
-                <template>log_to_qdebug(true)</template>
+                <example>log_to_qdebug(true)</example>
             </method>
             <method name="log_qdebug">
                 <description>Log all qDebug messages to log files or not.</description>
-                <template>log_qdebug(true)</template>
+                <example>log_qdebug(true)</example>
             </method>
             <method name="set_log_size">
                 <description>Set log file size.</description>
-                <template>set_log_size(100000)</template>
+                <example>set_log_size(100000)</example>
             </method>
             <method name="configure_logger">
                 <description>Configure the logger..</description>
-                <template>configure_logger({:logEnabled => true, :logLevel => :DEBUG, :logSize => 10000})</template>
+                <example>configure_logger({:logEnabled => true, :logLevel => :DEBUG, :logSize => 10000})</example>
             </method>
             <method name="log_events">
                 <description>Log events.</description>
-                <template>log_events('MousePress,MouseRelease')</template>
+                <example>log_events('MousePress,MouseRelease')</example>
             </method>
             <method name="stop_event_logging">
                 <description>Stop logging events.</description>
-                <template>stop_event_logging</template>
+                <example>stop_event_logging</example>
             </method>
         </methods>
 
@@ -622,27 +622,27 @@
         <methods>
             <method name="log_cpu">
                 <description>Log the cpu usage of the process</description>
-                <template>log_cpu</template>
+                <example>log_cpu</example>
             </method>
             <method name="stop_cpu_log">
                 <description>Stop cpu logging and get the results.</description>
-                <template>stop_cpu_log</template>
+                <example>stop_cpu_log</example>
             </method>
             <method name="log_mem">
                 <description>Log memory usage.</description>
-                <template>log_mem</template>
+                <example>log_mem</example>
             </method>
 	        <method name="stop_mem_log">
                 <description>Stop mem logging and get the results.</description>
-                <template>stop_mem_log</template>
+                <example>stop_mem_log</example>
             </method>
             <method name="log_gpu_mem">
                 <description>Log the gpu mem usage</description>
-                <template>log_gpu_mem</template>
+                <example>log_gpu_mem</example>
             </method>
             <method name="stop_gpu_log">
                 <description>Stop gpu logging and get the results.</description>
-                <template>stop_gpu_log</template>
+                <example>stop_gpu_log</example>
             </method>
         </methods>
 
