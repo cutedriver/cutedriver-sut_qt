@@ -60,7 +60,7 @@ module MobyBehaviour
 					command = command_params #in qt_behaviour
 					command.object_type( :Action )
 					command.command_name( 'Trigger' )
-					command.object_id( @parent.id )
+					command.object_id( get_parent.id )
 					command.command_params( 'id'=>id )
 
 					@sut.execute_command( command )

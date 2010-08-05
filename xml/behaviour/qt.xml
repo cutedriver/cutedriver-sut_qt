@@ -252,8 +252,12 @@
                 <description>Executes given javascript code on the given locator query.</description>
                 <example>execute_javascript_query</example>
             </method>
-        </methods>
-
+            <method name="scroll">
+                <description>For QwebView, scrolls given amount of pixels in the QWebFrame with dx, dy, for web elements scrolls the element visible</description>
+                <example>scroll(0,10)</example>
+                <example>scroll()</example>
+            </method>
+          </methods>
     </behaviour>
 
 
@@ -658,6 +662,18 @@
             <method name="stop_gpu_log">
                 <description>Stop gpu logging and get the results.</description>
                 <example>stop_gpu_log</example>
+            </method>
+            <method name="load_cpu_log">
+                <description>Load cpu logging results.</description>
+                <example>load_cpu_log</example>
+            </method>
+            <method name="load_gpu_log">
+                <description>Load Gpu logging results.</description>
+                <example>load_gpu_log</example>
+            </method>
+            <method name="load_mem_log">
+                <description>Load mem logging results.</description>
+                <example>load_mem_log</example>
             </method>
         </methods>
 
