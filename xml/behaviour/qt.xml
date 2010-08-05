@@ -252,8 +252,12 @@
                 <description>Executes given javascript code on the given locator query.</description>
                 <example>execute_javascript_query</example>
             </method>
-        </methods>
-
+            <method name="scroll">
+                <description>For QwebView, scrolls given amount of pixels in the QWebFrame with dx, dy, for web elements scrolls the element visible</description>
+                <example>scroll(0,10)</example>
+                <example>scroll()</example>
+            </method>
+          </methods>
     </behaviour>
 
 
