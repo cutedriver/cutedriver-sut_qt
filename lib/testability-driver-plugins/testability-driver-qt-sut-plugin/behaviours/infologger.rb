@@ -31,8 +31,8 @@ module MobyBehaviour
 		execute_info('cpu', params)
 	  end
 
-	  def stop_cpu_log
-		params = {:action => 'stop'}
+	  def stop_cpu_log(params={})
+		params[:action] = 'stop' 
 		execute_info('cpu', params)
 	  end
 
@@ -41,8 +41,8 @@ module MobyBehaviour
 		execute_info('mem', params)
 	  end
 
-	  def stop_mem_log
-		params = {:action => 'stop'}
+	  def stop_mem_log(params={})
+		params[:action] = 'stop' 
 		execute_info('mem', params)
 	  end
 
@@ -51,8 +51,23 @@ module MobyBehaviour
 		execute_info('gpu', params)
 	  end
 
-	  def stop_gpu_log
-		params = {:action => 'stop'}
+	  def stop_gpu_log(params={})
+		params[:action] = 'stop' 
+		execute_info('gpu', params)
+	  end
+
+	  def load_cpu_log(params={})
+		params[:action] = 'load' 
+		execute_info('cpu', params)
+	  end
+
+	  def load_mem_log(params={})
+		params[:action] = 'load' 
+		execute_info('mem', params)
+	  end
+
+	  def load_gpu_log(params={})
+		params[:action] = 'load' 
 		execute_info('gpu', params)
 	  end
 

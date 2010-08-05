@@ -659,6 +659,18 @@
                 <description>Stop gpu logging and get the results.</description>
                 <example>stop_gpu_log</example>
             </method>
+            <method name="load_cpu_log">
+                <description>Load cpu logging results.</description>
+                <example>load_cpu_log</example>
+            </method>
+            <method name="load_gpu_log">
+                <description>Load Gpu logging results.</description>
+                <example>load_gpu_log</example>
+            </method>
+            <method name="load_mem_log">
+                <description>Load mem logging results.</description>
+                <example>load_mem_log</example>
+            </method>
         </methods>
 
     </behaviour>
