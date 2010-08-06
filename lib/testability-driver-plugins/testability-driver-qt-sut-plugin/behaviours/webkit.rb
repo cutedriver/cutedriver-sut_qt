@@ -152,7 +152,7 @@ module MobyBehaviour
             if(center_y.to_i > frame_down_border)
               dy = center_y.to_i - frame_down_border + 1
             elsif (center_y.to_i < frame.attribute("y_absolute").to_i) 
-              dy = center_y_to_i - frame.attribute("y_absolute").to_i - 1
+              dy = center_y.to_i - frame.attribute("y_absolute").to_i - 1
             end
             
             if(center_x.to_i > frame_right_border)
