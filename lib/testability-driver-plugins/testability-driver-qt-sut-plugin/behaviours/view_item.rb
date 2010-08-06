@@ -67,9 +67,6 @@ module MobyBehaviour
 	  # enable hooking for performance measurement & debug logging
 	  MobyUtil::Hooking.instance.hook_methods( self ) if defined?( MobyUtil::Hooking )
 	end
-	
-	def check_state(new_state)
-	end
-	
+
   end
 end
