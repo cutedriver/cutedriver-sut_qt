@@ -89,16 +89,68 @@ module MobyBehaviour
 	  # === raises
 	  # ArgumentError:: The command argument was not a non empty String
 	  def execute_shell_command(command, param = { :detached => "false"} )      
-		Kernel::raise ArgumentError.new("The command argumet must be a non empty String.") unless ( command.kind_of?( String ) and !command.empty? )
-		Kernel::raise ArgumentError.new("The parameters argumet must be a Hash.") unless ( param.kind_of?(Hash) )
-		Kernel::raise ArgumentError.new(":detached must be either 'true' or 'false'.") unless ( param[ :detached ] == "true" or param[ :detached ] == "false" )
-		return execute_command( MobyCommand::Application.new( :Shell, command, nil, nil, nil, nil, nil, nil, param ) ).to_s
+      Kernel::raise ArgumentError.new("The command argument must be a non empty String.") unless ( command.kind_of?( String ) and !command.empty? )
+      Kernel::raise ArgumentError.new("The parameters argumet must be a Hash.") unless ( param.kind_of?(Hash) )
+
+      if param[:detached].nil?
+        param[:detached] = "false"
+      end
+        
+      param[:timeout].nil? ? timeout = 300 : timeout = param[:timeout]
+
+      # Launch the program execution into the background, wait for it to finish.
+      if param[:wait].to_s == "true"
+        param[:threaded] = "true"
+        pid = execute_command( MobyCommand::Application.new( :Shell, command, nil, nil, nil, nil, nil, nil, param ) ).to_i
+        data = "" 
+        if pid != 0
+          time = Time.new + timeout
+          while true
+            obj = shell_command(pid)
+            sleep 1
+            data += obj.Response.attribute("output").to_s
+            if Time.new > time
+              command_params = {:kill => 'true'}
+              return "Timeout of " + timeout.to_s + " seconds reached. " + shell_command(pid, command_params).to_s
+            elsif obj.Response.attribute("status") == "RUNNING"
+              next
+            else 
+              break
+            end
+          end
+        end
+        return data
+      end
+
+      return execute_command( MobyCommand::Application.new( :Shell, command, nil, nil, nil, nil, nil, nil, param ) ).to_s
 	  end
+
+	  # Returns the command status of given shell command
+	  #
+	  # === params
+	  # pid:: Integer of the process id given.
+	  # param:: Hash with the flags for the command
+	  # === returns
+	  # String:: Output of the command, if any
+	  # === raises
+	  # ArgumentError:: The command argument was not a non empty String
+    def shell_command(pid, param = {} )
+      Kernel::raise ArgumentError.new("pid argument should be positive integer.") unless pid.to_i > 0
+      param[ :status ] = 'true'
+      xml_source = execute_command( MobyCommand::Application.new( :Shell, pid.to_s, nil, nil, nil, nil, nil, nil, param ) ).to_s
+      if param[:kill].nil?
+        return MobyBase::StateObject.new( xml_source )
+      else
+        return xml_source
+      end
+    end
+
 
 	  def system_information
 		xml_source = execute_command( MobyCommand::Application.new( :SystemInfo, nil) )
 		MobyBase::StateObject.new( xml_source )			  		
 	  end
+
 
 	  # returns the memory used by the agent if -1 then memory consumption cannot be read
 	  def agent_mem_usage

@@ -23,6 +23,12 @@
                 <description>Executes the given command as a new process.</description>
                 <example>execute_shell_command</example>
             </method>
+
+            <method name="shell_command">
+                <description>Get the status of the command left as background process</description>
+                <example></example>
+            </method>
+
             <method name="tap_screen">
                 <description>Tap screen on given coordinates.</description>
                 <example>tap_screen(200,20)</example>
