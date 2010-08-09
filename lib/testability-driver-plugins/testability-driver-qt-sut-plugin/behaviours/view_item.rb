@@ -44,7 +44,7 @@ module MobyBehaviour
 		  command.object_type(:Standard)                          
 		  command.command_name('Tap')    
 
-		  mouse_move = @sut.parameter(:in_tap_move_pointer) 
+		  mouse_move = @sut.parameter[:in_tap_move_pointer]
 		  mouse_move = 'false' unless mouse_move
 
 		  params = {'x'=>center_x, 'y' => center_y, 'count' => 1, 'button' => @@_buttons_map[button], 'mouseMove'=>mouse_move, 'useCoordinates' => 'true'}      

@@ -49,7 +49,7 @@ module MobyUtil
          x_tap = attribute('x_absolute').to_i + x.to_i
          y_tap = attribute('y_absolute').to_i + y.to_i
 
-         mouse_move = @sut.parameter(:in_tap_move_pointer)
+         mouse_move = @sut.parameter[:in_tap_move_pointer]
          mouse_move = 'false' unless mouse_move
 
          params = { 'x'=>x_tap.to_s, 'y' => y_tap.to_s, 'button' => @@_buttons_map[button], 'mouseMove'=>mouse_move }
