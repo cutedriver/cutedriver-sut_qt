@@ -96,7 +96,7 @@ module MobyBehaviour
         param[:detached] = "false"
       end
         
-      param[:timeout].nil? ? timeout = 300 : timeout = param[:timeout]
+      param[:timeout].nil? ? timeout = 300 : timeout = param[:timeout].to_i
 
       # Launch the program execution into the background, wait for it to finish.
       if param[:wait].to_s == "true"
@@ -111,7 +111,7 @@ module MobyBehaviour
             data += obj.Response.attribute("output").to_s
             if Time.new > time
               command_params = {:kill => 'true'}
-              return "Timeout of " + timeout.to_s + " seconds reached. " + shell_command(pid, command_params).to_s
+              Kernel::raise RuntimeError.new( "Timeout of #{timeout.to_s} seconds reached. #{shell_command(pid, command_params).to_s}")
             elsif obj.Response.attribute("status") == "RUNNING"
               next
             else 
