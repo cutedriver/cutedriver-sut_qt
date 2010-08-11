@@ -17,6 +17,8 @@
 ## 
 ############################################################################
 
+require 'nokogiri'
+
 module MobyBehaviour
 
   module QT
@@ -108,11 +110,12 @@ module MobyBehaviour
           while true
             obj = shell_command(pid)
             sleep 1
-            data += obj.Response.attribute("output").to_s
+            data += obj['output']
             if Time.new > time
               command_params = {:kill => 'true'}
-              Kernel::raise RuntimeError.new( "Timeout of #{timeout.to_s} seconds reached. #{shell_command(pid, command_params).to_s}")
-            elsif obj.Response.attribute("status") == "RUNNING"
+              command_output = shell_command(pid, command_params)['output']
+              Kernel::raise RuntimeError.new( "Timeout of #{timeout.to_s} seconds reached. #{command_output}")
+            elsif obj['status'] == "RUNNING"
               next
             else 
               break
@@ -131,7 +134,7 @@ module MobyBehaviour
 	  # pid:: Integer of the process id given.
 	  # param:: Hash with the flags for the command
 	  # === returns
-	  # String:: Output of the command, if any
+	  # Hash:: Information about the shell command.
 	  # === raises
 	  # ArgumentError:: The command argument was not a non empty String
     def shell_command(pid, param = {} )
@@ -139,9 +142,18 @@ module MobyBehaviour
       param[ :status ] = 'true'
       xml_source = execute_command( MobyCommand::Application.new( :Shell, pid.to_s, nil, nil, nil, nil, nil, nil, param ) ).to_s
       if param[:kill].nil?
-        return MobyBase::StateObject.new( xml_source )
+        xml = Nokogiri::XML(xml_source)
+        data = {}
+        xml.xpath("//object[@type = 'Response']/attributes/attribute").each { |attr|
+          data[attr[:name]] = attr.children[0].content
+        }
+        return data
       else
-        return xml_source
+        # Killed processes have no relevant data.
+        data = {
+          :status => "KILLED",
+          :output => xml_source
+        }
       end
     end
 
