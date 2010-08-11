@@ -44,8 +44,8 @@ module MobyBehaviour
             optional_params[:use_tap_screen].to_s
           optional_params[:useTapScreen] = use_tap_screen
           
-				  speed = calculate_speed(@sut.parameter(:gesture_flick_distance), @sut.parameter(:gesture_flick_speed))
-				  distance = @sut.parameter(:gesture_flick_distance).to_i
+				  speed = calculate_speed(@sut.parameter[:gesture_flick_distance], @sut.parameter[:gesture_flick_speed])
+				  distance = @sut.parameter[:gesture_flick_distance].to_i
           params = {:gesture_type => :MouseGesture, :direction => direction, :speed => speed, :distance => distance, :isDrag => false, :button => button, :useTapScreen => use_tap_screen}
           params.merge!(optional_params)
 
@@ -86,7 +86,7 @@ module MobyBehaviour
 
          
 
-					speed = calculate_speed( @sut.parameter( :gesture_flick_distance ), @sut.parameter( :gesture_flick_speed ) )
+					speed = calculate_speed( @sut.parameter[ :gesture_flick_distance ], @sut.parameter[ :gesture_flick_speed ] )
 				    do_gesture({:gesture_type => :MouseGestureToCoordinates, :x => x, :y => y, :speed => speed, :isDrag => false, :button => button, :useTapScreen => use_tap_screen})		
 					do_sleep(speed)
 
@@ -235,7 +235,7 @@ module MobyBehaviour
             optional_params[:use_tap_screen].to_s
           optional_params[:useTapScreen] = use_tap_screen
 
-					speed = calculate_speed( distance, @sut.parameter( :gesture_drag_speed ) )
+					speed = calculate_speed( distance, @sut.parameter[ :gesture_drag_speed ] )
           params = {:gesture_type => :MouseGesture, :direction => direction, :speed => speed, :distance => distance, :isDrag => true, :button => button}
           params.merge!(optional_params)
           do_gesture(params)		
@@ -261,7 +261,7 @@ module MobyBehaviour
             optional_params[:use_tap_screen].to_s
           optional_params[:useTapScreen] = use_tap_screen
 
-					speed = calculate_speed( distance, @sut.parameter( :gesture_drag_speed ) )
+					speed = calculate_speed( distance, @sut.parameter[ :gesture_drag_speed ] )
           params = {:gesture_type => :MouseGesture, :direction => direction, :speed => speed, :distance => distance, :isDrag => false, :button => button, :isMove => true}
           params.merge!(optional_params)
           do_gesture(params)
@@ -302,7 +302,7 @@ module MobyBehaviour
 					distance = distance_to_point(x,y)
 					return if distance == 0
 
-					speed = calculate_speed(distance, @sut.parameter(:gesture_drag_speed))
+					speed = calculate_speed(distance, @sut.parameter[:gesture_drag_speed])
           params = {:gesture_type => :MouseGestureToCoordinates, :x => x, :y => y, :speed => speed, :isDrag => true, :button => button}
           params.merge!(optional_params)
           do_gesture(params)		
@@ -345,7 +345,7 @@ module MobyBehaviour
 					#no drag needed, maybe even attempting to drag to it self
 					return if distance == 0
 
-					speed = calculate_speed(distance, @sut.parameter(:gesture_drag_speed))
+					speed = calculate_speed(distance, @sut.parameter[:gesture_drag_speed])
           params = {:gesture_type => :MouseGestureTo, :speed => speed, :isDrag => true, :button => button}
           params[:targetId] = target_object.id
           params[:targetType] = target_object.attribute('objectType')
