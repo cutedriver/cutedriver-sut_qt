@@ -104,7 +104,7 @@ module MobyBehaviour
 
       # Check File and convert to TS if needed
       def prepare_file_as_ts(file)
-        puts "-> Processing file '" + file + "'"
+        #puts "-> Processing file '" + file + "'"
         if !File.exists?(file)
           puts "[WARNING] File '" + file + "' not found. Skiping."
           file = nil
@@ -112,7 +112,7 @@ module MobyBehaviour
           puts "[WARNING] Unknown file extension. Skiping. \n\n" + file
           file = nil
         elsif ( match = file.match(/(.*)\.qm/) )
-          puts "Converting '" + match[0] + "' to .ts ..."
+          #puts "Converting '" + match[0] + "' to .ts ..."
           if(! system "lconvert -o " + match[1] + ".ts " + file )
             puts "[ERROR] lconvert can't convert .qm file to .ts. Skiping. \n\n" + match[0]
           end
@@ -130,7 +130,7 @@ module MobyBehaviour
           puts "[WARNING] The input file is missing the language attribute on it's <TS> element. Skiping. \n\n"
           return nil, nil
         end
-        puts "Language: " + language
+        #puts "Language: " + language
         # Collect data for INSERT query
         data = []
         doc.xpath('.//message').each do |node|
@@ -165,14 +165,14 @@ module MobyBehaviour
             begin
               @dbh = SQLite3::Database.new( @options[:sqlitedb] )
             rescue SQLite3::NotADatabaseException
-              puts "'" + @options[:sqlitedb] + "' is not an SQlite database file."
+              #puts "'" + @options[:sqlitedb] + "' is not an SQlite database file."
               return  # Just finish
             end
           end
         end
 
         # Create table if doesn't exist (language collumns to be created as needed)
-        puts "Preparing table '" + @options[:table_name] + "' in the database."
+        #puts "Preparing table '" + @options[:table_name] + "' in the database."
         case @options[:dbstyle]
         when "mysql"
           sth = @dbh.prepare(
@@ -198,7 +198,7 @@ module MobyBehaviour
 
 
         # Add new column for new language if needed
-        puts "Adding translations for " + language + " to the database."
+        #puts "Adding translations for " + language + " to the database."
         case @options[:dbstyle]
         when "mysql"
           begin
@@ -232,7 +232,7 @@ module MobyBehaviour
             sth = @dbh.prepare( "INSERT INTO `" + @options[:table_name] + "` (FNAME, LNAME, `" + language + "`) VALUES " + insert_values +
                 "ON DUPLICATE KEY UPDATE fname = VALUES(fname), lname = VALUES(lname), `" + language + "` = VALUES(`" + language + "`) ;")
             n = sth.execute
-            puts ">>> " + n.affected_rows.to_s + " affected rows"
+            #puts ">>> " + n.affected_rows.to_s + " affected rows"
 
           rescue Exception => e
             puts e.inspect
