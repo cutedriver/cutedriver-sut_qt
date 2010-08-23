@@ -23,6 +23,12 @@
                 <description>Executes the given command as a new process.</description>
                 <example>execute_shell_command</example>
             </method>
+
+            <method name="shell_command">
+                <description>Get the status of the command left as background process</description>
+                <example></example>
+            </method>
+
             <method name="tap_screen">
                 <description>Tap screen on given coordinates.</description>
                 <example>tap_screen(200,20)</example>
@@ -252,8 +258,12 @@
                 <description>Executes given javascript code on the given locator query.</description>
                 <example>execute_javascript_query</example>
             </method>
-        </methods>
-
+            <method name="scroll">
+                <description>For QwebView, scrolls given amount of pixels in the QWebFrame with dx, dy, for web elements scrolls the element visible</description>
+                <example>scroll(0,10)</example>
+                <example>scroll()</example>
+            </method>
+          </methods>
     </behaviour>
 
 
@@ -473,7 +483,7 @@
 
     </behaviour>
 
-    <behaviour name="QtViewItem" object_type="ItemData" sut_type="QT" input_type="*" version="*">
+    <behaviour name="QtViewItem" object_type="ItemData;QTreeWidgetItem;QListWidgetItem;QTableWidgetItem" sut_type="QT" input_type="*" version="*">
 
         <module name="MobyBehaviour::QT::ViewItem" />
 
@@ -486,6 +496,21 @@
 
     </behaviour>
 
+
+    <behaviour name="QtTreeWidgetItemColumn" object_type="TreeWidgetItemColumn" sut_type="QT" input_type="*" version="*">
+
+        <module name="MobyBehaviour::QT::TreeWidgetItemColumn" />
+                                         
+        <methods>
+            <method name="check_state">
+                <description>Set the check state of the column inside treewidget item.</description>
+                <example>check_state(2)</example>
+            </method>
+        </methods>
+
+    </behaviour>
+
+
     <behaviour name="QtConfigureBehaviour" object_type="sut;application" sut_type="QT" input_type="*" version="*">
 
         <module name="MobyBehaviour::QT::ConfigureBehaviour" />
@@ -493,47 +518,47 @@
         <methods>
             <method name="clear_log">
                 <description>Clear log on the target.</description>
-                <template>clear_log</template>
+                <example>clear_log</example>
             </method>
             <method name="enable_logger">
                 <description>Enable logging on the target.</description>
-                <template>enable_logger</template>
+                <example>enable_logger</example>
             </method>
             <method name="disable_logger">
                 <description>Disable logging on the target.</description>
-                <template>disable_logger</template>
+                <example>disable_logger</example>
             </method>
             <method name="set_log_level">
                 <description>Set logging level on the target.</description>
-                <template>set_log_level(:INFO)</template>
+                <example>set_log_level(:INFO)</example>
             </method>
             <method name="set_log_folder">
                 <description>Set logging folder on the target.</description>
-                <template>set_log_folder('/tmp/logs/')</template>
+                <example>set_log_folder('/tmp/logs/')</example>
             </method>
             <method name="log_to_qdebug">
                 <description>Set logging direct all logging to qDebug or not.</description>
-                <template>log_to_qdebug(true)</template>
+                <example>log_to_qdebug(true)</example>
             </method>
             <method name="log_qdebug">
                 <description>Log all qDebug messages to log files or not.</description>
-                <template>log_qdebug(true)</template>
+                <example>log_qdebug(true)</example>
             </method>
             <method name="set_log_size">
                 <description>Set log file size.</description>
-                <template>set_log_size(100000)</template>
+                <example>set_log_size(100000)</example>
             </method>
             <method name="configure_logger">
                 <description>Configure the logger..</description>
-                <template>configure_logger({:logEnabled => true, :logLevel => :DEBUG, :logSize => 10000})</template>
+                <example>configure_logger({:logEnabled => true, :logLevel => :DEBUG, :logSize => 10000})</example>
             </method>
             <method name="log_events">
                 <description>Log events.</description>
-                <template>log_events('MousePress,MouseRelease')</template>
+                <example>log_events('MousePress,MouseRelease')</example>
             </method>
             <method name="stop_event_logging">
                 <description>Stop logging events.</description>
-                <template>stop_event_logging</template>
+                <example>stop_event_logging</example>
             </method>
         </methods>
 
@@ -622,27 +647,39 @@
         <methods>
             <method name="log_cpu">
                 <description>Log the cpu usage of the process</description>
-                <template>log_cpu</template>
+                <example>log_cpu</example>
             </method>
             <method name="stop_cpu_log">
                 <description>Stop cpu logging and get the results.</description>
-                <template>stop_cpu_log</template>
+                <example>stop_cpu_log</example>
             </method>
             <method name="log_mem">
                 <description>Log memory usage.</description>
-                <template>log_mem</template>
+                <example>log_mem</example>
             </method>
 	        <method name="stop_mem_log">
                 <description>Stop mem logging and get the results.</description>
-                <template>stop_mem_log</template>
+                <example>stop_mem_log</example>
             </method>
             <method name="log_gpu_mem">
                 <description>Log the gpu mem usage</description>
-                <template>log_gpu_mem</template>
+                <example>log_gpu_mem</example>
             </method>
             <method name="stop_gpu_log">
                 <description>Stop gpu logging and get the results.</description>
-                <template>stop_gpu_log</template>
+                <example>stop_gpu_log</example>
+            </method>
+            <method name="load_cpu_log">
+                <description>Load cpu logging results.</description>
+                <example>load_cpu_log</example>
+            </method>
+            <method name="load_gpu_log">
+                <description>Load Gpu logging results.</description>
+                <example>load_gpu_log</example>
+            </method>
+            <method name="load_mem_log">
+                <description>Load mem logging results.</description>
+                <example>load_mem_log</example>
             </method>
         </methods>
 

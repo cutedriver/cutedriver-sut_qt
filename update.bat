@@ -2,4 +2,4 @@
 del /F /Q pkg\
 cmd /c "gem uninstall testability-driver-qt-sut-plugin"
 cmd /c "rake gem"
-cmd /c "gem install pkg\testability-driver*.gem --LOCAL"
+cmd /c "gem install pkg\testability-driver*.gem --LOCAL --no-ri --no-rdoc"

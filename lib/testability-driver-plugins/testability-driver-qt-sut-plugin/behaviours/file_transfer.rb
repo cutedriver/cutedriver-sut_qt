@@ -63,10 +63,10 @@ module MobyBehaviour
 
           end
 
-        elsif arguments.include(:dir)
+        elsif arguments.include?(:dir)
 
           Base64.decode64( fixture("file", "rm_dir", {:file_name => arguments[:dir]}) )
-          return File.basename(file)
+          return arguments[:dir]
 
         else
 

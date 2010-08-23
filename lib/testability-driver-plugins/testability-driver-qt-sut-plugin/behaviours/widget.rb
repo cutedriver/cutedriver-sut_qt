@@ -139,9 +139,29 @@ module MobyBehaviour
 
           if attribute('objectType') == 'Web' or attribute('objectType') == 'Embedded'
             params['x'] = center_x
-            params['y'] = center_y					
+            params['y'] = center_y
             params['useCoordinates'] = 'true'
           end
+          
+          if(attribute('objectType') == 'Web')
+            frame = self
+            if type != "QWebFrame"
+              until frame.type.to_s == "QWebFrame"
+                frame = frame.get_parent
+              end
+
+              if((center_x.to_i < frame.attribute("x_absolute").to_i) or
+                 (center_x.to_i > frame.attribute("x_absolute").to_i + frame.attribute("width").to_i) or
+                 (center_y.to_i < frame.attribute("y_absolute").to_i) or
+                 (center_y.to_i > frame.attribute("y_absolute").to_i + frame.attribute("height").to_i)
+                )
+                self.scroll(0,0,1) # enable tap centralization
+                self.force_refresh({:id => get_application_id})
+                self.tap(tap_params, interval, button)
+                return
+              end
+            end
+          end	
           command.command_params(params)
           
           @sut.execute_command( command )    				
