@@ -59,18 +59,21 @@ module MobyController
 
 				end
 
-				def validate_message(msg_id)				  
+				def validate_message( msg_id )
 
 					#check that response matches the request
 					if @message_id != msg_id 
+					
 						MobyUtil::Logger.instance.log "fatal" , "Response to request did not match: \"#{@message_id}\"!=\"#{msg_id.to_s}\""
 						MobyUtil::Logger.instance.log "fatal" , @msg_body 
-						raise RuntimeError.new("Response to request did not match: \"#{@message_id}\"!=\"#{msg_id.to_s}\"") 
+						
+						Kernel::raise RuntimeError.new("Response to request did not match: \"#{@message_id}\"!=\"#{msg_id.to_s}\"") 
+						
 					end
 
 					#raise error if error flag
-					raise RuntimeError.new( @msg_body ) if flag == Comms::ERROR_MSG
-
+				  Kernel::raise RuntimeError.new( @msg_body ) if @flag == Comms::ERROR_MSG
+          
 				end
 
 				# enable hooking for performance measurement & debug logging
