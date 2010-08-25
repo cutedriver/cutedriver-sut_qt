@@ -62,7 +62,7 @@ module MobyController
 				def validate_message(msg_id)				  
 
 					#check that response matches the request
-					if @message_id =! msg_id 
+					if @message_id != msg_id 
 						MobyUtil::Logger.instance.log "fatal" , "Response to request did not match: \"#{@message_id}\"!=\"#{msg_id.to_s}\""
 						MobyUtil::Logger.instance.log "fatal" , @msg_body 
 						raise RuntimeError.new("Response to request did not match: \"#{@message_id}\"!=\"#{msg_id.to_s}\"") 
