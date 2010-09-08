@@ -134,14 +134,74 @@ module MobyBehaviour
         # Collect data for INSERT query
         data = []
         doc.xpath('.//message').each do |node|
-          begin
-            data << [ node.xpath('.//source').inner_text() , node.xpath('.//translation').inner_text() ]
-          rescue # ignores bad elements or elements with empty translations for now
-          end
+          # begin
+            # data << [ node.xpath('.//source').inner_text() , node.xpath('.//translation').inner_text() ]
+          # rescue # ignores bad elements or elements with empty translations for now
+          # end
+		  begin
+			nodeId = ""
+			nodeTranslation = ""
+			nodePlurality = "NULL"
+			nodeLengthVar = "NULL"
+			
+			# set nodeId
+			#raise Exception if node.xpath('@id').inner_text() == ""
+			if node.xpath('@id').inner_text() != ""
+				nodeId = node.xpath('@id').inner_text()
+			else
+				nodeId = node.xpath('.//source').inner_text()
+			end
+			
+			# Parse Numerus(LengthVar), or Numerus or LengthVar or translation direclty
+			if ! node.xpath('.//translation/numerusform').empty?
+				# puts ">>> Numerusform"
+				node.xpath('.//translation/numerusform').each do |numerus|
+					nodePlurality = numerus.xpath('@plurality').inner_text()
+					if ! numerus.xpath('.//lengthvariant').empty?
+						# puts "  >>> Lengthvar"
+						numerus.xpath('.//lengthvariant').each do |lenghtvar|
+							nodeLengthVar = lenghtvar.xpath('@priority').inner_text()
+							nodeTranslation = lenghtvar.inner_text()
+							data << [  nodeId, nodeTranslation, nodePlurality, nodeLengthVar ]
+						end
+					else
+						nodeTranslation = numerus.inner_text()
+						data << [  nodeId, nodeTranslation, nodePlurality, nodeLengthVar ]
+					end
+				end			
+			elsif ! node.xpath('.//translation/lengthvariant').empty?
+				# puts ">>> Lengthvar"
+				node.xpath('.//translation/lengthvariant').each do |lenghtvar|
+					nodeLengthVar = lenghtvar.xpath('@priority').inner_text()
+					nodeTranslation = lenghtvar.inner_text()
+					data << [  nodeId, nodeTranslation, nodePlurality, nodeLengthVar ]
+				end
+			else
+				# puts ">>> Translation"
+				nodeTranslation = node.xpath('.//translation').inner_text()
+				data << [  nodeId, nodeTranslation, nodePlurality, nodeLengthVar ]
+			end
+			
+		  rescue Exception # ignores bad elements or elements with empty translations for now
+		  end
         end
         open_file.close
         return language, data
       end
+	  
+	  # Parses filenames and strips the extension and language tags of the name 
+	  def parseFName(file)
+		fname = file.split('/').last
+		#(wordlist matching)
+		words = ["ar", "bg", "ca", "cs", "da", "de", "el", "en", "English-GB", "(apac)", "(apaccn)", "(apachk)", "(apactw)", "Japanese", "Thai", "us", "es", "419", "et", "eu", "fa", "fi", "fr", "gl", "he", "hi", "hr", "hu", "id", "is", "it", "ja", "ko", "lt", "lv", "mr", "ms", "nb", "nl", "pl", "pt", "br", "ro", "ru", "sk", "sl", "sr", "sv", "th", "tl", "tr", "uk", "ur", "us", "vi", "zh", "hk", "tw"]
+		match = fname .scan(/_([a-zA-Z1-9\-\(\)]*)/)
+		if match
+			match.each do |m|
+				fname .gsub!("_#{m[0]}"){|s| ""} if words.include?( m[0] )
+			end
+		end
+		fname .gsub!(".ts"){|s| ""}
+	  end
 
       # Upload language data to DB
       def upload_data (file, language, data)
@@ -179,10 +239,13 @@ module MobyBehaviour
             "CREATE TABLE IF NOT EXISTS " + @options[:table_name] + " (
                     `ID` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
                     `FNAME` VARCHAR(150) NOT NULL,
-                    `LNAME` VARCHAR(150) NOT NULL COLLATE latin1_general_cs,
-                    PRIMARY KEY (`ID`),
-                    UNIQUE INDEX `FileLogicNameIndex` (`FNAME`,`LNAME`)
-                );"
+                    `LNAME` VARCHAR(150) NOT NULL,
+					`PLURALITY` VARCHAR(50),
+					`LENGTHVAR` INT(10),
+					PRIMARY KEY (`ID`),
+					UNIQUE INDEX `FileLogicNameIndex` (`FNAME`,`LNAME`, `PLURALITY`, `LENGTHVAR`),
+					INDEX `LNameIndex` (`LNAME`)
+				);"
           )
           sth.execute
         when "sqlite"
@@ -191,9 +254,14 @@ module MobyBehaviour
                     `ID` INTEGER PRIMARY KEY AUTOINCREMENT,
                     `FNAME` VARCHAR(150) NOT NULL,
                     `LNAME` VARCHAR(150) NOT NULL
+					`PLURALITY` VARCHAR(50),
+					`LENGTHVAR` INT(10)
                 );"
           )
-          @dbh.execute("CREATE UNIQUE INDEX IF NOT EXISTS 'FileLogicNameIndex' ON " + @options[:table_name] + " (`FNAME`,`LNAME`);")
+          query = "CREATE UNIQUE INDEX IF NOT EXISTS 'FileLogicNameIndex' ON " + @options[:table_name] + " (`FNAME`,`LNAME`, `PLURALITY`, `LENGTHVAR`);"
+		  dbh.execute(query)
+		  query = "CREATE INDEX IF NOT EXISTS 'FileLogicIndex' ON " + @options[:table_name] + " (`LNAME`);"
+		  dbh.execute(query)	
         end
 
 
@@ -224,12 +292,12 @@ module MobyBehaviour
               # Escape ` and ' and "  and other restricted characters in SQL (prevent SQL injections
               source = source.gsub(/([\'\"\`\;\&])/){|s|  "\\" + s}
               translation = (translation != nil) ? translation.gsub(/([\'\"\`\;\&])/){|s|  "\\" + s} : ""
-              insert_values += "('" + File.basename(file) + "', '" + source + "', '" + translation + "'), "
+              insert_values += "('" + fname + "', '" + source + "', '" + translation + "', '" + plurality + "', '" + lengthvar + "'), "
             end
             insert_values[-2] = ' ' unless insert_values == "" # replace last ',' with ';'
 
             # INSERT Query
-            sth = @dbh.prepare( "INSERT INTO `" + @options[:table_name] + "` (FNAME, LNAME, `" + language + "`) VALUES " + insert_values +
+            sth = @dbh.prepare( "INSERT INTO `" + @options[:table_name] + "` (FNAME, LNAME, `" + language + "`, `PLURALITY`, `LENGTHVAR`) VALUES " + insert_values +
                 "ON DUPLICATE KEY UPDATE fname = VALUES(fname), lname = VALUES(lname), `" + language + "` = VALUES(`" + language + "`) ;")
             n = sth.execute
             #puts ">>> " + n.affected_rows.to_s + " affected rows"
@@ -251,11 +319,11 @@ module MobyBehaviour
               # we MAYBE  fucked if the texts have ";" or "`" or """ but for now only "'" seems to be problematic
               source = source.strip.gsub(/([\'])/){|s|  s + s}
               translation = (translation != nil ) ? translation.strip.gsub(/([\'])/){|s|  s + s} : ""
-              union_all += " SELECT '" + File.basename(file) + "' ,'" + source + "','" + translation + "'  UNION ALL\n"
+              union_all += " SELECT '" + fname + "' ,'" + source + "','" + translation + "', '" + plurality + "', '" + lengthvar + "'  UNION ALL\n"
               # INSERT Query if whe have collected enough or the last remaining (500 limit for now)
               if (counter >= 500 or cumulated == data.length)
                 union_all[-11..-1] = '' # strip last UNION ALL
-                @dbh.execute("INSERT OR REPLACE INTO `" + @options[:table_name] + "` (FNAME, LNAME, `" + language + "`) " + union_all)
+                @dbh.execute("INSERT OR REPLACE INTO `" + @options[:table_name] + "` (FNAME, LNAME, `" + language + "`, `PLURALITY`, `LENGTHVAR`) " + union_all)
                 puts ">>> " + @dbh.changes().to_s + " affected rows"
                 counter = 0
                 union_all = ""
