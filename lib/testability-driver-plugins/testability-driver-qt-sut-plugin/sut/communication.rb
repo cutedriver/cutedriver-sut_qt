@@ -97,32 +97,48 @@ module MobyController
 
 			class QtMessage
 
-				attr_reader :flag, :data, :crc
-				attr_accessor :message_id 
+				attr_reader :flag, :data, :crc, :compression, :size
+
+				#attr_accessor :message_id 
 
 				def initialize( message_flag, message_data )
+
+            # message flag
+            @flag = message_flag
+  
+            # no compression by default
 				    @compression = 1
-				    @data = message_data
-				    deflate if @data.length > 1000
-					@flag, @crc = message_flag, CRC::Crc16.crc16_ibm( @data, 0xffff )
+
+            # compress message body if size is greater than 1000 bytes
+				    deflate if ( @size = ( @data = message_data ).size ) > 1000
+
+            # calculate outgoing message crc; sent in message header to receiver for data validation 
+				  	@crc = CRC::Crc16.crc16_ibm( @data, 0xffff )
+
 				end
 
-				def make_binary_message
-					Kernel::raise ArgumentError.new( "Message cannot be nil" ) unless @message_id
-					[ @flag, @data.size, @crc, compression, @message_id, @data ].pack( 'CISCIa*' )
-				end
+				def make_binary_message( message_id )
+					
+					[ @flag, @size, @crc, @compression, message_id, @data ].pack( 'CISCIa*' )
 
-				def compression
-					@compression
-				end           
+				end
 
 				def deflate
+
+          # enable compression
 				  @compression = 2
+				  
 				  #qUncompress required the data length at the beginning so append it
 				  #the bytes need to be arranged in the below method (see QByteArray::qUncompress)
-				  @data = [(@data.size & 0xff000000) >> 24, (@data.size & 0x00ff0000) >> 16,
-				           (@data.size & 0x0000ff00) >> 8, (@data.size & 0x000000ff),
-  		                    Zlib::Deflate.deflate( @data, 9)].pack('C4a*')
+				  @data = [
+				    ( @size & 0xff000000 ) >> 24, ( @size & 0x00ff0000 ) >> 16,
+				    ( @size & 0x0000ff00 ) >> 8, ( @size & 0x000000ff ),
+  		      Zlib::Deflate.deflate( @data, 9 )
+  		    ].pack( 'C4a*' )
+
+          # update data size
+          @size = @data.size
+          
 				end			
 
 				# enable hooking for performance measurement & debug logging
