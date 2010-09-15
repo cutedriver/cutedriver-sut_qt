@@ -82,7 +82,10 @@ module MobyBehaviour
 		
 	  end
 
-	  
+	  def multi_touch(&block)
+		multitouch_operation(&block)
+	  end
+
 	  private
 	  
 	  def multitouch_operation(&block)
@@ -101,9 +104,9 @@ module MobyBehaviour
 		@sut.unfreeze
 		
 	  end
-
-				# enable hooking for performance measurement & debug logging
-				MobyUtil::Hooking.instance.hook_methods( self ) if defined?( MobyUtil::Hooking )
+	  
+	  # enable hooking for performance measurement & debug logging
+	  MobyUtil::Hooking.instance.hook_methods( self ) if defined?( MobyUtil::Hooking )
 
 
 	end
