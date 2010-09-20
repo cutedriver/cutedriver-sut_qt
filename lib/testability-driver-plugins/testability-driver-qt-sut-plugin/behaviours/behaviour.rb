@@ -48,8 +48,8 @@ module MobyBehaviour
 		#for components with object visible on screen but not actual widgets or graphicsitems
 		if self.attribute( 'objectType' ) == 'Embedded'
 		  command.application_id( get_application_id )
-		  command.object_id( parent_object.id )
-		  command.object_type( parent_object.attribute( 'objectType' ).intern )
+		  command.object_id( parent.id )
+		  command.object_type( parent.attribute( 'objectType' ).intern )
 		else
 		  command.application_id( get_application_id )
 		  command.object_id( self.id )
