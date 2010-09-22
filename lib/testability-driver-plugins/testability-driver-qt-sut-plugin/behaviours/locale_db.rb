@@ -189,14 +189,14 @@ module MobyBehaviour
 	  def parseFName(file)
 		fname = file.split('/').last
 		#(wordlist matching)
-		words = ["ar", "bg", "ca", "cs", "da", "de", "el", "en", "English-GB", "(apac)", "(apaccn)", "(apachk)", "(apactw)", "Japanese", "Thai", "us", "es", "419", "et", "eu", "fa", "fi", "fr", "gl", "he", "hi", "hr", "hu", "id", "is", "it", "ja", "ko", "lt", "lv", "mr", "ms", "nb", "nl", "pl", "pt", "br", "ro", "ru", "sk", "sl", "sr", "sv", "th", "tl", "tr", "uk", "ur", "us", "vi", "zh", "hk", "tw"]
-		match = fname .scan(/_([a-zA-Z1-9\-\(\)]*)/)
+		words = ["ar", "bg", "ca", "cs", "da", "de", "el", "en", "english-gb", "(apac)", "(apaccn)", "(apachk)", "(apactw)", "japanese", "thai", "us", "es", "419", "et", "eu", "fa", "fi", "fr", "gl", "he", "hi", "hr", "hu", "id", "is", "it", "ja", "ko", "lt", "lv", "mr", "ms", "nb", "nl", "pl", "pt", "br", "ro", "ru", "sk", "sl", "sr", "sv", "th", "tl", "tr", "uk", "ur", "us", "vi", "zh", "hk", "tw", "no"]
+		match = fname.scan(/_([a-zA-Z1-9\-\(\)]*)/)
 		if match
 			match.each do |m|
-				fname .gsub!("_#{m[0]}"){|s| ""} if words.include?( m[0] )
+				fname.gsub!("_#{m[0]}"){|s| ""} if words.include?( m[0].downcase )
 			end
 		end
-		fname .gsub!(".ts"){|s| ""}
+		fname.gsub!(".ts"){|s| ""}
 	  end
 
       # Upload language data to DB
@@ -241,7 +241,7 @@ module MobyBehaviour
 		    PRIMARY KEY (`ID`),
 		    UNIQUE INDEX `FileLogicNameIndex` (`FNAME`,`LNAME`, `PLURALITY`, `LENGTHVAR`),
 		    INDEX `LNameIndex` (`LNAME`)
-		    );"
+		    ) COLLATE=utf8_general_ci;"
           )
           sth.execute
         when "sqlite"
