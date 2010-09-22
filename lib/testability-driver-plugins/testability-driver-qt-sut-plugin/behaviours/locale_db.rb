@@ -134,15 +134,11 @@ module MobyBehaviour
         # Collect data for INSERT query
         data = []
         doc.xpath('.//message').each do |node|
-          # begin
-            # data << [ node.xpath('.//source').inner_text() , node.xpath('.//translation').inner_text() ]
-          # rescue # ignores bad elements or elements with empty translations for now
-          # end
 		  begin
 			nodeId = ""
 			nodeTranslation = ""
-			nodePlurality = "NULL"
-			nodeLengthVar = "NULL"
+			nodePlurality = ""
+			nodeLengthVar = ""
 			
 			# set nodeId
 			#raise Exception if node.xpath('@id').inner_text() == ""
@@ -238,14 +234,14 @@ module MobyBehaviour
           sth = @dbh.prepare(
             "CREATE TABLE IF NOT EXISTS " + @options[:table_name] + " (
                     `ID` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-                    `FNAME` VARCHAR(150) NOT NULL,
-                    `LNAME` VARCHAR(150) NOT NULL,
-					`PLURALITY` VARCHAR(50),
-					`LENGTHVAR` INT(10),
-					PRIMARY KEY (`ID`),
-					UNIQUE INDEX `FileLogicNameIndex` (`FNAME`,`LNAME`, `PLURALITY`, `LENGTHVAR`),
-					INDEX `LNameIndex` (`LNAME`)
-				);"
+		    `FNAME` VARCHAR(150) NOT NULL COLLATE latin1_general_ci,
+		    `LNAME` VARCHAR(150) NOT NULL COLLATE latin1_general_ci,
+		    `PLURALITY` VARCHAR(50) COLLATE latin1_general_ci,
+		    `LENGTHVAR` INT(10),
+		    PRIMARY KEY (`ID`),
+		    UNIQUE INDEX `FileLogicNameIndex` (`FNAME`,`LNAME`, `PLURALITY`, `LENGTHVAR`),
+		    INDEX `LNameIndex` (`LNAME`)
+		    );"
           )
           sth.execute
         when "sqlite"
@@ -283,12 +279,13 @@ module MobyBehaviour
 
 
         # Format and INSERT data
+	fname = parseFName(file)
         case @options[:dbstyle]
         when "mysql"
           begin
             # Formatting (seems like there is no length limit for the insert string)
             insert_values = ""
-            data.each do |source, translation|
+	    data.each do |source, translation, plurality, lengthvar|
               # Escape ` and ' and "  and other restricted characters in SQL (prevent SQL injections
               source = source.gsub(/([\'\"\`\;\&])/){|s|  "\\" + s}
               translation = (translation != nil) ? translation.gsub(/([\'\"\`\;\&])/){|s|  "\\" + s} : ""
