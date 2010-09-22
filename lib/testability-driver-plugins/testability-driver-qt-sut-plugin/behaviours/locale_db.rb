@@ -307,7 +307,7 @@ module MobyBehaviour
           begin
             # Formatting (seems like there is no length limit for the insert string)
             insert_values = ""
-	    data.each do |source, translation, plurality, lengthvar|
+			data.each do |source, translation, plurality, lengthvar|
               # Escape ` and ' and "  and other restricted characters in SQL (prevent SQL injections
               source = source.gsub(/([\'\"\`\;\&])/){|s|  "\\" + s}
               translation = (translation != nil) ? translation.gsub(/([\'\"\`\;\&])/){|s|  "\\" + s} : ""
@@ -332,7 +332,7 @@ module MobyBehaviour
             counter = 0
             cumulated = 0
             union_all = ""
-            data.each do |source, translation|
+            data.each do |source, translation, plurality, lengthvar|
               counter += 1
               cumulated += 1
               # we MAYBE  fucked if the texts have ";" or "`" or """ but for now only "'" seems to be problematic
