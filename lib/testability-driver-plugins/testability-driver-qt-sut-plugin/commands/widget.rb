@@ -214,5 +214,13 @@ module MobyCommand
 			@_command_value
 		end
 
+		def set_event_type(event_type)
+		  @_event_type = event_type
+		end
+		
+		def get_event_type		  
+		  Kernel::raise "Assert: event_type must be set!" unless @_event_type
+		  @_event_type
+		end
 	end
 end
