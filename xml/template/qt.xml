@@ -32,6 +32,17 @@
     does not use Qt Events-->
 		<parameter name="use_tap_screen"  value="false" />
 
+	    <!-- 
+		  The event type to use when interacting with the ui. Possible values are Mouse = 0, Touch = 1, Both =2.
+		  When set to 0 (mouse) only mouse events are sent (e.g. tap will result in mousepress and mouserelease events)
+		  When set to 1 (touch) only touch events are sent (e.g. tap will result in touchbegin and touchend events)	
+	      When set to 2 both mouse and touch events are sent.
+		  Note: When using multitouch behaviours this setting has no affect. Only touch events are sent.
+		  Default is set to two so both events will be sent. Note that if set to 0 or 1 then only the 
+		  specified events is sent. e.g. Some components may not handle touch events so setting to 1 maybe be dangerous.
+		-->
+		<parameter name="event_type"  value="2" />	
+
 		<parameter name="localisation_server_database_tablename" value="tr_qt_default" /> <!-- overwrites default value -->
 
 		<!-- recording will detect movements together with tap up and down as taps if the movement is smaller -->
