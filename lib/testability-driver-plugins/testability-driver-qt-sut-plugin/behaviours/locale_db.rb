@@ -271,15 +271,15 @@ module MobyBehaviour
             "CREATE TABLE IF NOT EXISTS " + @options[:table_name] + " (
                     `ID` INTEGER PRIMARY KEY AUTOINCREMENT,
                     `FNAME` VARCHAR(150) NOT NULL,
-                    `LNAME` VARCHAR(150) NOT NULL
+                    `LNAME` VARCHAR(150) NOT NULL,
 					`PLURALITY` VARCHAR(50),
 					`LENGTHVAR` INT(10)
                 );"
           )
           query = "CREATE UNIQUE INDEX IF NOT EXISTS 'FileLogicNameIndex' ON " + @options[:table_name] + " (`FNAME`,`LNAME`, `PLURALITY`, `LENGTHVAR`);"
-		  dbh.execute(query)
+		  @dbh.execute(query)
 		  query = "CREATE INDEX IF NOT EXISTS 'FileLogicIndex' ON " + @options[:table_name] + " (`LNAME`);"
-		  dbh.execute(query)	
+		  @dbh.execute(query)	
         end
 
 
@@ -332,22 +332,38 @@ module MobyBehaviour
             counter = 0
             cumulated = 0
             union_all = ""
+			
+			@dbh.execute("BEGIN TRANSACTION")
+			
             data.each do |source, translation, plurality, lengthvar|
               counter += 1
               cumulated += 1
               # we MAYBE  fucked if the texts have ";" or "`" or """ but for now only "'" seems to be problematic
               source = source.strip.gsub(/([\'])/){|s|  s + s}
               translation = (translation != nil ) ? translation.strip.gsub(/([\'])/){|s|  s + s} : ""
-              union_all += " SELECT '" + fname + "' ,'" + source + "','" + translation + "', '" + plurality + "', '" + lengthvar + "'  UNION ALL\n"
-              # INSERT Query if whe have collected enough or the last remaining (500 limit for now)
-              if (counter >= 500 or cumulated == data.length)
-                union_all[-11..-1] = '' # strip last UNION ALL
-                @dbh.execute("INSERT OR REPLACE INTO `" + @options[:table_name] + "` (FNAME, LNAME, `" + language + "`, `PLURALITY`, `LENGTHVAR`) " + union_all)
-                puts ">>> " + @dbh.changes().to_s + " affected rows"
-                counter = 0
-                union_all = ""
-              end
+              
+              # BULK INSERT Query if whe have collected enough or the last remaining (500 limit for now)
+			  # WARNING INSERT OR REPLACE requires all columns to be provided to make a proper update... will set to null the not provided!
+			  # union_all += " SELECT '" + fname + "' ,'" + source + "','" + translation + "', '" + plurality + "', '" + lengthvar + "'  UNION ALL\n"
+              # if (counter >= 500 or cumulated == data.length)
+                # union_all[-11..-1] = '' # strip last UNION ALL
+                # @dbh.execute("INSERT OR REPLACE INTO `" + @options[:table_name] + "` (FNAME, LNAME, `" + language + "`, `PLURALITY`, `LENGTHVAR`) " + union_all)
+                ##puts ">>> " + @dbh.changes().to_s + " affected rows"
+                # counter = 0
+                # union_all = ""
+              # end
+			  
+			  # NORMAL INSERT TO FIX THE REPLACE PROBLEM!! (replace puts null to the non specified collumns!)
+			  @dbh.execute("UPDATE `" + @options[:table_name] + "` SET `#{language}`='#{translation}', `PLURALITY`='#{plurality}', `LENGTHVAR`='#{lengthvar}' WHERE FNAME='#{fname}' AND LNAME='#{source}';")
+			  if @dbh.changes() == 0
+				@dbh.execute("INSERT INTO `" + @options[:table_name] + "` (FNAME, LNAME, `" + language + "`, `PLURALITY`, `LENGTHVAR`) VALUES ('#{fname}' ,'#{source}','#{translation}', '#{plurality}', '#{lengthvar}');")
+				puts "inserting"
+			  else
+				puts "updating"
+			  end
             end
+		
+			@dbh.execute("COMMIT TRANSACTION")
           rescue Exception => e
             puts e.inspect
             puts e.backtrace.join("\n")
