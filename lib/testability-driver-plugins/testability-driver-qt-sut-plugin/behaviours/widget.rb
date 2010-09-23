@@ -87,6 +87,15 @@ module MobyBehaviour
       #			def tap( tap_count = 1, interval = nil, button = :Left) 
       #			def tap( tap_count = 1, interval = nil, button = :Left, tap_screen = false, duration = 0.1 )   
 			def tap( tap_params = 1, interval = nil, button = :Left )
+        # delegate duration taps to grouped behaviors
+        if tap_params.kind_of?(Hash) && !tap_params[:duration].nil?
+          @sut.group_behaviours(tap_params[:duration], get_application) {
+            tap_down
+            tap_up
+          }
+          return
+        end
+
 				begin   
 				  #for api compatibility
 				  if interval and interval.kind_of?(Symbol)
@@ -104,15 +113,11 @@ module MobyBehaviour
             end
 
             tap_count = tap_params[:tap_count].nil? ? 1 : tap_params[:tap_count]
-            duration = tap_params[:duration]
-            if duration.nil?
-              duration = 0.1
-            end
             use_tap_screen = tap_params[:use_tap_screen].nil? ? MobyUtil::Parameter[ @sut.id][ :use_tap_screen, 'false'] :
               tap_params[:use_tap_screen].to_s
           else
             tap_count = tap_params
-            duration = 0.1
+
             use_tap_screen = MobyUtil::Parameter[@sut.id][ :use_tap_screen, 'false']            
           end
 
@@ -128,8 +133,7 @@ module MobyBehaviour
             'count' => tap_count.to_s, 
             'button' => @@_buttons_map[button], 
             'mouseMove' => MobyUtil::Parameter[ @sut.id ][ :in_tap_move_pointer, 'false' ], 
-            'useTapScreen' => use_tap_screen, 
-            'duration' => duration.to_s
+            'useTapScreen' => use_tap_screen
           }     
 
 

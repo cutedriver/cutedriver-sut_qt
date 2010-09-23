@@ -69,6 +69,10 @@
                 <description>Creates locale_db file.</description>
                 <example>create_locale_db("/usr/share", "*.qm", "/path/to/locale_db")</example>
             </method>
+    	    <method name="set_event_type">
+                <description>Set the event type used to generate events to the device.</description>
+                <example>set_event_type(:Mouse)</example>
+            </method>
         </methods>
 
     </behaviour>

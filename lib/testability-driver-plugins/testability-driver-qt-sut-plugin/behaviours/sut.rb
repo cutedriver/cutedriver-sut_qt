@@ -27,6 +27,8 @@ module MobyBehaviour
 
 	  include MobyBehaviour::Behaviour
 
+	  @@_event_type_map = { :Mouse => '0', :Touch => '1', :Both => '2' }
+
 	  # QT specific feature.
 	  # Kills all of the application processed started through the server.
 	  def kill_started_processes
@@ -91,41 +93,41 @@ module MobyBehaviour
 	  # === raises
 	  # ArgumentError:: The command argument was not a non empty String
 	  def execute_shell_command(command, param = { :detached => "false"} )      
-      Kernel::raise ArgumentError.new("The command argument must be a non empty String.") unless ( command.kind_of?( String ) and !command.empty? )
-      Kernel::raise ArgumentError.new("The parameters argumet must be a Hash.") unless ( param.kind_of?(Hash) )
+		Kernel::raise ArgumentError.new("The command argument must be a non empty String.") unless ( command.kind_of?( String ) and !command.empty? )
+		Kernel::raise ArgumentError.new("The parameters argumet must be a Hash.") unless ( param.kind_of?(Hash) )
 
-      if param[:detached].nil?
-        param[:detached] = "false"
-      end
+		if param[:detached].nil?
+		  param[:detached] = "false"
+		end
         
-      param[:timeout].nil? ? timeout = 300 : timeout = param[:timeout].to_i
+		param[:timeout].nil? ? timeout = 300 : timeout = param[:timeout].to_i
 
-      # Launch the program execution into the background, wait for it to finish.
-      if param[:wait].to_s == "true"
-        param[:threaded] = "true"
-        pid = execute_command( MobyCommand::Application.new( :Shell, command, nil, nil, nil, nil, nil, nil, param ) ).to_i
-        data = "" 
-        if pid != 0
-          time = Time.new + timeout
-          while true
-            obj = shell_command(pid)
-            sleep 1
-            data += obj['output']
-            if Time.new > time
-              command_params = {:kill => 'true'}
-              command_output = shell_command(pid, command_params)['output']
-              Kernel::raise RuntimeError.new( "Timeout of #{timeout.to_s} seconds reached. #{command_output}")
-            elsif obj['status'] == "RUNNING"
-              next
-            else 
-              break
-            end
-          end
-        end
-        return data
-      end
+		# Launch the program execution into the background, wait for it to finish.
+		if param[:wait].to_s == "true"
+		  param[:threaded] = "true"
+		  pid = execute_command( MobyCommand::Application.new( :Shell, command, nil, nil, nil, nil, nil, nil, param ) ).to_i
+		  data = "" 
+		  if pid != 0
+			time = Time.new + timeout
+			while true
+			  obj = shell_command(pid)
+			  sleep 1
+			  data += obj['output']
+			  if Time.new > time
+				command_params = {:kill => 'true'}
+				command_output = shell_command(pid, command_params)['output']
+				Kernel::raise RuntimeError.new( "Timeout of #{timeout.to_s} seconds reached. #{command_output}")
+			  elsif obj['status'] == "RUNNING"
+				next
+			  else 
+				break
+			  end
+			end
+		  end
+		  return data
+		end
 
-      return execute_command( MobyCommand::Application.new( :Shell, command, nil, nil, nil, nil, nil, nil, param ) ).to_s
+		return execute_command( MobyCommand::Application.new( :Shell, command, nil, nil, nil, nil, nil, nil, param ) ).to_s
 	  end
 
 	  # Returns the command status of given shell command
@@ -137,25 +139,25 @@ module MobyBehaviour
 	  # Hash:: Information about the shell command.
 	  # === raises
 	  # ArgumentError:: The command argument was not a non empty String
-    def shell_command(pid, param = {} )
-      Kernel::raise ArgumentError.new("pid argument should be positive integer.") unless pid.to_i > 0
-      param[ :status ] = 'true'
-      xml_source = execute_command( MobyCommand::Application.new( :Shell, pid.to_s, nil, nil, nil, nil, nil, nil, param ) ).to_s
-      if param[:kill].nil?
-        xml = Nokogiri::XML(xml_source)
-        data = {}
-        xml.xpath("//object[@type = 'Response']/attributes/attribute").each { |attr|
-          data[attr[:name]] = attr.children[0].content
-        }
-        return data
-      else
-        # Killed processes have no relevant data.
-        data = {
-          :status => "KILLED",
-          :output => xml_source
-        }
-      end
-    end
+	  def shell_command(pid, param = {} )
+		Kernel::raise ArgumentError.new("pid argument should be positive integer.") unless pid.to_i > 0
+		param[ :status ] = 'true'
+		xml_source = execute_command( MobyCommand::Application.new( :Shell, pid.to_s, nil, nil, nil, nil, nil, nil, param ) ).to_s
+		if param[:kill].nil?
+		  xml = Nokogiri::XML(xml_source)
+		  data = {}
+		  xml.xpath("//object[@type = 'Response']/attributes/attribute").each { |attr|
+			data[attr[:name]] = attr.children[0].content
+		  }
+		  return data
+		else
+		  # Killed processes have no relevant data.
+		  data = {
+			:status => "KILLED",
+			:output => xml_source
+		  }
+		end
+	  end
 
 
 	  def system_information
@@ -194,26 +196,26 @@ module MobyBehaviour
 		end
 	  end
 
-    # tap screen on given coordinates
-    # x:: X Coordinate to tap
-    # y:: Y Coordinate to tap
-    # time_to_hold:: How long is the ta pressed down, in seconds. default 0.1s
-    # == params
-    def tap_screen(x,y,time_to_hold = 0.1) # todo count
-      
-      command = MobyCommand::Tap.new(x,y,time_to_hold)
+	  # tap screen on given coordinates
+	  # x:: X Coordinate to tap
+	  # y:: Y Coordinate to tap
+	  # time_to_hold:: How long is the ta pressed down, in seconds. default 0.1s
+	  # == params
+	  def tap_screen(x,y,time_to_hold = 0.1) # todo count
+		
+		command = MobyCommand::Tap.new(x,y,time_to_hold)
 
-      begin 
-        execute_command( command )    				
-        nil
-      rescue Exception => e      
-        
-        MobyUtil::Logger.instance.log "behaviour" , "FAIL;Failed tap_screen on coords \"#{x}:#{y}\";"
-        Kernel::raise e        
-        
-      end      
+		begin 
+		  execute_command( command )    				
+		  nil
+		rescue Exception => e      
+		  
+		  MobyUtil::Logger.instance.log "behaviour" , "FAIL;Failed tap_screen on coords \"#{x}:#{y}\";"
+		  Kernel::raise e        
+		  
+		end      
 
-    end
+	  end
 
 	  def close_qttas
 		begin
@@ -227,39 +229,39 @@ module MobyBehaviour
 
 	  end
 
-    def log_process_mem_start(thread_name, file_name = nil, timestamp_type = nil, interval_s = nil)
-      status = nil
-      begin
-        status = execute_command(
-          MobyCommand::Application.new(
-            :ProcessMemLoggingStart,
-            thread_name,
-            nil, nil, nil, nil, nil, nil,
-            {:file_name => file_name, :timestamp => timestamp_type, :interval_s => interval_s} ) )
-        MobyUtil::Logger.instance.log "behaviour", "PASS;Successfully started process memory logging.;#{ id };sut;{};log_process_mem_start;"
-      rescue Exception => e
-        MobyUtil::Logger.instance.log "behaviour", "FAIL;Failed to start process memory logging.;#{ id };sut;{};log_process_mem_start;"
-        Kernel::raise RuntimeError.new( "Unable to start process memory logging: Exception: #{ e.message } (#{ e.class })" )
-      end
-      status
-    end
+	  def log_process_mem_start(thread_name, file_name = nil, timestamp_type = nil, interval_s = nil)
+		status = nil
+		begin
+		  status = execute_command(
+								   MobyCommand::Application.new(
+																:ProcessMemLoggingStart,
+																thread_name,
+																nil, nil, nil, nil, nil, nil,
+																{:file_name => file_name, :timestamp => timestamp_type, :interval_s => interval_s} ) )
+		  MobyUtil::Logger.instance.log "behaviour", "PASS;Successfully started process memory logging.;#{ id };sut;{};log_process_mem_start;"
+		rescue Exception => e
+		  MobyUtil::Logger.instance.log "behaviour", "FAIL;Failed to start process memory logging.;#{ id };sut;{};log_process_mem_start;"
+		  Kernel::raise RuntimeError.new( "Unable to start process memory logging: Exception: #{ e.message } (#{ e.class })" )
+		end
+		status
+	  end
 
-    def log_process_mem_stop(thread_name, return_data = nil)
-      log = nil
-      begin
-        log = execute_command(
-          MobyCommand::Application.new(
-            :ProcessMemLoggingStop,
-            thread_name,
-            nil, nil, nil, nil, nil, nil,
-            {:return_data => return_data} ) )
-        MobyUtil::Logger.instance.log "behaviour", "PASS;Successfully stopped process memory logging.;#{ id };sut;{};log_process_mem_stop;"
-      rescue Exception => e
-        MobyUtil::Logger.instance.log "behaviour", "FAIL;Failed to stop process memory logging.;#{ id };sut;{};log_process_mem_stop;"
-        Kernel::raise RuntimeError.new( "Unable to stop process memory logging: Exception: #{ e.message } (#{ e.class })" )
-      end
-      log
-    end
+	  def log_process_mem_stop(thread_name, return_data = nil)
+		log = nil
+		begin
+		  log = execute_command(
+								MobyCommand::Application.new(
+															 :ProcessMemLoggingStop,
+															 thread_name,
+															 nil, nil, nil, nil, nil, nil,
+															 {:return_data => return_data} ) )
+		  MobyUtil::Logger.instance.log "behaviour", "PASS;Successfully stopped process memory logging.;#{ id };sut;{};log_process_mem_stop;"
+		rescue Exception => e
+		  MobyUtil::Logger.instance.log "behaviour", "FAIL;Failed to stop process memory logging.;#{ id };sut;{};log_process_mem_stop;"
+		  Kernel::raise RuntimeError.new( "Unable to stop process memory logging: Exception: #{ e.message } (#{ e.class })" )
+		end
+		log
+	  end
 
 	  def group_behaviours( interval, app, &block )
 		begin		  
@@ -293,10 +295,22 @@ module MobyBehaviour
 		end
 	  end
 
+	  # Set the event type used to interact with the target. Possible methods are :Mouse, :Touch and :Both.
+	  # Event generation depends on this setting. If set to :Mouse or :Touch then only those events are generated.
+	  # If set to :Both then both mouse and touch events are sent. In this situation touch events are set as primary.
+	  # This setting has no affect when using multitouch. Note that if you generate multitouch type events e.g. a.tap_down, 
+	  # b.tap_down then a.tap_up, b.tap_up you must set the type to :Touch to avoid mouse events to be generated.
+	  # === params
+	  # new_type:: Symbol defining which method to use: :Mouse, :Touch and :Both.
+	  # === raises
+	  # ArgumentError:: If invalid type is given.
+	  def set_event_type(new_type)
+ 		raise ArgumentError.new("Invalid event type. Accepted values :" << @@_event_type_map.keys.join(", :") ) unless @@_event_type_map.include?(new_type)
+		MobyUtil::Parameter[ self.id ][ :event_type] = @@_event_type_map[new_type]
+	  end
+
 	  # enable hooking for performance measurement & debug logging
 	  MobyUtil::Hooking.instance.hook_methods( self ) if defined?( MobyUtil::Hooking )
-
-
 	end 
   end
 

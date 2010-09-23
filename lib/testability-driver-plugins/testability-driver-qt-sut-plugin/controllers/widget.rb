@@ -32,6 +32,8 @@ module MobyController
 			# == raises
 			# NotImplementedError: raised if unsupported command type       
 			def execute
+			  command_params = {:eventType => get_event_type, :name => get_command_name}
+			  command_params.merge!(get_command_params) if get_command_params
 
 			  builder = Nokogiri::XML::Builder.new{
 				TasCommands( :id=> get_application_id, :transitions => get_transitions, :service => get_service || 'uiCommand' ) {
@@ -41,7 +43,7 @@ module MobyController
 						Command( command_part[ :value ], command_part[ :params ] )
 					  end
 					else
-					  Command( get_command_value || "", ( get_command_params || {} ).merge( :name => get_command_name ) )
+					  Command( get_command_value || "", command_params )
 					end
 				  }
 				}

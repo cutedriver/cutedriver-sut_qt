@@ -42,11 +42,13 @@ module MobyController
 
 			end
 
+      # deprecated: see send_service_request#adapter.rb
 			# Wrapper for protocol message.
 			class QTResponse
 
 				attr_accessor :msg_body, :flag, :crc, :message_id
 
+        # deprecated: see send_service_request#adapter.rb
 				# Initialize QT Response.      
 				# == params
 				# command_flag Indicator flad for message type (error or ok)
@@ -55,10 +57,12 @@ module MobyController
 				# == returns
 				def initialize( command_flag, msg_body, crc, message_id )
 
+
 					@flag, @msg_body, @crc, @message_id = command_flag, msg_body, crc, message_id
 
 				end
 
+        # deprecated: see send_service_request#adapter.rb
 				def validate_message( msg_id )
 
 					#check that response matches the request
