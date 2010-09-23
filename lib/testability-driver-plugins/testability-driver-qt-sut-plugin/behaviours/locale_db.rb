@@ -335,9 +335,6 @@ module MobyBehaviour
 			  @dbh.execute("UPDATE `" + @options[:table_name] + "` SET `#{language}`='#{translation}', `PLURALITY`='#{plurality}', `LENGTHVAR`='#{lengthvar}' WHERE FNAME='#{fname}' AND LNAME='#{source}';")
 			  if @dbh.changes() == 0
 				@dbh.execute("INSERT INTO `" + @options[:table_name] + "` (FNAME, LNAME, `" + language + "`, `PLURALITY`, `LENGTHVAR`) VALUES ('#{fname}' ,'#{source}','#{translation}', '#{plurality}', '#{lengthvar}');")
-				puts "inserting"
-			  else
-				puts "updating"
 			  end
             end
 		
