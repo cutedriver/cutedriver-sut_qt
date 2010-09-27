@@ -45,6 +45,8 @@ module MobyBehaviour
           end
 		end
 
+		command.set_event_type(MobyUtil::Parameter[ @sut.id ][ :event_type, "0" ])
+
 		#for components with object visible on screen but not actual widgets or graphicsitems
 		if self.attribute( 'objectType' ) == 'Embedded'
 		  command.application_id( get_application_id )
@@ -59,6 +61,7 @@ module MobyBehaviour
 	  end
 
 	  def plugin_command( require_response = false, command = MobyCommand::WidgetCommand.new )
+		command.set_event_type(MobyUtil::Parameter[ @sut.id ][ :event_type, "0" ])
 		command.application_id( get_application_id )
 		command.object_id( self.id )
 		command.object_type( self.attribute('objectType' ).intern)
