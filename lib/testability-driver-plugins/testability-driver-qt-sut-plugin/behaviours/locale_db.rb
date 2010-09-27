@@ -126,28 +126,13 @@ module MobyBehaviour
         open_file = File.new( file )
         doc = Nokogiri.XML( open_file )
         language = doc.xpath('.//TS').attribute("language")
-		######## IF filename-to-columnname mapping is provided provided 
+		# IF filename-to-columnname mapping is provided update language
 		if (!column_names_map.empty?)
-		
-			file_language_code = file.match(/.*[_]([a-zA-Z_]{2})\.ts/) 		# filename_xx.ts 
-			file_language_code_long = file.match(/.*[_]([a-zA-Z_]{5})\.ts/) # filename_xx_YY.ts 
-			
-			# .ts file has no language code on the name just use whatever has been found in the xml language attribute for <TS>
-			if file_language_code.nil? and file_language_code_long.nil?	
-				
-			# use short language code to check for column mapping (i.e. file_en.ts, language_code["en"] => column_name["en GB"])
-			elsif file_language_code_long.nil?
-				language_code = file_language_code[1]
-				language = column_names_map[ language_code ] if column_names_map.key?(language_code)
-			
-			# use short language code to check for column mapping (i.e. file_en.ts, language_code["en_US"] => column_name["en US"])
-			else
-				language_code = file_language_code_long[1]
-				language = column_names_map[ language_code ] if column_names_map.key?(language_code)
-			
-			end
+			fname = file.split('/').last
+			appName = parseFName(fname)
+			language_code = fname.gsub(appName + "_" ){|s| ""}.gsub(".ts"){|s| ""}
+			language = column_names_map[ language_code ] if column_names_map.key?( language_code )
 		end
-	  ###########
         if (language == nil)
           puts "[WARNING] The input file is missing the language attribute on it's <TS> element. Skiping. \n\n"
           return nil, nil
