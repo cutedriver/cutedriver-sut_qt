@@ -41,7 +41,7 @@ module MobyBehaviour
 
       # rebuilds localisation db
       # ==raises
-      def create_locale_db(path = "/", file = "*.qm", database_file = nil)
+      def create_locale_db(path = "/", file = "*.qm", database_file = nil, column_names_map = {} )
 
         ## OPTIONS
         @options = {}
@@ -90,7 +90,7 @@ module MobyBehaviour
                     
           # Collect data for INSERT query from TS File
           #language, data = collectDataFromTS(tsFile)
-          language, data = nokogiri_ts_file(tsFile)
+          language, data = nokogiri_ts_file(tsFile, column_names_map)
           next if language == nil or data == ""
 
           # Upload language data to DB for current language file
@@ -121,11 +121,18 @@ module MobyBehaviour
         file
       end
 
-      def nokogiri_ts_file(file)
+      def nokogiri_ts_file(file, column_names_map = {} )
         # Read TS file
         open_file = File.new( file )
         doc = Nokogiri.XML( open_file )
         language = doc.xpath('.//TS').attribute("language")
+		# IF filename-to-columnname mapping is provided update language
+		if (!column_names_map.empty?)
+			fname = file.split('/').last
+			appName = parseFName(fname)
+			language_code = fname.gsub(appName + "_" ){|s| ""}.gsub(".ts"){|s| ""}
+			language = column_names_map[ language_code ] if column_names_map.key?( language_code )
+		end
         if (language == nil)
           puts "[WARNING] The input file is missing the language attribute on it's <TS> element. Skiping. \n\n"
           return nil, nil
