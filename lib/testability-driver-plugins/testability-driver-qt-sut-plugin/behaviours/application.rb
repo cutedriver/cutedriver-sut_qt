@@ -145,17 +145,26 @@ module MobyBehaviour
 	  
 	  def multitouch_operation(&block)
 
+		#make sure the situation is ok before freeze
+		self.force_refresh
+
 		@sut.freeze
 		
 		#disable sleep to avoid unnecessary sleeping
 		MobyUtil::Parameter[ @sut.id ][ :sleep_disabled] = 'true'
-		
+
 		command = MobyCommand::Group.new(0, self, block )
 		command.set_multitouch(true)
 		ret = @sut.execute_command( command )
 		
 		MobyUtil::Parameter[ @sut.id ][ :sleep_disabled] = 'false'
+
+		#sleep the biggest stored value
+		sleep MobyUtil::Parameter[ @sut.id ][ :skipped_sleep_time, 0 ] if MobyUtil::Parameter[ @sut.id ][ :skipped_sleep_time, 0 ] > 0
 		
+		#reset to 0
+		MobyUtil::Parameter[ @sut.id ][ :skipped_sleep_time] = 0
+
 		@sut.unfreeze
 		
 	  end

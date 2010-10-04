@@ -546,6 +546,9 @@ module MobyBehaviour
 		  #so wait at least one second
 		  time = 1 if time < 1	
 		  sleep time
+		else
+		  #store the biggest value which will then be used in multitouch situations to sleep
+		  MobyUtil::Parameter[ @sut.id ][ :skipped_sleep_time ] = time if time > MobyUtil::Parameter[ @sut.id ][ :skipped_sleep_time, 0]
 		end
 
 	  end
