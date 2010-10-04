@@ -21,41 +21,137 @@ module MobyBehaviour
 
   module QT
 
+    # == description
+    # This module contians the behaviours for multitouch operations. 
+    #
+    # == behaviour
+    # QtMultitouch
+    #
+    # == requires
+    # *
+    # == input_type
+    # touch
+    #
+    # == sut_type
+    # qt
+    #
+    # == sut_version
+    # *
+    #
+    # == objects
+    # *
+    #
 	module Multitouch
 
 	  include MobyBehaviour::QT::Behaviour
 
+      # == description
 	  # Performs a pinch zoom in operation. The distance of the operation is 
 	  # is for both fingers. So a distance of 100 will be performed by both
-	  # fingers.
-	  # see pinch_zoom
+	  # end points (fingers).
+	  #
+      # == arguments
+      # speed
+      #  Integer
+      #   description: Speed of the operation in seconds
+      #   example: 3
+	  #
+      # distance
+      #  Integer
+      #   description: Distance of the pinch zoom
+      #   example: 100
+	  #
+      # direction
+      #  Integer
+      #   description: Direction of the pinch zoom in degrees 0-180
+      #   example: 90
+	  #  Symbol
+      #   description: Direction of the pinch zoom either :Horizontal or :Vertical
+      #   example: :Horizontal
+      #
+      # == exceptions
+	  #
+      # ArgumentError
+      #  description:  In case the given parameters are not valid.
+      #    
+	  # == info
+      # See method pinch_zoom
+	  #
 	  def pinch_zoom_in(speed, distance, direction)
 		pinch_zoom({:type => :in, :speed => speed, :distance_1 => distance, :distance_2 => distance, :direction => direction, :differential => 10})
 	  end
 
+      # == description
 	  # Performs a pinch zoom out operation. The distance of the operation is 
 	  # is for both fingers. So a distance of 100 will be performed by both
 	  # fingers.
-	  # see pinch_zoom
+	  #
+      # == arguments
+      # speed
+      #  Integer
+      #   description: Speed of the operation in seconds
+      #   example: 3
+	  #
+      # distance
+      #  Integer
+      #   description: Distance of the pinch zoom
+      #   example: 100
+	  #
+      # direction
+      #  Integer
+      #   description: Direction of the pinch zoom in degrees 0-180
+      #   example: 90
+	  #  Symbol
+      #   description: Direction of the pinch zoom either :Horizontal or :Vertical
+      #   example: :Horizontal
+      #
+      # == exceptions
+	  #
+      # ArgumentError
+      #  description:  In case the given parameters are not valid.
+      #    
+      # == info
+      # See method pinch_zoom
+	  #
 	  def pinch_zoom_out(speed, distance, direction)
 		pinch_zoom({:type => :out, :speed => speed, :distance_1 => distance, :distance_2 => distance, :direction => direction, :differential => 10})
 	  end
 
-	  # Performs two gesture operations at the same time
-	  # causing a pinch zoom affect in components supporting 
-	  # pinch zoom.
-	  # == params
-	  # params: a hash containing the details of the pinch zoom. Required fields:
-	  # :type  values: :in, :out type of the zoom in or out 
-	  # :speed speed/duration in seconds
-	  # :distance_1 distance of the first finger zoom gesture
-	  # :distance_2 distance of the second finger zoom gesture
-	  # :direction direction of the total zoom operation seen as one line in degrees (0-180) or :Horisontal/:Vertical 
-	  # :differential the difference from where the zoom starts or ends
-	  # :x optional center point for the gesture (both required x and y)
-	  # :y optional center point for the gesture (both required x and y)
-	  # example
-	  # app.MainWindow.pinch_zoom( {:type => :in, :speed => 2, :distance_1 => 100, :distance_2 => 100, :direction => 180, :differential => 10, :x => 1, :y => 1} )
+	  # == description
+	  # Causes a pinch zoom gesture on the object. The type of the pinch is based on the given parameters. 
+	  # The parameters make it possible to define various kinds of pinch zoom operations.
+	  #
+	  # The image shows how the different parameters will be used to make the pinch gesture. 
+	  # The image show a zoom in type gesture (:type => :in). Direction is the angle of the 
+	  # first part of the pinch gesture against the y axel (0 degrees is up). Distance variables 
+	  # do not have to be the same. This means that you can set the gesture so that one finger 
+	  # moves a longer distance than the other (or even set one distance to 0). 
+	  # The :differential parameter determines the how close the nearest points 
+	  # in the pinch gesture are (:in start points and :out end points). 
+	  # The center points can be set using the :x and :y setting. 
+	  # The values are relative to the object and if not set then the center point of the object is used.
+	  # [image="pinch.png"]
+	  #
+      # == arguments
+	  # params
+	  #  Hash 
+	  #   description:
+	  #    A Hash table contains all of the parameters required to make the pinch zoom.
+	  #      :type(:in/:out). Type of the pinch. :in means that movement is done away from the center and :out means towards the center.
+	  #      :speed Speed/duration in seconds
+	  #      :distance_1 Distance of the first finger zoom gesture
+	  #      :distance_2 Distance of the second finger zoom gesture
+	  #      :direction Direction of the total zoom operation seen as one line in degrees (0-180) or :Horisontal/:Vertical 
+	  #      :differential The difference from where the zoom starts or ends
+	  #      :x Optional center point for the gesture (both required x and y)
+	  #      :y Optional center point for the gesture (both required x and y)
+	  #    example: pinch_zoom({:type => :in, :speed => 2, :distance_1 => 100, :distance_2 => 100, :direction => :Vertical, :differential => 10})
+	  #
+	  # == exceptions
+	  #
+      # ArgumentError
+      #  description:  In case the given parameters are not valid.
+      #    
 	  def pinch_zoom(params)
 
 		begin
@@ -65,10 +161,10 @@ module MobyBehaviour
 		  time = params[:speed].to_f
 		  speed = time*1000
 		  params[:speed] = speed.to_i
-		  if params['x'].kind_of?(Integer) and params['y'].kind_of?(Integer)
-			params['useCoordinates'] = 'true' 
-			params['x'] = attribute('x_absolute').to_i + params['x']
-			params['y'] = attribute('y_absolute').to_i + params['y']
+		  if params[:x].kind_of?(Integer) and params[:y].kind_of?(Integer)
+			params[:useCoordinates] = 'true' 
+			params[:x] = attribute('x_absolute').to_i + params[:x]
+			params[:y] = attribute('y_absolute').to_i + params[:y]
 		  end
 		  command = command_params #in qt_behaviour           
 		  command.command_name('PinchZoom')
@@ -87,21 +183,140 @@ module MobyBehaviour
 		nil	
 	  end
 
-	  #Rotation done around a center point holding the center point (one end moving)
+      # == description
+	  # Causes rotation motion on the object. The rotation will be so that one point is stationary 
+	  # while other moves to create a rotation motion.
+	  #
+	  # == arguments
+	  # radius
+	  #  Integer
+      #   description: Radius of the of the rotation in degrees (distance between the points)
+	  #   example: 100
+	  #
+	  # start_angle
+	  #  Integer
+      #   description: Starting angle of the rotation. Integer from 0-360
+	  #   example: 90
+	  #  Symbol
+	  #   description: Starting angle of the rotation. Symbol :Horizontal or :Vertical
+	  #   example: :Horizontal
+	  #
+	  # rotate_direction
+	  #  Symbol
+	  #   description: Rotation direction :Clockwise or :CounterClockwise. 
+	  #   example: :CounterClockwise
+	  #
+	  # distance
+	  #  Integer
+	  #   description: Distance of the rotation in degrees
+	  #   example: 360
+	  #
+	  # speed
+	  #  Integer
+	  #   description: Speed in seconds
+	  #   example: 3
+	  #
+	  # center_point
+	  #  Hash
+	  #   description: Optional X and Y coordinates (relative to the object e.g. top left of the object is 0.0). 
+	  #                In one point rotation the other end point will remain stationary (the rotation is done around that point)
+	  #                and that will be the given point. If not given the point will be the center of the object.
+	  #   example: {:x => 50, :y => 100}
+	  #
+	  # == exceptions
+	  #
+      # ArgumentError
+      #  description:  In case the given parameters are not valid.
+      #    
+      # == info
+      # See method rotate
+      #
 	  def one_point_rotate(radius, start_angle, rotate_direction, distance, speed, center_point = nil)
 		params = {:type => :one_point, :radius => radius, :rotate_direction => rotate_direction, :distance => distance, :speed => speed, :direction => start_angle}
-		params.merge!(origin_point) if center_point 
+		params.merge!(center_point) if center_point 
 		rotate(params)
 	  end
 	  
-	  #Rotatation around a center point (both ends moving)
+      # == description
+	  # Causes ratation motion on the object. The rotation will be so that both ends move to create a rotation motion
+	  #
+	  # == arguments
+	  # radius
+	  #  Integer
+      #   description: Radius of the of the rotation in degrees (distance between the points)
+	  #   example: 100
+	  #
+	  # start_angle
+	  #  Integer
+      #   description: Starting angle of the rotation. Integer from 0-360
+	  #   example: 90
+	  #  Symbol
+	  #   description: Starting angle of the rotation. Symbol :Horizontal or :Vertical
+	  #   example: :Horizontal
+	  #
+	  # rotate_direction
+	  #  Symbol
+	  #   description: Rotation direction :Clockwise or :CounterClockwise. 
+	  #   example: :CounterClockwise
+	  #
+	  # distance
+	  #  Integer
+	  #   description: Distance of the rotation in degrees
+	  #   example: 360
+	  #
+	  # speed
+	  #  Integer
+	  #   description: Speed in seconds
+	  #   example: 3
+	  #
+	  # center_point
+	  #  Hash
+	  #   description: Optional X and Y coordinates (relative to the object e.g. top left of the object is 0.0). 
+	  #                In two point rotation both end points will rotate around a center point which will be
+	  #                the given point. If not given the point will be the center of the object.
+	  #   example: {:x => 50, :y => 100}
+	  #
+	  # == exceptions
+	  #
+      # ArgumentError
+      #  description:  In case the given parameters are not valid.
+      #    
+      # == info
+      # See method rotate
+      #
 	  def two_point_rotate(radius, start_angle, rotate_direction, distance, speed, center_point = nil)
 		params = {:type => :two_point, :radius => radius, :rotate_direction => rotate_direction, :distance => distance, :speed => speed, :direction => start_angle}
-		params.merge!(origin_point) if center_point 
+		params.merge!(center_point) if center_point 
 		rotate(params)
 	  end
 
-	  # {:type => :one_point, :radius => 100, :rotate_direction => :Clockwise, :distance => 45, :speed => 2, :direction => 35, :x => 2, y => 35}
+
+
+	  # == description
+	  # Causes a rotate motion on the screen using two fingers. Similar gesture to pinch zooming except the angle changes.
+	  #
+	  #[image="pinch.png"]
+	  # The image shows how the different parameters will be used to make the rotation gestures in both 
+	  # one point and two point rotations. In one point rotation the other end remains stationary while 
+	  # the other moves around it based on the given radius. In two point rotation the movement is done 
+	  # by both ends. Note the direction paramters as the :direction parameter defines the starting angle 
+	  # for the gesture and :rotation_direction defines the actual rotation direction (clockwise or counter clockwise). 
+	  # When performing two point rotation note that the radius is in fact a radius not the diameter. 
+	  # Distance is given in degrees from 0-360. Center point can be set using :x and :y and if 
+	  # not set the center point of the object will be used.
+	  #
+      # == arguments
+	  # params
+	  #  Hash
+	  #   description: A hash of the parameters that define the rotation type, radius, rotation direction, distance speed and direction. 
+	  #                As an optional paramter the center point can also be defined.
+	  #   example: {:type => :one_point, :radius => 100, :rotate_direction => :Clockwise, :distance => 45, :speed => 2, :direction => 35, :x => 2, y => 35}
+	  #
+	  # == exceptions
+	  #
+      # ArgumentError
+      #  description:  In case the given parameters are not valid.
+      #    
 	  def rotate(params)
 		begin
 		  verify_rotate_params!(params)
@@ -110,10 +325,10 @@ module MobyBehaviour
 		  speed = time*1000
 		  params[:speed] = speed.to_i
 
-		  if params['x'].kind_of?(Integer) and params['y'].kind_of?(Integer)
-			params['useCoordinates'] = 'true' 
-			params['x'] = attribute('x_absolute').to_i + params['x']
-			params['y'] = attribute('y_absolute').to_i + params['y']
+		  if params[:x].kind_of?(Integer) and params[:y].kind_of?(Integer)
+			params[:useCoordinates] = 'true' 
+			params[:x] = attribute('x_absolute').to_i + params[:x]
+			params[:y] = attribute('y_absolute').to_i + params[:y]
 		  end
 
 		  command = command_params #in qt_behaviour           
@@ -122,7 +337,7 @@ module MobyBehaviour
 		  
 		  @sut.execute_command( command )
 		  
-		  #wait untill the pinch is finished
+		  #wait untill the operation to finish
 		  do_sleep(time)
 		rescue Exception => e      
 		  MobyUtil::Logger.instance.log "behaviour","FAIL;Failed rotate with params \"#{params.to_s}\".;#{identity};rotate;"
