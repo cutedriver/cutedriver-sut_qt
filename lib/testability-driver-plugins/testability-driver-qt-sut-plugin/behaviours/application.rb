@@ -55,6 +55,18 @@ module MobyBehaviour
 		@sut.execute_command(MobyCommand::Application.new(:BringToForeground, nil, self.uid, self.sut))
       end
 
+	  # == description
+	  # Taps the given objects at the same time (multitouch).
+	  # 
+      # == arguments
+	  # objects
+	  #  Array
+	  #   description: Array of objects to tap.
+	  #   example: @app.tap_objects([@app.Square( :name => 'topLeft' ), @app.Square( :name => 'topRight' )])
+	  #
+      # ArgumentError
+      #  description: objects is not an array
+      #    
 	  def tap_objects(objects)
 		raise ArgumentError.new("Nothing to tap") unless objects.kind_of?(Array)
 
@@ -64,6 +76,18 @@ module MobyBehaviour
 		
 	  end
 
+	  # == description
+	  # Taps down the given objects at the same time (multitouch).
+	  # 
+      # == arguments
+	  # objects
+	  #  Array
+	  #   description: Array of objects to tap down.
+	  #   example: @app.tap_down_objects([@app.Square( :name => 'topLeft' ), @app.Square( :name => 'topRight' )])
+	  #
+      # ArgumentError
+      #  description: objects is not an array
+      #    
 	  def tap_down_objects(objects)
 		raise ArgumentError.new("Nothing to tap") unless objects.kind_of?(Array)
 
@@ -73,6 +97,19 @@ module MobyBehaviour
 		
 	  end
 
+
+	  # == description
+	  # Taps up the given objects at the same time (multitouch).
+	  # 
+      # == arguments
+	  # objects
+	  #  Array
+	  #   description: Array of objects to tap up.
+	  #   example: @app.tap_up_objects([@app.Square( :name => 'topLeft' ), @app.Square( :name => 'topRight' )])
+	  #
+      # ArgumentError
+      #  description: objects is not an array
+      #    
 	  def tap_up_objects(objects)
 		raise ArgumentError.new("Nothing to tap") unless objects.kind_of?(Array)
 
@@ -82,6 +119,24 @@ module MobyBehaviour
 		
 	  end
 
+	  # == description
+	  # Performs the given operations at the same time (when possible). 
+	  # Note that only ui behaviours should be used here (e.g. taps, gestures).
+	  # 
+      # == arguments
+	  # &block
+	  #  Code block
+	  #   description: code block containing the operations to perform.
+	  #   example: @app.multi_touch{
+	  #                @app.ScribbleArea.tap_object(400,50)
+	  #                @app.ScribbleArea.gesture(:Right, 1, 50)
+	  #                @app.ScribbleArea.gesture(:Up, 2, 150)
+	  #                @app.ScribbleArea.gesture(:Left, 2, 150)
+	  #                @app.ScribbleArea.gesture(:Down, 3, 200)
+	  #                @app.ScribbleArea.pinch_zoom({:type => :in, :speed => 2, :distance_1 => 100, :distance_2 => 100, :direction => 0, :differential => 10,:x => 400, :y => 300})
+	  #                @app.ScribbleArea.rotate({:type => :two_point, :radius => 100, :rotate_direction => :Clockwise, :distance => 360, :speed => 3, :direction => 180, :x => 100, :y => 100})
+	  #                }	 
+	  #
 	  def multi_touch(&block)
 		multitouch_operation(&block)
 	  end
