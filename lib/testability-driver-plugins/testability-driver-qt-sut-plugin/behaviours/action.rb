@@ -28,7 +28,7 @@ module MobyBehaviour
 			# Hover over an action
 			# ==raises
 			# TestObjectNotFoundError:: If this application is not the foreground application on the device under test.    
-			def hover( refresh = true )
+			def hover( refresh = false )
 
 				begin
 
@@ -54,13 +54,13 @@ module MobyBehaviour
 			# Trigger an action
 			# ==raises
 			# TestObjectNotFoundError:: If this application is not the foreground application on the device under test.    
-			def trigger( refresh = true )
+			def trigger( refresh = false )
 
 				begin
 					command = command_params #in qt_behaviour
 					command.object_type( :Action )
 					command.command_name( 'Trigger' )
-					command.object_id( get_parent.id )
+					command.object_id( @parent.id )
 					command.command_params( 'id'=>id )
 
 					@sut.execute_command( command )
