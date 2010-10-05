@@ -29,7 +29,9 @@ module MobyController
 			attr_accessor(
 
 				:socket_read_timeout,
-				:socket_write_timeout
+				:socket_write_timeout,
+        :socket_received_bytes,
+        :socket_sent_bytes
 
 			)
 		
@@ -45,6 +47,8 @@ module MobyController
 
 				@socket = nil
 				@connected = false
+        @socket_received_bytes=0
+        @socket_sent_bytes=0
 
 				@sut_id = sut_id
 
@@ -121,7 +125,7 @@ module MobyController
 			# the response body
 			def send_service_request( message, return_crc = false )
 
-				connect if !@connected
+				connect if !@connected        
 
 				# set request message id
 				message.message_id = ( @counter += 1 )
@@ -165,12 +169,13 @@ module MobyController
 				}
 
 				Kernel::raise IOError.new( "Socket reading error for %i bytes - No data retrieved" % [ bytes_count ] ) if read_buffer.nil?
-
+        @socket_received_bytes+=read_buffer.size
 				read_buffer
 
 			end
 
 			def write_socket( data )
+        @socket_sent_bytes+=data.size
 
 				@socket.write( data )
 
