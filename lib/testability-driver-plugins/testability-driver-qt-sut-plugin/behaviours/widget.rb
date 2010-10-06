@@ -87,6 +87,9 @@ module MobyBehaviour
       #			def tap( tap_count = 1, interval = nil, button = :Left) 
       #			def tap( tap_count = 1, interval = nil, button = :Left, tap_screen = false, duration = 0.1 )   
 			def tap( tap_params = 1, interval = nil, button = :Left )
+        # tapMeasure = Time.now
+        # puts "tap: " + (Time.now - tapMeasure).to_s + " s - tap start"
+
         # delegate duration taps to grouped behaviors
         if tap_params.kind_of?(Hash) && !tap_params[:duration].nil?
           @sut.group_behaviours(tap_params[:duration], get_application) {
@@ -141,25 +144,36 @@ module MobyBehaviour
             params[:interval] = (interval.to_f * 1000).to_i					
           end
 
+          # puts "tap: " + (Time.now - tapMeasure).to_s + " s - before webs"
+
           if attribute('objectType') == 'Web' or attribute('objectType') == 'Embedded'
             params['x'] = center_x
             params['y'] = center_y
             params['useCoordinates'] = 'true'
           end
+
+          # puts "tap: " + (Time.now - tapMeasure).to_s + " s - before 2 webs"
           
           if(attribute('objectType') == 'Web')
-            frame = self
             if type != "QWebFrame"
-              until frame.type.to_s == "QWebFrame"
-                frame = frame.get_parent
-              end
+             # puts "tap: " + (Time.now - tapMeasure).to_s + " s - Not q webframe"
 
-              if((center_x.to_i < frame.attribute("x_absolute").to_i) or
-                 (center_x.to_i > frame.attribute("x_absolute").to_i + frame.attribute("width").to_i) or
-                 (center_y.to_i < frame.attribute("y_absolute").to_i) or
-                 (center_y.to_i > frame.attribute("y_absolute").to_i + frame.attribute("height").to_i)
+              x_absolute = (@sut.xml_data.xpath( "//object[@id='%s']/attributes/attribute[@name ='x_absolute']/value/text()" % self.attribute('webFrame') )[0]).to_s.to_i
+              y_absolute = (@sut.xml_data.xpath( "//object[@id='%s']/attributes/attribute[@name ='y_absolute']/value/text()" % self.attribute('webFrame') )[0]).to_s.to_i
+              width      = (@sut.xml_data.xpath( "//object[@id='%s']/attributes/attribute[@name ='width']/value/text()" % self.attribute('webFrame') )[0]).to_s.to_i
+              height     = (@sut.xml_data.xpath( "//object[@id='%s']/attributes/attribute[@name ='height']/value/text()" % self.attribute('webFrame') )[0]).to_s.to_i
+              
+             # puts "tap: " + (Time.now - tapMeasure).to_s + " s - x_a(#{x_absolute}), y_a(#{y_absolute}), w(#{width}), h(#{height})"
+              
+
+              if((center_x.to_i < x_absolute) or
+                 (center_x.to_i > x_absolute + width) or
+                 (center_y.to_i < y_absolute) or
+                 (center_y.to_i > y_absolute + height)
                 )
+                puts "web element scroll"
                 self.scroll(0,0,1) # enable tap centralization
+                puts "web element force refresh in tap"
                 self.force_refresh({:id => get_application_id})
                 self.tap(tap_params, interval, button)
                 return
@@ -168,8 +182,10 @@ module MobyBehaviour
           end	
           command.command_params(params)
           
+          # puts "tap: " + (Time.now - tapMeasure).to_s + " s - tap about to execute "
           @sut.execute_command( command )    				
 
+          # puts "tap: " + (Time.now - tapMeasure).to_s + " s - executed"
           #do not allow operations to continue untill taps done
           if interval
             sleep interval * tap_count
@@ -183,6 +199,9 @@ module MobyBehaviour
         end      
 
         MobyUtil::Logger.instance.log "behaviour" , "PASS;Operation tap executed successfully with tap_count \"#{tap_count}\", button \"#{button.to_s}\".;#{identity};tap;"
+
+        # puts "tap: " + (Time.now - tapMeasure).to_s + " s - tapping ending"
+
         
         nil
 
