@@ -20,14 +20,55 @@
 module MobyBehaviour
 
 	module QT
-
+	
+		# == description
+		# This module contains behaviours specific to actions
+		#
+		# == behaviour
+		# QtAction
+		#
+		# == requires
+		# *
+		#
+		# == input_type
+		# touch
+		#
+		# == sut_type
+		# qt
+		#
+		# == sut_version
+		# *
+		#
+		# == objects
+		# QAction
+		#
 		module Action
 
 			include MobyBehaviour::QT::Behaviour
 
-			# Hover over an action
-			# ==raises
-			# TestObjectNotFoundError:: If this application is not the foreground application on the device under test.    
+			# == description
+			# Hover over an action inside a visible widget.
+			#
+			# == arguments
+			# refresh
+			#  Boolean
+			#   description: is refresh done after trigger command
+			#   example: true
+			#   default: false
+			#
+			# == returns
+			# nil
+			#    
+			# == info
+			#  Hover is done by determining action's coordinates inside parent widget and moving mouse coursor there.
+			#  Therefore, the parent object in script must be a visible widget containing that action.
+			#  For example, a menu must be opened first, before actions inside the menu can be hovered.
+			#  \nNOTE: Moving mouse cursor over action's position may not do anything,
+			#  unless test application window is topmost, or at least not obscured by other windows.
+			#  This can be a problem especially when testing desktop applications on Windows 7.
+			#  \nIMPORTANT: In future this method may be changed to call hover slot of QAction instead of using mouse, 
+			#  or deprecated and replace by a new method of different name better describing that this uses mouse.
+			
 			def hover( refresh = false )
 
 				begin
@@ -38,7 +79,7 @@ module MobyBehaviour
 					command.object_id( @parent.id )
 					command.command_params( 'id' => id )
 					@sut.execute_command( command )
-					self.force_refresh({:id => get_application_id}) if refresh   
+					self.force_refresh({:id => get_application_id}) if refresh
 
 				rescue Exception => e
 
@@ -51,9 +92,30 @@ module MobyBehaviour
 				nil
 			end
 
-			# Trigger an action
-			# ==raises
-			# TestObjectNotFoundError:: If this application is not the foreground application on the device under test.    
+			# == description
+			# Activate action inside a visible widget.
+			#
+			# == arguments
+			# refresh
+			#  Boolean
+			#   description: is refresh done after trigger command
+			#   example: true
+			#   default: false
+			#
+			# == returns
+			# nil
+			# 
+			# == exceptions
+			# *
+			#   no special exceptions, may throw any exception
+			#    
+			# == info
+			#  Trigger is done by determining action's coordinates inside parent widget and doing mouse down + mouse up there.
+			#  Therefore, the parent object in script must be a visible widget containing that action.
+			#  For example, a menu must be opened first, before actions inside the menu can be triggered.
+			#  \nIMPORTANT: In future this method may be changed to call trigger slot of QAction instead of using mouse,
+			#  or deprecated and replace by a differently named method better describing that this uses mouse.
+
 			def trigger( refresh = false )
 
 				begin
