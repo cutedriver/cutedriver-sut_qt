@@ -64,8 +64,8 @@ module MobyBehaviour
 			# refresh
 			#  Boolean
 			#   description: Determine is refresh done after trigger command
-			#   example: True
-			#   default: False
+			#   example: true
+			#   default: false
 			#
 			# == returns
 			# NilClass
@@ -108,8 +108,8 @@ module MobyBehaviour
 			# refresh
 			#  Boolean
 			#   description: Determine is refresh done after trigger command
-			#   example: True
-			#   default: False
+			#   example: true
+			#   default: false
 			#
 			# == returns
 			# NilClass
