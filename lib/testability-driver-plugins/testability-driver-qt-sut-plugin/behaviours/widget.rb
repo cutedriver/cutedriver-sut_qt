@@ -171,9 +171,9 @@ module MobyBehaviour
                  (center_y.to_i < y_absolute) or
                  (center_y.to_i > y_absolute + height)
                 )
-                puts "web element scroll"
+                #puts "web element scroll"
                 self.scroll(0,0,1) # enable tap centralization
-                puts "web element force refresh in tap"
+                #puts "web element force refresh in tap"
                 self.force_refresh({:id => get_application_id})
                 self.tap(tap_params, interval, button)
                 return
