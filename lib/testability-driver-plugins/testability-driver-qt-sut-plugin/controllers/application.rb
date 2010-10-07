@@ -76,11 +76,14 @@ module MobyController
 		elsif @_command == :State        	
 		  params = {}
 		  params.merge!(get_flags) if get_flags
+		  app_details = {:service => 'uiState', :name => get_application, :id => @_application_uid }
+		  app_details[:applicationUid] = get_refresh_args[:applicationUid] if get_refresh_args.include?(:applicationUid)
+
 		  if MobyUtil::Parameter[ @_sut.id ][ :filter_type,'none' ] == 'none'	  
-			command_xml = make_message( {:service => 'uiState', :name => get_application, :id => @_application_uid },'UiState', params)
+			command_xml = make_message( app_details,'UiState', params)
 		  else			
 			params[:filtered] = 'true' if MobyUtil::Parameter[ @_sut.id ][ :filter_type,'none' ] == 'dynamic'	  
-			command_xml = make_parametrized_message({:service => 'uiState',:name => get_application, :id => @_application_uid },'UiState', params, make_filters )
+			command_xml = make_parametrized_message(app_details, 'UiState', params, make_filters )
 		  end
 		  return_response_crc = true
 		  
@@ -91,8 +94,7 @@ module MobyController
 		  command_xml = make_message({:service => 'listCrashedApps', :name => get_application, :id => @_application_uid }, 'listCrashedApps', nil)
 
 		elsif @_command == :Shell                
-		  command_xml = make_message( {:service => 'shellCommand', :name => @_application_name },'shellCommand', @_flags, nil)
-
+		  command_xml = make_message( {:service => 'shellCommand'},'shellCommand', @_flags, @_application_name)
 		elsif @_command == :KillAll
 		  command_xml = make_message( {:service =>'kill'},'Kill', nil)
 
