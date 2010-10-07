@@ -35,6 +35,18 @@ module MobyController
 
 			end
 
+      def received_bytes
+
+				@sut_adapter.socket_received_bytes
+
+			end
+
+      def sent_bytes
+
+				@sut_adapter.socket_sent_bytes
+
+			end
+
 			# enable hooking for performance measurement & debug logging
 			MobyUtil::Hooking.instance.hook_methods( self ) if defined?( MobyUtil::Hooking )
 
