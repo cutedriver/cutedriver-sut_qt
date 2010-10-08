@@ -125,7 +125,7 @@ module MobyBehaviour
 	  # 
       # == arguments
 	  # &block
-	  #  Code block
+	  #  Proc
 	  #   description: code block containing the operations to perform.
 	  #   example: @app.multi_touch{
 	  #                @app.ScribbleArea.tap_object(400,50)
