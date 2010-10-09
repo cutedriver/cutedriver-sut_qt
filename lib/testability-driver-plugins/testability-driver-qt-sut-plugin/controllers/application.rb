@@ -35,15 +35,40 @@ module MobyController
 	    # == returns
 	    # == raises
 	    # ArgumentError: raised if unsupported command type   
-
 	    def execute()
-
-		    #message = nil
 
 		    return_response_crc = false
 
-        # run
-		    if @_command == :Run
+        # application ui state
+		    if @_command == :State
+
+		      app_details = { :service => 'uiState', :name => @_application_name, :id => @_application_uid }
+
+		      app_details[ :applicationUid ] = @_refresh_args[ :applicationUid ] if @_refresh_args.include?( :applicationUid )
+
+          case MobyUtil::Parameter[ @_sut.id ][ :filter_type, 'none' ]
+
+            when 'none' 
+
+    			    command_xml = make_message( app_details, 'UiState', @_flags || {} )
+
+            when 'dynamic'
+
+              params = @_flags || {}
+
+              params[ :filtered ] = 'true'
+    			    command_xml = make_parametrized_message( app_details, 'UiState', params, make_filters )
+
+            else
+
+    			    command_xml = make_parametrized_message( app_details, 'UiState', @_flags || {}, make_filters )
+
+          end
+
+		      return_response_crc = true
+
+        # launch application
+		    elsif @_command == :Run
 
           arguments = MobyUtil::Parameter[ @_sut.id ][ :application_start_arguments, "" ]
 
@@ -117,34 +142,6 @@ module MobyController
 		    elsif @_command == :List
 
 		      Kernel::raise ArgumentError.new( "Unknown command! " + @_command.to_s )
-
-        # application ui state
-		    elsif @_command == :State
-
-		      app_details = { :service => 'uiState', :name => @_application_name, :id => @_application_uid }
-
-		      app_details[ :applicationUid ] = @_refresh_args[ :applicationUid ] if @_refresh_args.include?( :applicationUid )
-
-          case MobyUtil::Parameter[ @_sut.id ][ :filter_type, 'none' ]
-
-            when 'none' 
-
-    			    command_xml = make_message( app_details, 'UiState', @_flags || {} )
-
-            when 'dynamic'
-
-              params = @_flags || {}
-
-              params[ :filtered ] = 'true'
-    			    command_xml = make_parametrized_message( app_details, 'UiState', params, make_filters )
-
-            else
-
-    			    command_xml = make_parametrized_message( app_details, 'UiState', @_flags || {}, make_filters )
-
-          end
-
-		      return_response_crc = true
 
         # list applications		      
 		    elsif @_command == :ListApps
@@ -354,6 +351,8 @@ module MobyController
 
 	    def make_filters
 
+=begin
+
 		    params = Hash.new
 
         # get sut id parameter only once, store as local variable
@@ -387,13 +386,43 @@ module MobyController
 
 		    params		
 
+=end
+
+		    params = {}
+
+        # get sut paramteres only once, store to local variable
+        sut_parameters = MobyUtil::Parameter[ @_sut.id ]
+
+		    params[ 'filterProperties' ] = $last_parameter if sut_parameters[ :filter_properties, nil ]
+		    params[ 'pluginBlackList'  ] = $last_parameter if sut_parameters[ :plugin_blacklist,  nil ]
+		    params[ 'pluginWhiteList'  ] = $last_parameter if sut_parameters[ :plugin_whitelist,  nil ]
+
+        case sut_parameters[ :filter_type, 'none' ]
+        
+          when 'dynamic'
+
+            # updates the filter with the current backtrace file list
+		        MobyUtil::DynamicAttributeFilter.instance.update_filter( caller( 0 ) ) 
+
+		        white_list = MobyUtil::DynamicAttributeFilter.instance.filter_string
+		        params['attributeWhiteList'] = white_list if white_list
+          
+          when 'static'
+
+		        params['attributeBlackList'] = $last_parameter if sut_parameters[ :attribute_blacklist, nil ]
+		        params['attributeWhiteList'] = $last_parameter if sut_parameters[ :attribute_whitelist, nil ]
+          
+        end
+
+		    params		
+
 	    end
 
 	    # enable hooking for performance measurement & debug logging
 	    MobyUtil::Hooking.instance.hook_methods( self ) if defined?( MobyUtil::Hooking )
 
-	  end #module Application    
+	  end # Application    
 
-  end #module QT  
+  end # QT  
 
-end #module MobyController
+end # MobyController
