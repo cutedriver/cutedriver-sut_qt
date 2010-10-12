@@ -64,6 +64,7 @@ module MobyBehaviour
 	  #   description: Array of objects to tap.
 	  #   example: @app.tap_objects([@app.Square( :name => 'topLeft' ), @app.Square( :name => 'topRight' )])
 	  #
+	  # == exceptions
       # ArgumentError
       #  description: objects is not an array
       #    
@@ -85,6 +86,7 @@ module MobyBehaviour
 	  #   description: Array of objects to tap down.
 	  #   example: @app.tap_down_objects([@app.Square( :name => 'topLeft' ), @app.Square( :name => 'topRight' )])
 	  #
+	  # == exceptions
       # ArgumentError
       #  description: objects is not an array
       #    
@@ -107,6 +109,7 @@ module MobyBehaviour
 	  #   description: Array of objects to tap up.
 	  #   example: @app.tap_up_objects([@app.Square( :name => 'topLeft' ), @app.Square( :name => 'topRight' )])
 	  #
+	  # == exceptions
       # ArgumentError
       #  description: objects is not an array
       #    
@@ -125,7 +128,7 @@ module MobyBehaviour
 	  # 
       # == arguments
 	  # &block
-	  #  Code block
+	  #  Proc
 	  #   description: code block containing the operations to perform.
 	  #   example: @app.multi_touch{
 	  #                @app.ScribbleArea.tap_object(400,50)

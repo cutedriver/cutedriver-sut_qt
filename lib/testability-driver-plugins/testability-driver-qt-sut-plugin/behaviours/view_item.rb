@@ -43,6 +43,7 @@ module MobyBehaviour
 		  command.application_id(get_application_id)    
 		  command.object_type(:Standard)                          
 		  command.command_name('Tap')    
+		  command.set_event_type(MobyUtil::Parameter[ @sut.id ][ :event_type, "0" ])
 
 		  mouse_move = @sut.parameter[:in_tap_move_pointer]
 		  mouse_move = 'false' unless mouse_move

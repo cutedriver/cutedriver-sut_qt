@@ -17,190 +17,412 @@
 ## 
 ############################################################################
 
-
-
 module MobyController
 
   module QT
 
-	module Application 
+	  module Application 
 
-	  # Execute the command). 
-	  # Sends the message to the device using the @sut_adapter (see base class)     
-	  # == params         
-	  # == returns
-	  # == raises
-	  # ArgumentError: raised if unsupported command type   
+	    def set_adapter( adapter )
 
-	  def execute()
+    		@sut_adapter = adapter
 
-		message = nil
+	    end           
 
-		return_response_crc = false
+	    # Execute the command). 
+	    # Sends the message to the device using the @sut_adapter (see base class)     
+	    # == params         
+	    # == returns
+	    # == raises
+	    # ArgumentError: raised if unsupported command type   
+	    def execute()
 
-		if @_command == :Run
+		    return_response_crc = false
 
-		  param_arguments = MobyUtil::Parameter[ @_sut.id ][ :application_start_arguments, "" ]
+        # application ui state
+		    if @_command == :State
 
-		  arguments = ""
-		  arguments << param_arguments if param_arguments != ""
+		      app_details = { :service => 'uiState', :name => @_application_name, :id => @_application_uid }
 
-		  if @_arguments
-			arguments << "," if param_arguments != ""
-			arguments << @_arguments
-		  end
-		  params = {'application_path' => get_application(), 'arguments' => arguments, 'environment' => @_environment, 'events_to_listen' => @_events_to_listen, 'signals_to_listen' => @_signals_to_listen, 'start_command' => @_start_command}
-		  command_xml = make_message( 'startApplication','Run', params )
+		      app_details[ :applicationUid ] = @_refresh_args[ :applicationUid ] if @_refresh_args.include?( :applicationUid )
 
-		elsif @_command == :Close
-      flags = {}
-		  flags.merge!(get_flags) if get_flags
-      if (!flags.empty?) 
-        #puts "flags " + flags[:force_kill] .to_s
-        params = {'uid' => @_application_uid.to_s,'kill' => flags[:force_kill] , 'wait_time' => MobyUtil::Parameter[ @_sut.id ][ :application_close_wait ]}
-      else
-        params = {'uid' => @_application_uid.to_s,'kill' => MobyUtil::Parameter[ @_sut.id ][ :application_close_kill ], 'wait_time' => MobyUtil::Parameter[ @_sut.id ][ :application_close_wait ]}
-		  end
-		  command_xml = make_message( 'closeApplication','Close', params, @_application_uid.to_s )
+          case MobyUtil::Parameter[ @_sut.id ][ :filter_type, 'none' ]
 
-		elsif @_command == :CloseQttas
-		  params = {'uid' => '0'}
-		  command_xml = make_message( 'closeApplication','Close', {'uid' => '0'} )
+            when 'none' 
 
-		elsif @_command == :Kill
-		  command_xml = make_message( 'closeApplication','Kill', {'uid' => @_application_uid.to_s})
+    			    command_xml = make_message( app_details, 'UiState', @_flags || {} )
 
-		elsif @_command == :List
-		  Kernel::raise ArgumentError.new("Unknown command! " + @_command.to_s )        
+            when 'dynamic'
 
-		elsif @_command == :State        	
-		  params = {}
-		  params.merge!(get_flags) if get_flags
-		  if MobyUtil::Parameter[ @_sut.id ][ :filter_type,'none' ] == 'none'	  
-			command_xml = make_message( 'uiState','UiState', params, @_application_uid, get_application)
-		  else			
-			params[:filtered] = 'true' if MobyUtil::Parameter[ @_sut.id ][ :filter_type,'none' ] == 'dynamic'	  
-			command_xml = make_parametrized_message( 'uiState','UiState', params, @_application_uid, get_application, make_filters )
-		  end
-		  return_response_crc = true
-		  
-		elsif @_command == :ListApps        
-		  command_xml = make_message( 'listApps','listApps', nil, @_application_uid, get_application )
+              params = @_flags || {}
 
-		elsif @_command == :ListCrashedApps
-		  command_xml = make_message('listCrashedApps', 'listCrashedApps', nil, @_application_uid, get_application)
+              params[ :filtered ] = 'true'
+    			    command_xml = make_parametrized_message( app_details, 'UiState', params, make_filters )
 
-		elsif @_command == :Shell                
-		  command_xml = make_message( 'shellCommand','shellCommand', @_flags, nil, nil, @_application_name )
+            else
 
-		elsif @_command == :KillAll
-		  command_xml = make_message( 'kill','Kill', nil)
+    			    command_xml = make_parametrized_message( app_details, 'UiState', @_flags || {}, make_filters )
 
-		elsif @_command == :TapScreen
-		  command_xml = make_message( 'tapScreen','TapScreen', params)
+          end
 
-		elsif @_command == :BringToForeground
-		  command_xml = make_message('bringToForeground', 'BringToForeground', {'pid' => @_application_uid.to_s})
-		  
-		elsif @_command == :SystemInfo
-		  command_xml = make_message('systemInfo', 'systemInfo', nil)
+		      return_response_crc = true
 
-    elsif @_command == :ProcessMemLoggingStart
-      command_xml = make_message(
-        'resourceLogging',
-        'ProcessMemLoggingStart',
-          {'thread_name' => @_application_name,
-           'file_name' => @_flags[:file_name],
-           'timestamp' => @_flags[:timestamp],
-           'interval_s' => @_flags[:interval_s]})
+        # launch application
+		    elsif @_command == :Run
 
-    elsif @_command == :ProcessMemLoggingStop
-      command_xml = make_message(
-        'resourceLogging',
-        'ProcessMemLoggingStop',
-          {'thread_name' => @_application_name,
-           'return_data' => @_flags[:return_data]})
+          arguments = MobyUtil::Parameter[ @_sut.id ][ :application_start_arguments, "" ]
 
-		else
-		  Kernel::raise ArgumentError.new( "Unknown command! " + @_command.to_s )
+          if @_arguments
+            arguments << "," unless arguments.empty?
+            arguments << @_arguments
+          end
+		      
+		      command_xml = make_message( 
+            { 
+              :service => 'startApplication' 
+            }, 
+            'Run', 
+            { 
+              'application_path' => @_application_name, 
+              'arguments' => arguments, 
+              'environment' => @_environment, 
+              'events_to_listen' => @_events_to_listen, 
+              'signals_to_listen' => @_signals_to_listen, 
+              'start_command' => @_start_command 
+            }
+          )
 
-		end
-		message = Comms::MessageGenerator.generate( command_xml )
-		@sut_adapter.send_service_request( message, return_response_crc ) if message
+        # close
+		    elsif @_command == :Close
 
-	  end
+          sut_id = @_sut.id
 
-	  def set_adapter( adapter )
-		@sut_adapter = adapter
-	  end           
+		      command_xml = make_message( 
+            { 
+              :service => 'closeApplication', 
+              :id => @_application_uid 
+            },
+            'Close', 
+            { 
+              'uid' => @_application_uid, 
+              'kill' => ( @_flags || {} )[ :force_kill ] || MobyUtil::Parameter[ sut_id ][ :application_close_kill ], 
+              'wait_time' => MobyUtil::Parameter[ sut_id ][ :application_close_wait ] 
+            }
+          )
 
-	  private 
+        # close qttas
+		    elsif @_command == :CloseQttas
 
-	  def make_parametrized_message( service_name, command_name, params, application_id = nil, application_name = nil, command_params = {} )
+		      #params = {'uid' => '0'}
 
-		Nokogiri::XML::Builder.new{
-		  TasCommands( :id => application_id, :name => application_name, :service => service_name ) {
-			Target( :TasId => "Application" ) {
-			  Command( ( params || {} ).merge( :name => command_name ) ){
-				command_params.collect{ | name, value | param( :name => name, :value => value ) }					        
-			  }
-			}
-		  }
-		}.to_xml
-	  end
+		      command_xml = make_message( 
+            { 
+              :service => 'closeApplication' 
+            }, 
+            'Close', 
+            { 
+              'uid' => '0' 
+            } 
+          )
 
-	  def make_message( service_name, command_name, params, application_id = nil, application_name = nil, command_value = nil )
+        # kill application
+		    elsif @_command == :Kill
 
-		Nokogiri::XML::Builder.new{
-		  TasCommands( :id => application_id, :name => application_name, :service => service_name ) {
-			Target( :TasId => "Application" ) {
-			  Command( command_value || "", ( params || {} ).merge( :name => command_name ) )
-			}
-		  }
-		}.to_xml
+		      command_xml = make_message( 
+            { 
+              :service => 'closeApplication' 
+            },
+            'Kill', 
+            { 
+              'uid' => @_application_uid 
+            } 
+          )
 
-	  end
+        # list application -- raises exception??
+		    elsif @_command == :List
+
+		      Kernel::raise ArgumentError.new( "Unknown command! " + @_command.to_s )
+
+        # list applications		      
+		    elsif @_command == :ListApps
+
+		      command_xml = make_message(
+            {
+              :service => 'listApps', 
+              :name => @_application_name, 
+              :id => @_application_uid 
+            },
+            'listApps', 
+            nil 
+          )
+
+        # list crashed applications
+		    elsif @_command == :ListCrashedApps
+
+		      command_xml = make_message(
+            {
+              :service => 'listCrashedApps', 
+              :name => @_application_name, 
+              :id => @_application_uid 
+            }, 
+            'listCrashedApps', 
+            nil
+          )
+
+        # shell command
+		    elsif @_command == :Shell
+
+		      command_xml = make_message( 
+            { 
+              :service => 'shellCommand'
+            },
+            'shellCommand', 
+            @_flags, 
+            @_application_name
+          )
+
+        # kill all application started by agent_qt
+		    elsif @_command == :KillAll
+
+		      command_xml = make_message(
+            { 
+              :service =>'kill' 
+            },
+            'Kill', 
+            nil
+          )
+
+        # tap screen
+		    elsif @_command == :TapScreen
+
+		      command_xml = make_message( 
+            { 
+              :service =>'tapScreen'
+            },
+            'TapScreen', 
+            params
+          )
+
+        # bring application to foreground
+		    elsif @_command == :BringToForeground
+
+		      command_xml = make_message( 
+            { 
+              :service => 'bringToForeground'
+            }, 
+            'BringToForeground', 
+            {
+              'pid' => @_application_uid 
+            }
+          )
+		      
+        # system info
+		    elsif @_command == :SystemInfo
+
+		      command_xml = make_message( 
+            {
+              :service => 'systemInfo'
+            }, 
+            'systemInfo', 
+            nil
+          )
+
+        # start process memory logging
+		    elsif @_command == :ProcessMemLoggingStart
+
+		      command_xml = make_message(
+            {
+              :service => 'resourceLogging'
+            },
+			     'ProcessMemLoggingStart',
+            {
+              'thread_name' => @_application_name,
+				      'file_name' => @_flags[ :file_name ],
+              'timestamp' => @_flags[ :timestamp ],
+              'interval_s' => @_flags[ :interval_s ]
+            }
+          )
+
+        # stop process memory logging
+		    elsif @_command == :ProcessMemLoggingStop
+
+		      command_xml = make_message(
+            {
+              :service =>'resourceLogging'
+            },
+            'ProcessMemLoggingStop',
+            { 
+              'thread_name' => @_application_name,
+              'return_data' => @_flags[ :return_data ]
+            }
+          )
+
+        # unknown command
+		    else
+
+		      Kernel::raise ArgumentError.new( "Unknown command! " + @_command.to_s )
+
+		    end
+
+        message = Comms::MessageGenerator.generate( command_xml )
+
+		    @sut_adapter.send_service_request( message, return_response_crc ) if message
+	   
+      end
+
+    private 
+
+	    def make_parametrized_message( service_details, command_name, params, command_params = {} )
+
+=begin
+
+		    Nokogiri::XML::Builder.new{
+		      TasCommands( service_details ) {
+			    Target( :TasId => "Application" ) {
+			      Command( ( params || {} ).merge( :name => command_name ) ){
+  				    command_params.collect{ | name, value | 
+                param( :name => name, :value => value ) 
+              }					        
+			      }
+			    }
+		      }
+		    }.to_xml
+
+=end
+
+        params ||= {}
+        params[ :name ] = command_name
+
+        "<?xml version=\"1.0\"?><TasCommands#{ 
+
+          service_details.collect{ | value | " #{ value.first }=\"#{ value.last }\"" }.to_s
+
+        }><Target TasId=\"Application\"><Command#{ 
+
+          params.collect{ | value | " #{ value.first }=\"#{ value.last }\"" }.to_s 
+
+        }>#{
+
+            command_params.collect{ | name, value | "<param name=\"#{ name }\" value=\"#{ value }\"/>" }.to_s
+
+        }</Command></Target></TasCommands>"
+
+	    end
+
+	    def make_message( service_details, command_name, params, command_value = nil )
+
+=begin
+
+        Nokogiri::XML::Builder.new{
+          TasCommands( service_details ) {
+          Target( :TasId => "Application" ) {
+            Command( command_value || "", ( params || {} ).merge( :name => command_name ) )
+          }
+          }
+        }.to_xml
+
+=end
+
+        params ||= {}
+        params[ :name ] = command_name
+
+        "<?xml version=\"1.0\"?><TasCommands#{ 
+
+          service_details.collect{ | value | " #{ value.first }=\"#{ value.last }\"" }.to_s
+
+        }><Target TasId=\"Application\"><Command#{ 
+
+          params.collect{ | value | " #{ value.first }=\"#{ value.last }\"" }.to_s 
+
+        }>#{ command_value || "" }</Command></Target></TasCommands>"
+
+	    end
 
 
-	  def encode_string(source)
-		source = source.to_s
-		source.gsub!( "&", "&amp;" );
-		source.gsub!( ">", "&gt;" );
-		source.gsub!( "<", "&lt;" );
-		source.gsub!( "\"", "&quot;" );
-		source.gsub!( "\'", "&apos;" );
-		source
-	  end
+	    def encode_string( source )
+		    source = source.to_s
+		    source.gsub!( '&', '&amp;' );
+		    source.gsub!( '>', '&gt;' );
+		    source.gsub!( '<', '&lt;' );
+		    source.gsub!( '"', '&quot;' );
+		    source.gsub!( '\'', '&apos;' );
+		    source
+	    end
 
-	  def make_filters
+	    def make_filters
 
-		params = Hash.new
-		filter_properties = MobyUtil::Parameter[ @_sut.id ][:filter_properties, nil]
-		plugin_blacklist = MobyUtil::Parameter[ @_sut.id ][:plugin_blacklist, nil]
-		plugin_whitelist = MobyUtil::Parameter[ @_sut.id ][:plugin_whitelist, nil]
-		params['filterProperties'] = filter_properties if filter_properties
-		params['pluginBlackList'] = plugin_blacklist if plugin_blacklist
-		params['pluginWhiteList'] = plugin_whitelist if plugin_whitelist
+=begin
 
-		if MobyUtil::Parameter[ @_sut.id ][ :filter_type,'none' ] == 'dynamic'
-		  MobyUtil::DynamicAttributeFilter.instance.update_filter( caller( 0 ) ) # updates the filter with the current backtrace file list
-		  white_list = attribute_filter_string = MobyUtil::DynamicAttributeFilter.instance.filter_string
-		  params['attributeWhiteList'] = white_list if white_list
-		elsif MobyUtil::Parameter[ @_sut.id ][ :filter_type,'none' ] == 'static'
-		  black_list = MobyUtil::Parameter[ @_sut.id ][ :attribute_blacklist,nil ]
-		  white_list = MobyUtil::Parameter[ @_sut.id ][ :attribute_whitelist,nil ]
-		  params['attributeBlackList'] = black_list if black_list
-		  params['attributeWhiteList'] = white_list if white_list
-		end
-		params		
+		    params = Hash.new
 
-	  end
+        # get sut id parameter only once, store as local variable
+        sut_id = @_sut.id
 
-          # enable hooking for performance measurement & debug logging
-          MobyUtil::Hooking.instance.hook_methods( self ) if defined?( MobyUtil::Hooking )
+		    filter_properties = MobyUtil::Parameter[ sut_id ][ :filter_properties, nil ]
+		    plugin_blacklist = MobyUtil::Parameter[ sut_id ][ :plugin_blacklist, nil ]
+		    plugin_whitelist = MobyUtil::Parameter[ sut_id ][ :plugin_whitelist, nil ]
 
-	end #module Application    
+		    params[ 'filterProperties' ] = filter_properties if filter_properties
+		    params[ 'pluginBlackList' ] = plugin_blacklist if plugin_blacklist
+		    params[ 'pluginWhiteList' ] = plugin_whitelist if plugin_whitelist
 
-  end #module QT  
+		    if MobyUtil::Parameter[ sut_id ][ :filter_type,'none' ] == 'dynamic'
 
-end #module MobyController
+		      MobyUtil::DynamicAttributeFilter.instance.update_filter( caller( 0 ) ) # updates the filter with the current backtrace file list
+
+		      white_list = attribute_filter_string = MobyUtil::DynamicAttributeFilter.instance.filter_string
+
+		      params['attributeWhiteList'] = white_list if white_list
+
+		    elsif MobyUtil::Parameter[ sut_id ][ :filter_type,'none' ] == 'static'
+
+		      black_list = MobyUtil::Parameter[ sut_id ][ :attribute_blacklist, nil ]
+		      white_list = MobyUtil::Parameter[ sut_id ][ :attribute_whitelist, nil ]
+
+		      params['attributeBlackList'] = black_list if black_list
+		      params['attributeWhiteList'] = white_list if white_list
+
+		    end
+
+		    params		
+
+=end
+
+		    params = {}
+
+        # get sut paramteres only once, store to local variable
+        sut_parameters = MobyUtil::Parameter[ @_sut.id ]
+
+		    params[ 'filterProperties' ] = $last_parameter if sut_parameters[ :filter_properties, nil ]
+		    params[ 'pluginBlackList'  ] = $last_parameter if sut_parameters[ :plugin_blacklist,  nil ]
+		    params[ 'pluginWhiteList'  ] = $last_parameter if sut_parameters[ :plugin_whitelist,  nil ]
+
+        case sut_parameters[ :filter_type, 'none' ]
+        
+          when 'dynamic'
+
+            # updates the filter with the current backtrace file list
+		        MobyUtil::DynamicAttributeFilter.instance.update_filter( caller( 0 ) ) 
+
+		        white_list = MobyUtil::DynamicAttributeFilter.instance.filter_string
+		        params['attributeWhiteList'] = white_list if white_list
+          
+          when 'static'
+
+		        params['attributeBlackList'] = $last_parameter if sut_parameters[ :attribute_blacklist, nil ]
+		        params['attributeWhiteList'] = $last_parameter if sut_parameters[ :attribute_whitelist, nil ]
+          
+        end
+
+		    params		
+
+	    end
+
+	    # enable hooking for performance measurement & debug logging
+	    MobyUtil::Hooking.instance.hook_methods( self ) if defined?( MobyUtil::Hooking )
+
+	  end # Application    
+
+  end # QT  
+
+end # MobyController

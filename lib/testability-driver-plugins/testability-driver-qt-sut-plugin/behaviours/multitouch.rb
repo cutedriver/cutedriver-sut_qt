@@ -28,7 +28,7 @@ module MobyBehaviour
     # QtMultitouch
     #
     # == requires
-    # *
+    #  sut_qt
     # == input_type
     # touch
     #
@@ -69,6 +69,12 @@ module MobyBehaviour
       #   description: Direction of the pinch zoom either :Horizontal or :Vertical
       #   example: :Horizontal
       #
+	  #
+	  # == returns
+	  # NilClass
+	  #   description: -
+	  #   example: -
+	  #
       # == exceptions
 	  #
       # ArgumentError
@@ -105,6 +111,11 @@ module MobyBehaviour
       #   description: Direction of the pinch zoom either :Horizontal or :Vertical
       #   example: :Horizontal
       #
+	  # == returns
+	  # NilClass
+	  #   description: -
+	  #   example: -
+	  #
       # == exceptions
 	  #
       # ArgumentError
@@ -130,22 +141,35 @@ module MobyBehaviour
 	  # in the pinch gesture are (:in start points and :out end points). 
 	  # The center points can be set using the :x and :y setting. 
 	  # The values are relative to the object and if not set then the center point of the object is used.
-	  # [image="pinch.png"]
+	  # \n
+	  # [img="pinch.png"]Pinch zoom parameters[/img]
 	  #
       # == arguments
 	  # params
 	  #  Hash 
 	  #   description:
-	  #    A Hash table contains all of the parameters required to make the pinch zoom.
-	  #      :type(:in/:out). Type of the pinch. :in means that movement is done away from the center and :out means towards the center.
-	  #      :speed Speed/duration in seconds
-	  #      :distance_1 Distance of the first finger zoom gesture
-	  #      :distance_2 Distance of the second finger zoom gesture
-	  #      :direction Direction of the total zoom operation seen as one line in degrees (0-180) or :Horisontal/:Vertical 
-	  #      :differential The difference from where the zoom starts or ends
-	  #      :x Optional center point for the gesture (both required x and y)
-	  #      :y Optional center point for the gesture (both required x and y)
+	  #    A Hash table contains all of the parameters required to make the pinch zoom. 
+	  #    See [link="#pinch_options_table"]Pinch options table[/link] for valid keys. 
 	  #    example: pinch_zoom({:type => :in, :speed => 2, :distance_1 => 100, :distance_2 => 100, :direction => :Vertical, :differential => 10})
+	  #
+	  # == tables
+	  # pinch_options_table
+	  #  title: Pinch options table
+	  #  |Key|Type|Description|Possible values|Example|Required|
+	  #  |:type|Symbol|Zoom in or out|:in,:out|:type => :in|Yes|
+	  #  |:speed|Integer|Speed of the gesture in seconds|Positive Integer|:speed => 2|Yes|
+	  #  |:distance_1|Integer|Distance of the first finger zoom gesture|Positive integer|:distance_1 => 100|Yes|
+	  #  |:distance_2|Integer|Distance of the second finger zoom gesture|Positive integer|:distance_2 => 100|Yes|
+	  #  |:differential|Integer|The difference from where the zoom starts or ends|Positive integer|:differential => 10|Yes|
+	  #  |:x|Integer|X coordinate of the center point for the pinch (relative to the object). Optional defaults to center point but if set y must also be set.|Positive Integer| :x => 120|No|
+	  #  |:y|Integer|Y coordinate of the center point for the pinch (relative to the object). Optional defaults to center point but if set x must also be set.|Positive Integer|:y => 200|No|
+	  #
+	  #
+	  # == returns
+	  # NilClass
+	  #   description: -
+	  #   example: -
+	  #
 	  #
 	  # == exceptions
 	  #
@@ -223,6 +247,12 @@ module MobyBehaviour
 	  #                and that will be the given point. If not given the point will be the center of the object.
 	  #   example: {:x => 50, :y => 100}
 	  #
+	  # == returns
+	  # NilClass
+	  #   description: -
+	  #   example: -
+	  #
+	  #
 	  # == exceptions
 	  #
       # ArgumentError
@@ -276,6 +306,11 @@ module MobyBehaviour
 	  #                the given point. If not given the point will be the center of the object.
 	  #   example: {:x => 50, :y => 100}
 	  #
+	  # == returns
+	  # NilClass
+	  #   description: -
+	  #   example: -
+	  #
 	  # == exceptions
 	  #
       # ArgumentError
@@ -294,8 +329,9 @@ module MobyBehaviour
 
 	  # == description
 	  # Causes a rotate motion on the screen using two fingers. Similar gesture to pinch zooming except the angle changes.
-	  #
-	  #[image="pinch.png"]
+	  # \n
+	  # \n
+	  # [img="rotate.png"]Rotation parameters[/img]
 	  # The image shows how the different parameters will be used to make the rotation gestures in both 
 	  # one point and two point rotations. In one point rotation the other end remains stationary while 
 	  # the other moves around it based on the given radius. In two point rotation the movement is done 
@@ -308,9 +344,28 @@ module MobyBehaviour
       # == arguments
 	  # params
 	  #  Hash
-	  #   description: A hash of the parameters that define the rotation type, radius, rotation direction, distance speed and direction. 
-	  #                As an optional paramter the center point can also be defined.
+	  #   description: A hash of the parameters that define the rotation. See [link="#rotate_options_table"]Rotate options table[/link] for valid keys
+	  #
 	  #   example: {:type => :one_point, :radius => 100, :rotate_direction => :Clockwise, :distance => 45, :speed => 2, :direction => 35, :x => 2, y => 35}
+	  #
+	  # == tables
+	  # rotate_options_table
+	  #  title: Rotate options table
+	  #  |Key|Type|Description|Possible values|Example|Required|
+	  #  |:type|Symbol|Rotation type|:one_point,:two_point|:type => :one_point|Yes|
+	  #  |:radius|Integer|Radius of the rotatation in pixels|Any positive Integer|:radius => 100|Yes|
+	  #  |:rotation_direction|Symbol|Rotation direction|:Clockwise, :CounterClockwise|:rotate_direction => :Clockwise|Yes|
+	  #  |:distance|Integer|Rotation distance in degrees|0-360|:distance => 90|Yes|
+	  #  |:speed|Integer|Speed of the gesture in seconds|Positive Integer|:speed => 2|Yes|
+	  #  |:direction|Integer/Symbol|The start angle of the rotation.|0-360 or :Horizontal, :Vertical|:direction => 35|Yes|
+	  #  |:x|Integer|X coordinate of the center point for the pinch (relative to the object). Optional defaults to center point but if set y must also be set.|Positive Integer|:x => 50|No|
+	  #  |:y|Integer|Y coordinate of the center point for the pinch (relative to the object). Optional defaults to center point but if set x must also be set.|Positive Integer|:y => 120|No|
+	  #	  
+	  #
+	  # == returns
+	  # NilClass
+	  #   description: -
+	  #   example: -
 	  #
 	  # == exceptions
 	  #
