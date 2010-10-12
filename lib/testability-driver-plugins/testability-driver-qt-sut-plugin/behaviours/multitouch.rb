@@ -22,7 +22,7 @@ module MobyBehaviour
   module QT
 
     # == description
-    # This module contians the behaviours for multitouch operations. 
+    # Behaviours for multitouch operations. 
     #
     # == behaviour
     # QtMultitouch
@@ -69,6 +69,10 @@ module MobyBehaviour
       #   description: Direction of the pinch zoom either :Horizontal or :Vertical
       #   example: :Horizontal
       #
+      # differential
+      #  Integer
+      #   description: The difference from where the zoom starts or ends (how far apart are the fingers when starting the zoom)
+      #   example: 10
 	  #
 	  # == returns
 	  # NilClass
@@ -83,8 +87,8 @@ module MobyBehaviour
 	  # == info
       # See method pinch_zoom
 	  #
-	  def pinch_zoom_in(speed, distance, direction)
-		pinch_zoom({:type => :in, :speed => speed, :distance_1 => distance, :distance_2 => distance, :direction => direction, :differential => 10})
+	  def pinch_zoom_in(speed, distance, direction, differential = 10)
+		pinch_zoom({:type => :in, :speed => speed, :distance_1 => distance, :distance_2 => distance, :direction => direction, :differential => differential})
 	  end
 
       # == description
@@ -110,6 +114,11 @@ module MobyBehaviour
 	  #  Symbol
       #   description: Direction of the pinch zoom either :Horizontal or :Vertical
       #   example: :Horizontal
+	  #
+      # differential
+      #  Integer
+      #   description: The difference from where the zoom starts or ends (how far apart are the fingers when starting the zoom)
+      #   example: 10
       #
 	  # == returns
 	  # NilClass
@@ -124,8 +133,8 @@ module MobyBehaviour
       # == info
       # See method pinch_zoom
 	  #
-	  def pinch_zoom_out(speed, distance, direction)
-		pinch_zoom({:type => :out, :speed => speed, :distance_1 => distance, :distance_2 => distance, :direction => direction, :differential => 10})
+	  def pinch_zoom_out(speed, distance, direction, differential = 10)
+		pinch_zoom({:type => :out, :speed => speed, :distance_1 => distance, :distance_2 => distance, :direction => direction, :differential => differential})
 	  end
 
 	  # == description
@@ -155,7 +164,7 @@ module MobyBehaviour
 	  # == tables
 	  # pinch_options_table
 	  #  title: Pinch options table
-	  #  |Key|Type|Description|Possible values|Example|Required|
+	  #  |Key|Type|Description|Accepted values|Example|Required|
 	  #  |:type|Symbol|Zoom in or out|:in,:out|:type => :in|Yes|
 	  #  |:speed|Integer|Speed of the gesture in seconds|Positive Integer|:speed => 2|Yes|
 	  #  |:distance_1|Integer|Distance of the first finger zoom gesture|Positive integer|:distance_1 => 100|Yes|
@@ -209,7 +218,7 @@ module MobyBehaviour
 
       # == description
 	  # Causes rotation motion on the object. The rotation will be so that one point is stationary 
-	  # while other moves to create a rotation motion.
+	  # while other moves to create a rotation motion (like a hinge).
 	  #
 	  # == arguments
 	  # radius
@@ -268,7 +277,7 @@ module MobyBehaviour
 	  end
 	  
       # == description
-	  # Causes ratation motion on the object. The rotation will be so that both ends move to create a rotation motion
+	  # Causes ratation motion on the object. The rotation will be so that both ends move to create a rotation motion around a point.
 	  #
 	  # == arguments
 	  # radius
@@ -328,10 +337,11 @@ module MobyBehaviour
 
 
 	  # == description
-	  # Causes a rotate motion on the screen using two fingers. Similar gesture to pinch zooming except the angle changes.
+	  # Causes a rotate motion on the screen using two fingers (e.g. like turning a knob). Similar gesture to pinch zooming except the angle changes.
 	  # \n
 	  # \n
 	  # [img="rotate.png"]Rotation parameters[/img]
+	  # \n
 	  # The image shows how the different parameters will be used to make the rotation gestures in both 
 	  # one point and two point rotations. In one point rotation the other end remains stationary while 
 	  # the other moves around it based on the given radius. In two point rotation the movement is done 
@@ -351,7 +361,7 @@ module MobyBehaviour
 	  # == tables
 	  # rotate_options_table
 	  #  title: Rotate options table
-	  #  |Key|Type|Description|Possible values|Example|Required|
+	  #  |Key|Type|Description|Accepted values|Example|Required|
 	  #  |:type|Symbol|Rotation type|:one_point,:two_point|:type => :one_point|Yes|
 	  #  |:radius|Integer|Radius of the rotatation in pixels|Any positive Integer|:radius => 100|Yes|
 	  #  |:rotation_direction|Symbol|Rotation direction|:Clockwise, :CounterClockwise|:rotate_direction => :Clockwise|Yes|
