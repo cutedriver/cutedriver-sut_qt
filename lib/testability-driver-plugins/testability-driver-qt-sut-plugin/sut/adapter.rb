@@ -29,7 +29,9 @@ module MobyController
 			attr_accessor(
 
 				:socket_read_timeout,
-				:socket_write_timeout
+				:socket_write_timeout,
+        :socket_received_bytes,
+        :socket_sent_bytes
 
 			)
 		
@@ -45,6 +47,8 @@ module MobyController
 
 				@socket = nil
 				@connected = false
+        @socket_received_bytes=0
+        @socket_sent_bytes=0
 
 				@sut_id = sut_id
 
@@ -121,29 +125,53 @@ module MobyController
 			# the response body
 			def send_service_request( message, return_crc = false )
 
-				connect if !@connected
+				connect if !@connected        
 
 				# set request message id
 				message.message_id = ( @counter += 1 )
 
 				# write request message to socket
-				write_socket( message.make_binary_message )
+				write_socket( message.make_binary_message(@counter) )
 
 				# read response to determine was the message handled properly and parse the header
-				# header[ 0 ] = command_flag, header[ 1 ] = body_size, header[ 2 ] = crc, header[ 3 ] = compression_flag
+				# header[ 0 ] = command_flag
+        # header[ 1 ] = body_size
+        # header[ 2 ] = crc
+        # header[ 3 ] = compression_flag
+        # header[ 4 ] = message_id
 				header = read_socket( 12 ).unpack( 'CISCI' )
 
 				# read the message body and compare crc checksum
 				Kernel::raise IOError.new( "CRC do not match. Maybe the message is corrupted!" ) if CRC::Crc16.crc16_ibm( body = read_socket( header[ 1 ] ) , 0xffff ) != header[ 2 ]
 
-				# return qt response - inlfate the message body if it is compressed
-				response = Comms::QTResponse.new( header[ 0 ], ( header[ 3 ] == 2 ? Comms::Inflator.inflate( body ) : body ), header[ 2 ], header[ 4 ] )
+        # validate response message; check that response message id matches the request
+				if header[ 4 ] != @counter
 
-				# validate response message
-				response.validate_message( @counter )
+					MobyUtil::Logger.instance.log "fatal" , "Response to request did not match: \"#{ header[ 4 ].to_s }\"!=\"#{ @counter.to_s }\""
 
-				# other cases return the body (only really needed in ui state and screenshot situations)
-				return_crc ? [ response.msg_body, response.crc ] : response.msg_body
+          # save to file?
+					MobyUtil::Logger.instance.log "fatal" , body
+
+					Kernel::raise RuntimeError.new( "Response to request did not match: \"#{ header[ 4 ].to_s }\"!=\"#{ @counter.to_s }\"" )
+
+				end
+
+        # inflate the message body if compressed
+        if ( header[ 3 ] == 2 )
+
+          body = Zlib::Inflate.inflate( body ) unless ( body = body[ 4..-1 ] ).empty?
+
+        end
+
+        # raise exception if messages error flag is set
+				# Flag statuses:
+				#   0 -> ERROR_MSG
+        #   1 -> VALID_MSG
+        #   2 -> OK_MESSAGE
+			  Kernel::raise RuntimeError.new( body ) if header[ 0 ] == 0
+
+				# return the body ( and crc if required )
+				return_crc ? [ body, header[ 2 ] ] : body
 
 			end
 
@@ -165,12 +193,13 @@ module MobyController
 				}
 
 				Kernel::raise IOError.new( "Socket reading error for %i bytes - No data retrieved" % [ bytes_count ] ) if read_buffer.nil?
-
+        @socket_received_bytes+=read_buffer.size
 				read_buffer
 
 			end
 
 			def write_socket( data )
+        @socket_sent_bytes+=data.size
 
 				@socket.write( data )
 

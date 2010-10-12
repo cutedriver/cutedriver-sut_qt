@@ -29,7 +29,7 @@ module MobyBehaviour
 	  @@_buttons_map = { :NoButton => '0', :Left => '1', :Right => '2', :Middle => '4' }
 	  @@_valid_directions = [ :Up, :Down, :Left, :Right ]
 	  @@_direction_map = { :Up => '0', :Down => '180', :Left => '270', :Right => '90' }
-	  @@_pinch_directions = { :Horizontal => '180', :Vertical => '0'}
+	  @@_pinch_directions = { :Horizontal => '90', :Vertical => '0'}
 	  @@_rotate_direction = [ :Clockwise, :CounterClockwise ]
 
 	  def command_params( command = MobyCommand::WidgetCommand.new )   
