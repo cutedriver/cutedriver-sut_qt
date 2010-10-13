@@ -174,10 +174,13 @@ module MobyBehaviour
 				end			
 			elsif ! node.xpath('.//translation/lengthvariant').empty?
 				# puts ">>> Lengthvar"
+				priority = 1
 				node.xpath('.//translation/lengthvariant').each do |lenghtvar|
 					nodeLengthVar = lenghtvar.xpath('@priority').inner_text()
+					nodeLengthVar = priority.to_s if nodeLengthVar.empty?
 					nodeTranslation = lenghtvar.inner_text()
 					data << [  nodeId, nodeTranslation, nodePlurality, nodeLengthVar ]
+					priority += 1					
 				end
 			else
 				# puts ">>> Translation"
@@ -339,7 +342,7 @@ module MobyBehaviour
               # end
 			  
 			  # NORMAL INSERT TO FIX THE REPLACE PROBLEM!! (replace puts null to the non specified collumns!)
-			  @dbh.execute("UPDATE `" + @options[:table_name] + "` SET `#{language}`='#{translation}', `PLURALITY`='#{plurality}', `LENGTHVAR`='#{lengthvar}' WHERE FNAME='#{fname}' AND LNAME='#{source}';")
+			  @dbh.execute("UPDATE `" + @options[:table_name] + "` SET `#{language}`='#{translation}' WHERE FNAME='#{fname}' AND LNAME='#{source}' AND `PLURALITY`='#{plurality}' AND `LENGTHVAR`='#{lengthvar}';")
 			  if @dbh.changes() == 0
 				@dbh.execute("INSERT INTO `" + @options[:table_name] + "` (FNAME, LNAME, `" + language + "`, `PLURALITY`, `LENGTHVAR`) VALUES ('#{fname}' ,'#{source}','#{translation}', '#{plurality}', '#{lengthvar}');")
 			  end
