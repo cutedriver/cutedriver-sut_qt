@@ -50,23 +50,30 @@ module MobyBehaviour
 
           if device_path!=nil
 
+            ret_list_of_files = []
             list_of_files = list_files_from_sut(:from=>device_path,:file=>file)
             list_of_files.each do |name|
-              Base64.decode64( fixture("file", "delete_file", {:file_name => name}) )
+              if fixture("file", "delete_file", {:file_name => name}) == "OK"
+                ret_list_of_files << name
+              end
             end
-            return list_of_files
+            return ret_list_of_files
 
           else
 
-            Base64.decode64( fixture("file", "delete_file", {:file_name => file}) )
-            return File.basename(file)
+            if fixture("file", "delete_file", {:file_name => file}) == "OK"
+              return File.basename(file)
+            end
+            return 
 
           end
 
         elsif arguments.include?(:dir)
 
-          Base64.decode64( fixture("file", "rm_dir", {:file_name => arguments[:dir]}) )
-          return arguments[:dir]
+          if fixture("file", "rm_dir", {:file_name => arguments[:dir]}) == "OK"
+          	return arguments[:dir]
+          end
+          return
 
         else
 
