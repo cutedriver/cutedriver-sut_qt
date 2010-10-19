@@ -93,7 +93,7 @@ module MobyBehaviour
           next if language == nil or data == ""
 
           # Upload language data to DB for current language file
-          MobyUtil::Localisation.upload_ts_data(e_file, language, data, @options[:table_name])
+          MobyUtil::Localisation.upload_ts_data( language, data, @options[:table_name] )
         end
 
         nil
