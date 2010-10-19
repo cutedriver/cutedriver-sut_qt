@@ -45,38 +45,29 @@ module MobyBehaviour
 
         ## OPTIONS
         @options = {}
-        @options[:table_name] = ""
-        @options[:host] = ""
-        @options[:user] = ""
-        @options[:passwd] = ""
-        @options[:db] = ""
-        @options[:dbstyle] = ""
-        @options[:sqlitedb] = ""
-
-        @options[:dbstyle] = MobyUtil::Parameter[ :localisation_db_type ]
-
-        @options[:table_name] = MobyUtil::Parameter[ :sut_qt ][ :localisation_server_database_tablename ]
-                
-        @options[:host] = MobyUtil::Parameter[ :localisation_server_ip ]
-        @options[:user] = MobyUtil::Parameter[ :localisation_server_username ]
-        @options[:passwd] = MobyUtil::Parameter[ :localisation_server_password ]
-                
-        @options[:sqlitedb] = MobyUtil::Parameter[ :localisation_server_database_name ]
-
+		
+        @options[:dbstyle] = MobyUtil::Parameter[ :localisation_db_type, "" ]
+        @options[:host] = MobyUtil::Parameter[ :localisation_server_ip, "" ]
+        @options[:user] = MobyUtil::Parameter[ :localisation_server_username, "" ]
+        @options[:passwd] = MobyUtil::Parameter[ :localisation_server_password, "" ]
+        @options[:sqlitedb] = MobyUtil::Parameter[ :localisation_server_database_name, "" ]
+		@options[:table_name] = MobyUtil::Parameter[ :sut_qt ][ :localisation_server_database_tablename, "" ]
         @options[:db] = "tdriver_locale"
 
         if(database_file != nil)
           @options[:sqlitedb] = database_file;
         end
                 
-				begin
-					tmp_path = MobyUtil::Parameter[:tmp_folder] + "/locale_db_tmp"
-				rescue MobyUtil::ParameterNotFoundError
-					tmp_path = Dir.tmpdir + "/locale_db_tmp"
-				end
+		begin
+			tmp_path = MobyUtil::Parameter[:tmp_folder] + "/locale_db_tmp"
+		rescue MobyUtil::ParameterNotFoundError
+			tmp_path = Dir.tmpdir + "/locale_db_tmp"
+		end
+		
         if (File.directory? tmp_path)
           FileUtils.rm_rf(tmp_path)
         end
+		
         if (File.directory? tmp_path)
         else
           FileUtils.mkdir(tmp_path)
