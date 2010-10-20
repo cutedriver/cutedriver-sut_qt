@@ -73,6 +73,11 @@
                 <description>Set the event type used to generate events to the device.</description>
                 <example>set_event_type(:Mouse)</example>
             </method>
+		    <method name="find_object">
+                <description>.</description>
+                <example>find_object(objects)</example>
+            </method>	
+
         </methods>
 
     </behaviour>
@@ -627,6 +632,7 @@
 
     </behaviour>
 
+<!--
     <behaviour name="Flash" object_type="sut" sut_type="QT" input_type="*" version="*">
 
         <module name="MobyBehaviour::FlashBehaviour" />
@@ -643,6 +649,7 @@
         </methods>
 
     </behaviour>
+-->
 
     <behaviour name="QtInfoLoggerBehaviour" object_type="sut;application" sut_type="QT" input_type="*" version="*">
 

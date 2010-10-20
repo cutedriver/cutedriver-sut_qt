@@ -309,6 +309,11 @@ module MobyBehaviour
 		MobyUtil::Parameter[ self.id ][ :event_type] = @@_event_type_map[new_type]
 	  end
 
+	  # {:name => '', id => '', applicationUid => ''},[ {:objectName => '' , :className => , :text =>} ,..]
+	  def find_object(app_details = nil, objects = nil)
+		ret = execute_command( MobyCommand::FindObjectCommand.new(self, app_details, objects) )
+	  end
+
 	  # enable hooking for performance measurement & debug logging
 	  MobyUtil::Hooking.instance.hook_methods( self ) if defined?( MobyUtil::Hooking )
 	end 
