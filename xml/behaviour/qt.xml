@@ -61,6 +61,14 @@
                 <description>Stop process memory logging.</description>
                 <example>log_process_mem_stop('testapp', 'true')</example>
             </method>
+            <method name="cpu_load_start">
+                <description>Start generating CPU load.</description>
+                <example>cpu_load_start(25)</example>
+            </method>
+            <method name="cpu_load_stop">
+                <description>Stop generating CPU load.</description>
+                <example>cpu_load_stop</example>
+            </method>
             <method name="group_behaviours">
                 <description>Group behaviours into a single message.</description>
                 <example>group_behaviours(1, app){app.Node.tap;app.Node1.tap}</example>

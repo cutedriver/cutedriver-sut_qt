@@ -263,6 +263,34 @@ module MobyBehaviour
 		log
 	  end
 
+    def cpu_load_start(load)
+      status = nil
+      begin
+        status = execute_command(
+                    MobyCommand::Application.new(
+															 :CpuLoadStart,
+															 nil, nil, nil, nil, nil, nil, nil,
+															 {:cpu_load => load} ) )
+        MobyUtil::Logger.instance.log "behaviour", "PASS;Successfully started generating CPU load.;#{ id };sut;{};cpu_load_start;"
+      rescue Exception => e
+        MobyUtil::Logger.instance.log "behaviour", "FAIL;Failed to start generating CPU load.;#{ id };sut;{};cpu_load_start;"
+        Kernel::raise RuntimeError.new( "Unable to start generating CPU load: Exception: #{ e.message } (#{ e.class })" )
+      end
+      status
+    end
+
+    def cpu_load_stop
+      status = nil
+      begin
+        status = execute_command(MobyCommand::Application.new(:CpuLoadStop) )
+        MobyUtil::Logger.instance.log "behaviour", "PASS;Successfully started generating CPU load.;#{ id };sut;{};cpu_load_start;"
+      rescue Exception => e
+        MobyUtil::Logger.instance.log "behaviour", "FAIL;Failed to start generating CPU load.;#{ id };sut;{};cpu_load_start;"
+        Kernel::raise RuntimeError.new( "Unable to start generating CPU load: Exception: #{ e.message } (#{ e.class })" )
+      end
+      status
+    end
+
 	  def group_behaviours( interval, app, &block )
 		begin		  
 		  raise ArgumentError.new("Application must be defined!") unless app

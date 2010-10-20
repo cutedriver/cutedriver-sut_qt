@@ -257,6 +257,30 @@ module MobyController
             }
           )
 
+        # start CPU load generating
+        elsif @_command == :CpuLoadStart
+
+          command_xml = make_message(
+            {
+              :service => 'resourceLogging'
+            },
+            'CpuLoadStart',
+            {
+              'cpu_load' => @_flags[ :cpu_load ]
+            }
+          )
+
+        # stop CPU load generating
+        elsif @_command == :CpuLoadStop
+
+          command_xml = make_message(
+            {
+              :service => 'resourceLogging'
+            },
+            'CpuLoadStop',
+            nil
+          )
+
         # unknown command
 		    else
 
