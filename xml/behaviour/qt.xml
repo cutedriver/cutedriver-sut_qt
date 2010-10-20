@@ -635,18 +635,18 @@
 
     </behaviour>
 
-    <behaviour name="Flaxi" object_type="sut" sut_type="QT" input_type="*" version="*">
+    <behaviour name="Flash" object_type="sut" sut_type="QT" input_type="*" version="*">
 
-        <module name="MobyBehaviour::FlaxiBehaviour" />
+        <module name="MobyBehaviour::FlashBehaviour" />
 
         <methods>
             <method name="flash">
-                <description>Flashes the device using flaxi</description>
+                <description>Flashes the device using any command line tool</description>
                 <example>flash</example>
             </method>
             <method name="flash_files">
-                <description>Instructs the flaxi to flash defined files</description>
-                <example>flash_files('\tmp\image.bin \tmp\variant.bin')</example>
+                <description>Instructs to flash defined files with a command line tool</description>
+                <example>flash_files('\tmp\image.bin \tmp\image2.bin')</example>
             </method>
         </methods>
 
