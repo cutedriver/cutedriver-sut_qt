@@ -71,7 +71,12 @@ module MobyBehaviour
         list_of_files = receive_files( path, file, tmp_path )
 		
         list_of_files.each do |e_file|
-		  MobyUtil::Localisation.upload_translation_file( e_file, table_name, db_connection, column_names_map)	
+			begin
+				MobyUtil::Localisation.upload_translation_file( e_file, table_name, db_connection, column_names_map)	
+			rescue Exception => e
+				puts "Error while uploading #{e_file}."
+				puts e.message
+			end
         end
 
         nil
