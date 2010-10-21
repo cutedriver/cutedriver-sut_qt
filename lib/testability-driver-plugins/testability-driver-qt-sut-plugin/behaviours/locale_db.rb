@@ -40,23 +40,18 @@ module MobyBehaviour
       include MobyBehaviour::QT::Behaviour
 
       # rebuilds localisation db
+	  # database_file:: String overrides the :localisation_server_database_name tdriver configuration paramater if provided
       # ==raises
       def create_locale_db(path = "/", file = "*.qm", database_file = nil, column_names_map = {} )
 
-        ## OPTIONS
-        @options = {}
+		db_type =  MobyUtil::Parameter[ :localisation_db_type ]
+		host =  MobyUtil::Parameter[ :localisation_server_ip ]
+		database_file = MobyUtil::Parameter[ :localisation_server_database_name ] if database_file.nil?
+		username = MobyUtil::Parameter[ :localisation_server_username ]
+		password = MobyUtil::Parameter[ :localisation_server_password ]
 		
-        @options[:dbstyle] = MobyUtil::Parameter[ :localisation_db_type, "" ]
-        @options[:host] = MobyUtil::Parameter[ :localisation_server_ip, "" ]
-        @options[:user] = MobyUtil::Parameter[ :localisation_server_username, "" ]
-        @options[:passwd] = MobyUtil::Parameter[ :localisation_server_password, "" ]
-        @options[:sqlitedb] = MobyUtil::Parameter[ :localisation_server_database_name, "" ]
-		@options[:table_name] = MobyUtil::Parameter[ :sut_qt ][ :localisation_server_database_tablename, "" ]
-        @options[:db] = "tdriver_locale"
-
-        if(database_file != nil)
-          @options[:sqlitedb] = database_file;
-        end
+		db_connection = MobyUtil::DBConnection.new(  db_type, host, database_file, username, password )
+		table_name = MobyUtil::Parameter[ :sut_qt ][ :localisation_server_database_tablename, "" ]
                 
 		begin
 			tmp_path = MobyUtil::Parameter[:tmp_folder] + "/locale_db_tmp"
@@ -73,18 +68,10 @@ module MobyBehaviour
           FileUtils.mkdir(tmp_path)
         end
 
-        list_of_files = receive_files(path, file, tmp_path)
+        list_of_files = receive_files( path, file, tmp_path )
+		
         list_of_files.each do |e_file|
-          # Check File and convert to TS File if needed
-		  tsFile = MobyUtil::Localisation.convert_to_ts(e_file)
-          next if tsFile == nil
-                    
-          # Collect data for INSERT query from TS File
-          language, data = MobyUtil::Localisation.parse_ts_file(tsFile, column_names_map)
-          next if language == nil or data == ""
-
-          # Upload language data to DB for current language file
-          MobyUtil::Localisation.upload_ts_data( language, data, @options[:table_name] )
+		  MobyUtil::Localisation.upload_translation_file( e_file, table_name, db_connection, column_names_map)	
         end
 
         nil
@@ -98,8 +85,6 @@ module MobyBehaviour
         list_of_files = fixture("file", "list_files",
           {:file_name => file,
             :file_path => device_path}).split(';')
-
-
         new_list_of_files = Array.new
         list_of_files.each do |name|
           new_list_of_files.push( tmp_path + "/" + File.basename(name) )
