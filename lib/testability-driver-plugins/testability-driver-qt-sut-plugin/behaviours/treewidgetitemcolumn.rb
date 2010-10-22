@@ -46,6 +46,8 @@ module MobyBehaviour
 		  command.command_name('CheckState')    
 		  params = {:state => new_state, :column => self.attribute('column'), :item => self.attribute('parentItem')}      
 
+          command.set_event_type(MobyUtil::Parameter[ @sut.id ][ :event_type, "0" ])
+
 		  command.command_params(params)
 		  @sut.execute_command(command)
 

@@ -49,6 +49,8 @@ module MobyBehaviour
 
 		  params = {'x'=>center_x, 'y' => center_y, 'count' => 1, 'button' => @@_buttons_map[button], 'mouseMove'=>mouse_move, 'useCoordinates' => 'true'}      
 
+          command.set_event_type(MobyUtil::Parameter[ @sut.id ][ :event_type, "0" ])
+
 		  command.command_params(params)
 		  @sut.execute_command(command)
 
