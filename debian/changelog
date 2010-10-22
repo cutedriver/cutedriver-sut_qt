@@ -1,4 +1,4 @@
-libtestability-driver-ruby (0.9.1-5) unstable; urgency=low
+libtestability-driver-ruby-sut-qt (0.9.1-5) unstable; urgency=low
 
   * Fixes: NB#196800 - Bad translation of qtn_msg_view_title_conversations_list logical string for SMS 
   * Fixes tree widget item select
