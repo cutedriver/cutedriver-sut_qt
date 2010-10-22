@@ -21,6 +21,7 @@ module MobyController
 
   module QT
 
+	  module Application 
 	module Application 
 
 	  def set_adapter( adapter )
@@ -70,7 +71,7 @@ module MobyController
 		  # launch application
 		elsif @_command == :Run
 
-          arguments = MobyUtil::Parameter[ @_sut.id ][ :application_start_arguments, "" ]
+          arguments = MobyUtil::Parameter[ @_sut.id ][ :application_start_arguments, "" ].clone 
 
           if @_arguments
             arguments << "," unless arguments.empty?
@@ -257,17 +258,37 @@ module MobyController
 									 }
 									 )
 
-		  # unknown command
+        # start CPU load generating
+        elsif @_command == :CpuLoadStart
+
+          command_xml = make_message(
+            {
+              :service => 'resourceLogging'
+            },
+            'CpuLoadStart',
+            {
+              'cpu_load' => @_flags[ :cpu_load ]
+            }
+          )
+
+        # stop CPU load generating
+        elsif @_command == :CpuLoadStop
+
+          command_xml = make_message(
+            {
+              :service => 'resourceLogging'
+            },
+            'CpuLoadStop',
+            nil
+          )
+
+		# unknown command
 		else
-
 		  Kernel::raise ArgumentError.new( "Unknown command! " + @_command.to_s )
-
 		end
 
         message = Comms::MessageGenerator.generate( command_xml )
-
-		@sut_adapter.send_service_request( message, return_response_crc ) if message
-		
+		@sut_adapter.send_service_request( message, return_response_crc ) if message		
       end
 
 	  private 
