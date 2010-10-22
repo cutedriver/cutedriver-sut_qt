@@ -166,6 +166,10 @@ module MobyBehaviour
           file='*.*'
         end
         transfered_files=Array.new
+
+        #ensure that the base dir exist
+        fixture("file","mk_dir",{:file_name=>"#{arguments[ :to ]}"})
+        
         if arguments.include?( :file )==false
           Kernel::raise ArgumentError.new( "Argument :from not found") unless arguments.include?( :from )
           local_dir.entries.each do | local_file_or_subdir |
