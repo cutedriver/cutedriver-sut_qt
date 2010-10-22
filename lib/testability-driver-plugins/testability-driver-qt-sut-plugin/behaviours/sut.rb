@@ -229,6 +229,42 @@ module MobyBehaviour
 
 	  end
 
+    # == description
+    # Starts process memory logging. Information about the given application's
+    # heap memory usage will be stored in a file. In addition to application,
+    # used log file can be specified as well as the type of timestamp and
+    # interval length (in seconds).
+    #
+    # Note! Currently only supported on Symbian platform.
+    #
+    # == arguments
+    # thread_name
+    #  String
+    #   description: Name of the application process/thread.
+    #   example: 'testapp'
+    #
+    # file_name
+    #  String
+    #   description: Full name (containing path) of the used log file.
+    #   example: 'c:\Data\proc_mem.log'
+    #
+    # timestamp_type
+    #  String
+    #   description: Type of the used timestamp, either "absolute" for
+    #                current system time or "relative" or not specified for
+    #                relative timestamp from 0 in milliseconds.
+    #   example: 'absolute'
+    #
+    # interval_s
+    #  Integer
+    #   description: Logging interval in seconds.
+    #   example: 2
+    #
+    # == returns
+    # String
+    #   description: Response message
+    #   example: 'OK'
+    #
 	  def log_process_mem_start(thread_name, file_name = nil, timestamp_type = nil, interval_s = nil)
 		status = nil
 		begin
@@ -246,7 +282,31 @@ module MobyBehaviour
 		status
 	  end
 
-	  def log_process_mem_stop(thread_name, return_data = nil)
+    # == description
+    # Stops process memory logging. Logging of the given application's heap
+    # memory usage is stopped. Either the full log file name or the log file
+    # contents will be returned.
+    #
+    # Note! Currently only supported on Symbian platform.
+    #
+    # == arguments
+    # thread_name
+    #  String
+    #   description: Name of the application process/thread.
+    #   example: 'testapp'
+    #
+    # return_data
+    #  String
+    #   description: Should the log file data be returned in response message.
+    #                If false, only the log file name will be returned.
+    #   example: 'true'
+    #
+    # == returns
+    # String
+    #   description: Either the full log file name or the log file contents.
+    #   example: 'OK'
+    #
+    def log_process_mem_stop(thread_name, return_data = nil)
 		log = nil
 		begin
 		  log = execute_command(
@@ -262,6 +322,57 @@ module MobyBehaviour
 		end
 		log
 	  end
+
+    # == description
+    # Starts generating CPU load. Tries to generate CPU load as accurately as
+    # it can but depending on other activities on the system it might vary.
+    #
+    # Note! Currently only supported on Symbian platform.
+    #
+    # == arguments
+    # load
+    #  Integer
+    #   description: Requested CPU load in percentage.
+    #   example: 50
+    #
+    # == returns
+	  # NilClass
+	  #   description: -
+	  #   example: -
+    #
+    def cpu_load_start(load)
+      begin
+        status = execute_command(
+                    MobyCommand::Application.new(
+															 :CpuLoadStart,
+															 nil, nil, nil, nil, nil, nil, nil,
+															 {:cpu_load => load} ) )
+        MobyUtil::Logger.instance.log "behaviour", "PASS;Successfully started generating CPU load.;#{ id };sut;{};cpu_load_start;"
+      rescue Exception => e
+        MobyUtil::Logger.instance.log "behaviour", "FAIL;Failed to start generating CPU load.;#{ id };sut;{};cpu_load_start;"
+        Kernel::raise RuntimeError.new( "Unable to start generating CPU load: Exception: #{ e.message } (#{ e.class })" )
+      end
+    end
+
+    # == description
+    # Stops generating CPU load.
+    #
+    # Note! Currently only supported on Symbian platform.
+    #
+    # == returns
+	  # NilClass
+	  #   description: -
+	  #   example: -
+    #
+    def cpu_load_stop
+      begin
+        status = execute_command(MobyCommand::Application.new(:CpuLoadStop) )
+        MobyUtil::Logger.instance.log "behaviour", "PASS;Successfully started generating CPU load.;#{ id };sut;{};cpu_load_start;"
+      rescue Exception => e
+        MobyUtil::Logger.instance.log "behaviour", "FAIL;Failed to start generating CPU load.;#{ id };sut;{};cpu_load_start;"
+        Kernel::raise RuntimeError.new( "Unable to start generating CPU load: Exception: #{ e.message } (#{ e.class })" )
+      end
+    end
 
 	  def group_behaviours( interval, app, &block )
 		begin		  

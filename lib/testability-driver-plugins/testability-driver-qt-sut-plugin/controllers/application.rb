@@ -70,7 +70,7 @@ module MobyController
         # launch application
 		    elsif @_command == :Run
 
-          arguments = MobyUtil::Parameter[ @_sut.id ][ :application_start_arguments, "" ]
+          arguments = MobyUtil::Parameter[ @_sut.id ][ :application_start_arguments, "" ].clone 
 
           if @_arguments
             arguments << "," unless arguments.empty?
@@ -255,6 +255,30 @@ module MobyController
               'thread_name' => @_application_name,
               'return_data' => @_flags[ :return_data ]
             }
+          )
+
+        # start CPU load generating
+        elsif @_command == :CpuLoadStart
+
+          command_xml = make_message(
+            {
+              :service => 'resourceLogging'
+            },
+            'CpuLoadStart',
+            {
+              'cpu_load' => @_flags[ :cpu_load ]
+            }
+          )
+
+        # stop CPU load generating
+        elsif @_command == :CpuLoadStop
+
+          command_xml = make_message(
+            {
+              :service => 'resourceLogging'
+            },
+            'CpuLoadStop',
+            nil
           )
 
         # unknown command
