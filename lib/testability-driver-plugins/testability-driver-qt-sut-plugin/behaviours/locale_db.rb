@@ -42,6 +42,41 @@ module MobyBehaviour
       # rebuilds localisation db
 	  # database_file:: String overrides the :localisation_server_database_name tdriver configuration paramater if provided
       # ==raises
+	  
+	  	# == description
+		# Creates a new localisation able for translation using the tdriver_parameters to locate the Localization DB. 
+		# It uses the temporary folder to store temporary translation files.
+		#
+		# == arguments
+		# path
+		#  String
+		#   description: Path where the translation files to upload to the database are found
+		#   example: "/usr/me/tdriver/localization_files"
+		#   default: "/"
+		#
+		# file
+		#  String
+		#   description: File names of the translation files to be uploaded.
+		#	example:"*.ts"
+		#	default: "*.qm"
+		#
+		# database_file
+		#  String
+		#   description: If this is provided it will overwrite the value set in the parameter ':localisation_server_database_name'
+		#   example: "mysqlitedb.sqlite"
+		#   default: nil
+		#
+		# column_names_map
+		#  Hash
+		#   description: Hash with the language codes from the translation files as keys and the desired column names as values
+		#   example: {"en" => "en_GB"}
+		#   default: {}
+		#
+		# == returns
+		# nil
+		#
+		# == throws
+		# 
       def create_locale_db(path = "/", file = "*.qm", database_file = nil, column_names_map = {} )
 
 		db_type =  MobyUtil::Parameter[ :localisation_db_type ]
