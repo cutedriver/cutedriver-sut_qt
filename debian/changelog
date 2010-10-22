@@ -3,7 +3,7 @@ libtestability-driver-ruby (0.9.1-5) unstable; urgency=low
   * Fixes: NB#196800 - Bad translation of qtn_msg_view_title_conversations_list logical string for SMS 
   * Fixes tree widget item select
 
- -- Testability Driver Team <testabilitydriver@nokia.com>  Fri, 22 Oct 2010 12:30:00 +0300
+ -- Testability Driver Team <testabilitydriver@nokia.com>  Fri, 22 Oct 2010 15:10:00 +0300
  
 libtestability-driver-ruby-sut-qt (0.9.1-4) unstable; urgency=low
 
