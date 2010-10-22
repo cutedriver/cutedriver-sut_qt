@@ -70,7 +70,7 @@ module MobyController
         # launch application
 		    elsif @_command == :Run
 
-          arguments = MobyUtil::Parameter[ @_sut.id ][ :application_start_arguments, "" ]
+          arguments = MobyUtil::Parameter[ @_sut.id ][ :application_start_arguments, "" ].clone 
 
           if @_arguments
             arguments << "," unless arguments.empty?
