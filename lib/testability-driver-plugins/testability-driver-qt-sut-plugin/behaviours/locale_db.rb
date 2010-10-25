@@ -52,25 +52,21 @@ module MobyBehaviour
 		#  String
 		#   description: Path where the translation files to upload to the database are found
 		#   example: "/usr/me/tdriver/localization_files"
-		#   default: "/"
 		#
 		# file
 		#  String
 		#   description: File names of the translation files to be uploaded.
 		#	example:"*.ts"
-		#	default: "*.qm"
 		#
 		# database_file
 		#  String
 		#   description: If this is provided it will overwrite the value set in the parameter ':localisation_server_database_name'
 		#   example: "mysqlitedb.sqlite"
-		#   default: nil
 		#
 		# column_names_map
 		#  Hash
 		#   description: Hash with the language codes from the translation files as keys and the desired column names as values
 		#   example: {"en" => "en_GB"}
-		#   default: {}
 		#
 		# == returns
 		# nil
@@ -119,8 +115,10 @@ module MobyBehaviour
 
 	  
 	  private 
-	  	  
-      #receives files from SUT
+	  
+	  # == description
+      # Receives files from SUT
+	  #
       def receive_files(device_path, file, tmp_path)
         list_of_files = fixture("file", "list_files",
           {:file_name => file,
