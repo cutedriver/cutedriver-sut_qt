@@ -52,7 +52,7 @@ module MobyBehaviour
 			# Hover is done by determining action's coordinates inside parent widget and moving mouse cursor there.
 			# Therefore, the parent object in script must be a visible widget containing that action.
 			# For example, a menu must be opened first, before actions inside the menu can be hovered.\n
-      # \n
+                        # \n
 			# [b]NOTE:[/b] Moving mouse cursor over action's position may not do anything,
 			# unless test application window is topmost, or at least not obscured by other windows.
 			# This can be a problem especially when testing desktop applications on Windows 7.\n
