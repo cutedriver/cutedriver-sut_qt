@@ -40,8 +40,11 @@ module MobyBehaviour
 			# NilClass
 			#   description: -
 			#   example: -
+			#
+			# == exceptions
+			# Exception
+			#   description: No special exceptions, may throw any exception
 			def type_text( text )
-
 				ret = nil
 
 				begin

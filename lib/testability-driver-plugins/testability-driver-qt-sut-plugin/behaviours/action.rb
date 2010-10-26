@@ -71,8 +71,11 @@ module MobyBehaviour
 			# NilClass
 			#   description: -
 			#   example: -
+			#
+			# == exceptions
+			# Exception
+			#   description: No special exceptions, may throw any exception
 			def hover( refresh = false )
-
 				begin
 
 					command = command_params #in qt_behaviour

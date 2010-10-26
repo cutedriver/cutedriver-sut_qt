@@ -38,11 +38,19 @@ module MobyBehaviour
 
 	  end
 
-	  # Returns list of applications running on SUT known to qttasserver
-	  # ==usage
-	  # apps = sut.list_apps() #returns the xml containing applications and their names and process ids
-	  # ==return
-	  # String:: Xml string containing all applications and their names and process ids
+          # == description
+          # Returns XML list of applications running on SUT known to qttasserver
+          # \n
+          # == arguments
+          #
+          # == returns
+          # String
+          #   description: tasMessage XML
+          #   example: <tasMessage dateTime="2010.10.26 17:01:53.930" version="0.9.1" ><tasInfo id="1" name="Qt4.7.0" type="qt" ><object id="" name="QApplications" type="applications" ></object></tasInfo></tasMessage>
+          #
+          # == exceptions
+          # RuntimeError
+          #   description: if getting applications list throws any exception it's converted to RuntimeError with descriptive message
 	  def list_apps
 
 		apps = nil
