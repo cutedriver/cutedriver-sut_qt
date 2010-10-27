@@ -21,6 +21,27 @@ module MobyBehaviour
 
   module QT
 
+    # == description
+    # Base behaviour 
+    #
+    # == behaviour
+    # QtBehaviour
+    #
+    # == requires
+    #  sut_qt
+    #
+    # == sut_type
+    # qt
+    #
+    # == input_type
+    # All
+	#
+    # == sut_version
+    # *
+    #
+    # == objects
+    # sut;application
+    #
 	module Behaviour
 
 	  include MobyBehaviour::Behaviour
