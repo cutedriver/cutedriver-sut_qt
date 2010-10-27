@@ -150,7 +150,7 @@ module MobyBehaviour
       # The center points can be set using the :x and :y setting. 
       # The values are relative to the object and if not set then the center point of the object is used.
       # \n
-      # [img="pinch.png"]Pinch zoom parameters[/img]
+      # [img="images/pinch.png"]Pinch zoom parameters[/img]
       #
       # == arguments
       # params
@@ -333,7 +333,7 @@ module MobyBehaviour
       # Causes a rotate motion on the screen using two fingers (e.g. like turning a knob). Similar gesture to pinch zooming except the angle changes.
       # \n
       # \n
-      # [img="rotate.png"]Rotation parameters[/img]
+      # [img="images/rotate.png"]Rotation parameters[/img]
       # \n
       # The image shows how the different parameters will be used to make the rotation gestures in both 
       # one point and two point rotations. In one point rotation the other end remains stationary while 
