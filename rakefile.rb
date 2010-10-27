@@ -93,9 +93,9 @@ def run_tdriver_devtools( params, tests )
   unless tests.nil?
     ARGV << "-t"; ARGV << tests;
   end
-  
+
   params.to_s.split(" ").each{ | argument | ARGV << argument }
-    
+
   begin
     require File.expand_path( File.join( File.dirname( __FILE__ ), '../driver/lib/tdriver-devtools/tdriver-devtools.rb' ) )
   rescue LoadError
@@ -133,7 +133,7 @@ task :doc, :tests do | task, args |
   
   puts "\nGenerating documentation XML file..."
 
-  run_tdriver_devtools( '-g both lib doc/document.xml', args[:tests] )
+  run_tdriver_devtools( '-g both lib doc/document.xml', test_results_folder )
   
 end
 
