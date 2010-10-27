@@ -314,7 +314,7 @@
 
     </behaviour>
 
-    <behaviour name="QtFileTransfer" object_type="sut;*" sut_type="QT" input_type="*" version="*">
+    <behaviour name="QtFileTransfer" object_type="sut" sut_type="QT" input_type="*" version="*">
 
         <module name="MobyBehaviour::QT::FileTransfer" />
 
