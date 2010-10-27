@@ -701,7 +701,7 @@
     </behaviour>
 	
 	
-	<behaviour>
+	<behaviour name="QtLocalisationDB" object_type="sut" sut_type="QT" input_type="*" version="*">
 		
 		<module name="MobyBehaviour::QT::LocalisationDB" />
 		
