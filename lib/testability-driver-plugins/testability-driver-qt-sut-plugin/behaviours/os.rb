@@ -72,6 +72,11 @@ module MobyBehaviour
 			# == params
 			# == returns  
 			# == raises
+
+      # == deprecated
+      # 0.x.x
+      # == description
+			# This method is now deprecated as recent version of Agent Qt server never loads PlatformService      
 			def press_enter(interval = nil)
 				begin   				  
 				  if interval
