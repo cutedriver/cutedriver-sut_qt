@@ -21,6 +21,27 @@ module MobyBehaviour
 
   module QT
 
+    # == description
+    # Synchronization specific behaviours
+    #
+    # == behaviour
+    # QtSynchronization
+    #
+    # == requires
+    # testability-driver-qt-sut-plugin
+    #
+    # == input_type
+    # touch
+    #
+    # == sut_type
+    # QT
+    #
+    # == sut_version
+    # *
+    #
+    # == objects
+    # *
+    #
     module Synchronization
   
       include MobyBehaviour::QT::Behaviour

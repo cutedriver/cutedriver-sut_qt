@@ -28,7 +28,7 @@ module MobyBehaviour
 		# QtAction
 		#
 		# == requires
-		# *
+		# testability-driver-qt-sut-plugin
 		#
 		# == input_type
 		# touch

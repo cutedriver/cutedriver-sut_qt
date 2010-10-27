@@ -21,6 +21,27 @@ module MobyBehaviour
 
 	module QT
 
+    # == description
+    # OS specific behaviours
+    #
+    # == behaviour
+    # QtOs
+    #
+    # == requires
+    # testability-driver-qt-sut-plugin
+    #
+    # == input_type
+    # *
+    #
+    # == sut_type
+    # QT
+    #
+    # == sut_version
+    # *
+    #
+    # == objects
+    # sut
+    #
 		module Os
 
 			include MobyBehaviour::QT::Behaviour
@@ -31,23 +52,22 @@ module MobyBehaviour
 			# == returns  
 			# == raises
 			# def open_file(path, dialog_name, button)
-				# begin
-					# command = command_params #in qt_behaviour           
-					# command.command_name('OpenFile')
-					# command.command_params('dialogName' => dialog_name, 'filePath' => path, 'dialogButton' => button)
-					# command.service('platformOperation')
-					##open file is done without ui state update so wait for the dialog to open
-					# sleep 0.2
-					# @sut.execute_command(command)
-					# self.force_refresh
-				# rescue Exception => e
-					# MobyUtil::Logger.instance.log "behaviour" , "FAIL;Failed open_file with path \"#{path}\", dialog_name \"#{dialog_name}\", button \"#{button.to_s}\".;#{identity};open_file;"
-					# Kernel::raise e
-				# end
-				# MobyUtil::Logger.instance.log "behaviour" , "PASS;Operation file executed successfully with path \"#{path}\", dialog_name \"#{dialog_name}\", button \"#{button.to_s}\".;#{identity};open_file;"
-				# nil
-			# end
-			
+      # begin
+      # command = command_params #in qt_behaviour           
+      # command.command_name('OpenFile')
+      # command.command_params('dialogName' => dialog_name, 'filePath' => path, 'dialogButton' => button)
+      # command.service('platformOperation')
+      ##open file is done without ui state update so wait for the dialog to open
+      # sleep 0.2
+      # @sut.execute_command(command)
+      # self.force_refresh
+      # rescue Exception => e
+      # MobyUtil::Logger.instance.log "behaviour" , "FAIL;Failed open_file with path \"#{path}\", dialog_name \"#{dialog_name}\", button \"#{button.to_s}\".;#{identity};open_file;"
+      # Kernel::raise e
+      # end
+      # MobyUtil::Logger.instance.log "behaviour" , "PASS;Operation file executed successfully with path \"#{path}\", dialog_name \"#{dialog_name}\", button \"#{button.to_s}\".;#{identity};open_file;"
+      # nil
+      # end			
 			# Press Enter on the keyboard. Useful to accept crash warnings on windows
 			# == params
 			# == returns  
@@ -64,7 +84,8 @@ module MobyBehaviour
 					Kernel::raise e
 				end
 					MobyUtil::Logger.instance.log "behaviour" , "PASS;Successfuly sent an Enter keystroke request to the qttas server;press_enter;"
-				nil			end
+				nil
+			end
 
 			# enable hooking for performance measurement & debug logging
 			MobyUtil::Hooking.instance.hook_methods( self ) if defined?( MobyUtil::Hooking )

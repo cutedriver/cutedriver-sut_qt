@@ -21,6 +21,27 @@ module MobyBehaviour
 
 	module QT
 
+    # == description
+    # Fixture specific behaviours
+    #
+    # == behaviour
+    # QtFixture
+    #
+    # == requires
+    # testability-driver-qt-sut-plugin
+    #
+    # == input_type
+    # *
+    #
+    # == sut_type
+    # qt
+    #
+    # == sut_version
+    # *
+    #
+    # == objects
+    # sut;*
+    #
 		module Fixture
 
 			include MobyBehaviour::QT::Behaviour
