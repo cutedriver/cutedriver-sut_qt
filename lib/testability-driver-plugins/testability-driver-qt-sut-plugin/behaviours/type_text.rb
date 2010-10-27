@@ -23,6 +23,27 @@ module MobyBehaviour
 
 	module QT
 
+    # == description
+    # TypeText specific behaviours
+    #
+    # == behaviour
+    # QtTypeText
+    #
+    # == requires
+    # testability-driver-qt-sut-plugin
+    #
+    # == input_type
+    # *
+    #
+    # == sut_type
+    # QT
+    #
+    # == sut_version
+    # *
+    #
+    # == objects
+    # *
+    #
 		module TypeText
 
 			include MobyBehaviour::QT::Behaviour

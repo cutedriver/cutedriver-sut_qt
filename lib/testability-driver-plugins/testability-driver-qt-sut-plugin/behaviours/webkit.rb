@@ -17,13 +17,31 @@
 ## 
 ############################################################################
 
-
-
-# TODO: document 
 module MobyBehaviour
 
 	module QT
 
+    # == description
+    # Webkit specific behaviours
+    #
+    # == behaviour
+    # QtWebkit
+    #
+    # == requires
+    # testability-driver-qt-sut-plugin
+    #
+    # == input_type
+    # *
+    #
+    # == sut_type
+    # QT;S60QT
+    #
+    # == sut_version
+    # *
+    #
+    # == objects
+    # *
+    #
 		module Webkit
 
 			include MobyBehaviour::QT::Behaviour

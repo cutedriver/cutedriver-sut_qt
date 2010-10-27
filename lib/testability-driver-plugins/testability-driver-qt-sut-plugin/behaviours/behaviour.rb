@@ -35,100 +35,106 @@ module MobyBehaviour
     #
     # == input_type
     # All
-	#
+    #
     # == sut_version
     # *
     #
     # == objects
     # sut;application
     #
-	module Behaviour
+    module Behaviour
 
-	  include MobyBehaviour::Behaviour
+      include MobyBehaviour::Behaviour
 
-	  @@_valid_buttons = [ :NoButton, :Left, :Right, :Middle ]
-	  @@_buttons_map = { :NoButton => '0', :Left => '1', :Right => '2', :Middle => '4' }
-	  @@_valid_directions = [ :Up, :Down, :Left, :Right ]
-	  @@_direction_map = { :Up => '0', :Down => '180', :Left => '270', :Right => '90' }
-	  @@_pinch_directions = { :Horizontal => '90', :Vertical => '0'}
-	  @@_rotate_direction = [ :Clockwise, :CounterClockwise ]
+      @@_valid_buttons = [ :NoButton, :Left, :Right, :Middle ]
+      @@_buttons_map = { :NoButton => '0', :Left => '1', :Right => '2', :Middle => '4' }
+      @@_valid_directions = [ :Up, :Down, :Left, :Right ]
+      @@_direction_map = { :Up => '0', :Down => '180', :Left => '270', :Right => '90' }
+      @@_pinch_directions = { :Horizontal => '90', :Vertical => '0'}
+      @@_rotate_direction = [ :Clockwise, :CounterClockwise ]
 
-	  def command_params( command = MobyCommand::WidgetCommand.new )   
-		
-		if  self.attribute( 'objectType' ) == 'Graphics' and
-            self.attribute( 'visibleOnScreen' ) == 'false' and
-            self.creation_attributes[:visibleOnScreen] != 'false'
+      # == nodoc
+      # should this method be private?
+      def command_params( command = MobyCommand::WidgetCommand.new )   
+
+        if self.attribute( 'objectType' ) == 'Graphics' and self.attribute( 'visibleOnScreen' ) == 'false' and self.creation_attributes[:visibleOnScreen] != 'false'
           begin
             self.creation_attributes.merge!({'visibleOnScreen' => 'true'})
-			self.parent.child(self.creation_attributes)
+            self.parent.child(self.creation_attributes)
           rescue
             Kernel::raise MobyBase::TestObjectNotVisibleError
           end
-		end
+        end
 
-		command.set_event_type(MobyUtil::Parameter[ @sut.id ][ :event_type, "0" ])
+        command.set_event_type(MobyUtil::Parameter[ @sut.id ][ :event_type, "0" ])
 
-		#for components with object visible on screen but not actual widgets or graphicsitems
-		if self.attribute( 'objectType' ) == 'Embedded'
-		  command.application_id( get_application_id )
-		  command.object_id( parent.id )
-		  command.object_type( parent.attribute( 'objectType' ).intern )
-		else
-		  command.application_id( get_application_id )
-		  command.object_id( self.id )
-		  command.object_type( self.attribute( 'objectType' ).intern )
-		end
-		command
-	  end
+        #for components with object visible on screen but not actual widgets or graphicsitems
+        if self.attribute( 'objectType' ) == 'Embedded'
+          command.application_id( get_application_id )
+          command.object_id( parent.id )
+          command.object_type( parent.attribute( 'objectType' ).intern )
+        else
+          command.application_id( get_application_id )
+          command.object_id( self.id )
+          command.object_type( self.attribute( 'objectType' ).intern )
+        end
 
-	  def plugin_command( require_response = false, command = MobyCommand::WidgetCommand.new )
-		command.set_event_type(MobyUtil::Parameter[ @sut.id ][ :event_type, "0" ])
-		command.application_id( get_application_id )
-		command.object_id( self.id )
-		command.object_type( self.attribute('objectType' ).intern)
-		command.transitions_off    
-		command
-	  end
+        command
 
-	  private   
+      end
 
-	  def do_sleep(time)
+      # == nodoc
+      # should this method be private?
+      def plugin_command( require_response = false, command = MobyCommand::WidgetCommand.new )
+        command.set_event_type(MobyUtil::Parameter[ @sut.id ][ :event_type, "0" ])
+        command.application_id( get_application_id )
+        command.object_id( self.id )
+        command.object_type( self.attribute('objectType' ).intern)
+        command.transitions_off    
+        command
+      end
 
-		time = time.to_f
-		time = time * 1.3
-		#for flicks the duration of the gesture is short but animation (scroll etc..) may not
-		#so wait at least one second
-		time = 1 if time < 1	
-		sleep time
+    private   
 
-	  end
+      def do_sleep(time)
 
-	  def center_x
+        time = time.to_f
+        time = time * 1.3
+        #for flicks the duration of the gesture is short but animation (scroll etc..) may not
+        #so wait at least one second
+        time = 1 if time < 1  
+        sleep time
 
-		#x = self.attribute( 'x_absolute' ).to_i
-		#width = self.attribute( 'width' ).to_i
-		#x = x + ( width/2 )
-		#x.to_s
+      end
 
-		( ( self.attribute( 'x_absolute' ).to_i ) + ( self.attribute( 'width' ).to_i / 2 ) ).to_s
+      def center_x
 
-	  end
+        #x = self.attribute( 'x_absolute' ).to_i
+        #width = self.attribute( 'width' ).to_i
+        #x = x + ( width/2 )
+        #x.to_s
 
-	  def center_y
-		#y = self.attribute( 'y_absolute' ).to_i
-		#height = self.attribute( 'height' ).to_i
-		#y = y + ( height/2 )
-		#y.to_s
+        ( ( self.attribute( 'x_absolute' ).to_i ) + ( self.attribute( 'width' ).to_i / 2 ) ).to_s
 
-		( ( self.attribute( 'y_absolute' ).to_i ) + ( self.attribute( 'height' ).to_i / 2 ) ).to_s
+      end
 
-	  end  
+      def center_y
 
-				# enable hooking for performance measurement & debug logging
-				MobyUtil::Hooking.instance.hook_methods( self ) if defined?( MobyUtil::Hooking )
+        #y = self.attribute( 'y_absolute' ).to_i
+        #height = self.attribute( 'height' ).to_i
+        #y = y + ( height/2 )
+        #y.to_s
 
-	end
+        ( ( self.attribute( 'y_absolute' ).to_i ) + ( self.attribute( 'height' ).to_i / 2 ) ).to_s
+
+      end  
+
+      # enable hooking for performance measurement & debug logging
+      MobyUtil::Hooking.instance.hook_methods( self ) if defined?( MobyUtil::Hooking )
+
+    end
 
   end
 
 end
+

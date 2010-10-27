@@ -21,6 +21,27 @@ module MobyBehaviour
 
 	module QT
 
+    # == description
+    # KeyPress specific behaviours
+    #
+    # == behaviour
+    # QtKeyPress
+    #
+    # == requires
+    # testability-driver-qt-sut-plugin
+    #
+    # == input_type
+    # *
+    #
+    # == sut_type
+    # qt
+    #
+    # == sut_version
+    # *
+    #
+    # == objects
+    # *
+    #
 		module KeyPress
 
 			include MobyBehaviour::QT::Behaviour
