@@ -17,17 +17,6 @@
 ## 
 ############################################################################
 
-## DESCRIPTION
-# This script will take .qm or .ts files from SUT
-# to convert those into SQL tables to a server following 
-# the TDriver table structure for locale data
-
-## REQUIREMENTS
-# mysql gem installed on the system
-# QT's lconvert on the path
-
-#require 'tdriver'
-require 'nokogiri'
 require 'tmpdir'
 require 'base64'
 
@@ -35,7 +24,7 @@ module MobyBehaviour
 
   module QT
 
-    module SUT
+    module LocalisationDB
 
       include MobyBehaviour::QT::Behaviour
 
