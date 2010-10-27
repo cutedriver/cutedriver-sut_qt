@@ -40,6 +40,8 @@ module MobyBehaviour
             #  @object.execute_javascript_query
             def execute_javascript_query(java_script, locator_query = nil, index = -1, webframe_id = 0)   
 
+              returnValue = ""
+              
                 begin   
                   
                   command = command_params #in qt_behaviour           
@@ -52,28 +54,25 @@ module MobyBehaviour
                   end
 =end                  
 
-				  if type != "QWebFrame"
-					command.command_name('ExecuteJavaScriptOnWebElement')
-					webframe_id = self.attribute('webFrame') if webframe_id.to_s == "0"				  
-				  else
-					command.command_name('ExecuteJavaScriptOnQWebFrame')
-				  end
-				  
-
+                  if type != "QWebFrame"
+                  command.command_name('ExecuteJavaScriptOnWebElement')
+                  webframe_id = self.attribute('webFrame') if webframe_id.to_s == "0"				  
+                  else
+                  command.command_name('ExecuteJavaScriptOnQWebFrame')
+                  end
 
                   command.service( 'webkitCommand' )
                   params = {
                     'java_script'   => java_script,
                     'locator_query' => locator_query,
                     'index'         => index.to_s,
-				    'elementId'     => self.id.to_s, 
+                    'elementId'     => self.id.to_s, 
                     'webframe_id'   => webframe_id.to_s
                   }
                   
                   command.command_params( params )
                   
                   returnValue = @sut.execute_command( command )
-                  Kernel::raise RuntimeError.new( "Running Javascript '%s' failed with error: %s" % [ java_script, returnValue ] ) if ( returnValue != "OK" )
           
                 rescue Exception => e      
 
@@ -84,7 +83,7 @@ module MobyBehaviour
 
                 MobyUtil::Logger.instance.log "behaviour" , "PASS;Operation send javascript executed successfully with execute_javascript \"#{java_script}\""
 
-                nil
+              returnValue
 
             end
 
