@@ -27,7 +27,7 @@ module MobyBehaviour
     # TreeWidgetItemColumn specific behaviours
     #
     # == behaviour
-    # QtTypeText
+    # QtTreeWidgetItemColumn
     #
     # == requires
     # testability-driver-qt-sut-plugin
