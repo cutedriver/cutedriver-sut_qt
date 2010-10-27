@@ -81,9 +81,9 @@ module MobyBehaviour
       # Will return an error if the logging was not started.
       # The logging is done by writing the values to a log file.
       # When the logging is stopped the file is read and a xml format of the data is returned.
-      # The file is removed./n
+      # The file is removed.\n
       # 
-      # The data is returned in the same format as the ui state xml. Each log enty contains a timestamp the and cpu load value./n
+      # The data is returned in the same format as the ui state xml. Each log enty contains a timestamp the and cpu load value.\n
       #
       # The top object is of type logData and name cpuLoad. It contains the number of entries. The entries are the child elements of logData element.
       #
@@ -97,7 +97,7 @@ module MobyBehaviour
       #   <object>       
       # [/code]
       #
-      # Each logEntry contains a timeStamp (yyyyMMddhhmmsszzz) and cpuLoad (%)./n
+      # Each logEntry contains a timeStamp (yyyyMMddhhmmsszzz) and cpuLoad (%).\n
       #
       # [code]
       # <object id="0" name="LogEntry" type="logEntry" >
@@ -114,7 +114,7 @@ module MobyBehaviour
       #
       # You can use xpath to access the data directly to form any your own reports. Another way is to create a state object out of the data. This way you can access the data as you access ui state objects.
       #
-      #[code]
+      # [code]
       #     #start logging
       #      @app.log_cpu({:interval => 1, :filePath => 'C:\Data'})
       #
@@ -136,9 +136,9 @@ module MobyBehaviour
       #      g.data('Cpu Usage', data)
       #      g.write("Cpu_load.png")
       #
-      #[/code]
+      # [/code]
       #
-      #The example produces a graph which shows the cpu load (values depend on the testing steps, device, platform etc...).
+      # The example produces a graph which shows the cpu load (values depend on the testing steps, device, platform etc...).
       #
 			# == arguments
 			# params
@@ -200,7 +200,7 @@ module MobyBehaviour
       # The logging is done by writing the values to a log file.
       # When the logging is stopped the file is read and a xml format of the data is returned. The file is removed.
       #
-      # The top object is of type logData and name memUsage. It contains the number of entries. The entries are the child elements of logData element./n
+      # The top object is of type logData and name memUsage. It contains the number of entries. The entries are the child elements of logData element.\n
       #
       # [code]
       #   <object id="0" name="memUsage" type="logData" >
@@ -229,7 +229,7 @@ module MobyBehaviour
       #
       # You can use xpath to access the data directly to form any your own reports. Another way is to create a state object out of the data. This way you can access the data as you access ui state objects.
       #
-      #[code]
+      # [code]
       #     #start log
       #      @app.log_mem({:interval => 1, :filePath => 'C:\Data'})
       #
@@ -312,7 +312,7 @@ module MobyBehaviour
       # Stops the gpu memory logging and returns the results and xml data.
       # Will return an error if the logging was not started.
       # The logging is done by writing the values to a log file.
-      # When the logging is stopped the file is read and a xml format of the data is returned. The file is removed./n
+      # When the logging is stopped the file is read and a xml format of the data is returned. The file is removed.\n
       #
       # Top object is of type logData and name gpuMemUsage. It contains the number of entries. The entries are the child elements of logData element.
       #
@@ -326,7 +326,7 @@ module MobyBehaviour
       #    <objects>
       # [/code]
       #
-      # Each logEntry contains a timeStamp (yyyyMMddhhmmsszzz), totalMem, usedMem, freeMem, processPrivateMem and processSharedMem. Process specific details may not always be available. /n
+      # Each logEntry contains a timeStamp (yyyyMMddhhmmsszzz), totalMem, usedMem, freeMem, processPrivateMem and processSharedMem. Process specific details may not always be available. \n
       #
       # [code]
       #    <object id="0" name="LogEntry" type="logEntry" >
@@ -355,7 +355,7 @@ module MobyBehaviour
       #
       # You can use xpath to access the data directly to form any your own reports. Another way is to create a state object out of the data. This way you can access the data as you access ui state objects.
       #
-      #[code]
+      # [code]
       #     #start log
       #      @app.log_gpu_mem({:interval => 1, :filePath => 'C:\Data'})
       #      #perform testing...
@@ -388,9 +388,9 @@ module MobyBehaviour
       #      g.data('Process shared memory', processSharedMem)
       #      g.write("info_gpu_load.png")
       #
-      #[/code]
+      # [/code]
       #
-      #The example produces a graph which shows the cpu load (values depend on the testing steps, device, platform etc...).
+      # The example produces a graph which shows the cpu load (values depend on the testing steps, device, platform etc...).
       #
 			# == arguments
 			# params

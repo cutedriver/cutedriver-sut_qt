@@ -125,6 +125,10 @@ module MobyBehaviour
 			#   [:from]
       #   [:to]
       #
+      # [code]
+      # @sut.copy_from_sut(:from => 'E:\', :file => '*.log', :to => 'C:\temp\') # copy all files with log file extension from E: drive
+      # @sut.copy_from_sut(:file => 'E:\logs\test.log') # copy E:\logs\test.log file from device
+      # [/code]
 			# == returns
 			# copied files in array
       #
@@ -132,9 +136,7 @@ module MobyBehaviour
 			# ArgumentErrors
       #  description: For missing / wrong argument types
       #
-			# == info
-			# @sut.copy_from_sut(:from => 'E:\', :file => '*.log', :to => 'C:\temp\') # copy all files with log file extension from E: drive
-      # @sut.copy_from_sut(:file => 'E:\logs\test.log') # copy E:\logs\test.log file from device
+			# == info			
       #
       def copy_from_sut(arguments)
         MobyBase::Error.raise( :WrongArgumentType, arguments.class, "hash" ) unless arguments.kind_of?( Hash )
@@ -186,6 +188,11 @@ module MobyBehaviour
 			#   [:from]
       #   [:to]
       #
+      # [code]
+      # @sut.copy_to_sut(:from => 'C:\temp', :to => 'E:\logs\') # copy all files to E:\logs folder in sut
+      # @sut.copy_to_sut(:file => 'C:\logs\test.log', :to => 'E:\temp\') # copy C:\logs\test.log file to E:\temp folder in sut
+      # [/code]
+      #
 			# == returns
 			# copied files in array
       #
@@ -193,9 +200,7 @@ module MobyBehaviour
 			# ArgumentErrors
       #  description: For missing / wrong argument types
       #
-			# == info
-			# @sut.copy_to_sut(:from => 'C:\temp', :to => 'E:\logs\') # copy all files to E:\logs folder in sut
-      # @sut.copy_to_sut(:file => 'C:\logs\test.log', :to => 'E:\temp\') # copy C:\logs\test.log file to E:\temp folder in sut
+			# == info			
       #
       def copy_to_sut(arguments)
         MobyBase::Error.raise( :WrongArgumentType, arguments.class, "hash" ) unless arguments.kind_of?( Hash )
@@ -268,6 +273,11 @@ module MobyBehaviour
 			#   [:file]
 			#   [:from]
       #
+      # [code]
+      # @sut.list_files_from_sut(:from => 'C:\temp', :file => '*.log') # list all files with log file extension
+      # @sut.list_files_from_sut(:from = 'C:\') # list alls files from C: drive
+      # @sut.list_files_from_sut(:from = 'C:\temp') # list all files from c:\temp
+      # [/code]
 			# == returns
 			# file list array
       #
@@ -275,10 +285,7 @@ module MobyBehaviour
 			# ArgumentErrors
       #  description: For missing / wrong argument types
       #
-			# == Info
-			# @sut.list_files_from_sut(:from => 'C:\temp', :file => '*.log') # list all files with log file extension
-      # @sut.list_files_from_sut(:from = 'C:\') # list alls files from C: drive
-      # @sut.list_files_from_sut(:from = 'C:\temp') # list all files from c:\temp
+			# == Info			
       #
       def list_files_from_sut(arguments)
         MobyBase::Error.raise( :WrongArgumentType, arguments.class, "hash" ) unless arguments.kind_of?( Hash )
