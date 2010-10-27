@@ -21,6 +21,27 @@ module MobyBehaviour
 
 	module QT
 
+    # == description
+    # Method specific behaviours
+    #
+    # == behaviour
+    # QtMethod
+    #
+    # == requires
+    # testability-driver-qt-sut-plugin
+    #
+    # == input_type
+    # *
+    #
+    # == sut_type
+    # qt
+    #
+    # == sut_version
+    # *
+    #
+    # == objects
+    # *
+    #
 		module Method
 
 			include MobyBehaviour::QT::Behaviour
