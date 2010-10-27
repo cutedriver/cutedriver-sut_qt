@@ -21,6 +21,32 @@ module MobyBehaviour
 
 	module QT
 
+    <behaviour name="QtScreenCapture" object_type="*" sut_type="QT" input_type="*" version="*">
+
+        <module name="MobyBehaviour::QT::ScreenCapture" />
+
+
+    # == description
+    # ScreenCapture specific behaviours
+    #
+    # == behaviour
+    # QtScreenCapture
+    #
+    # == requires
+    # testability-driver-qt-sut-plugin
+    #
+    # == input_type
+    # *
+    #
+    # == sut_type
+    # QT
+    #
+    # == sut_version
+    # *
+    #
+    # == objects
+    # *
+    #
 		module ScreenCapture
 
 			include MobyBehaviour::QT::Behaviour
