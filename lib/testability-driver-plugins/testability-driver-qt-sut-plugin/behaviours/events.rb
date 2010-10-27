@@ -21,6 +21,27 @@ module MobyBehaviour
 
 	module QT
 
+    # == description
+    # Events specific behaviours
+    #
+    # == behaviour
+    # QtEvents
+    #
+    # == requires
+    # testability-driver-qt-sut-plugin
+    #
+    # == input_type
+    # *
+    #
+    # == sut_type
+    # qt
+    #
+    # == sut_version
+    # *
+    #
+    # == objects
+    # *;application
+    #
 		module Events
 
 			include MobyBehaviour::QT::Behaviour
