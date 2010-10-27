@@ -152,12 +152,11 @@ module MobyBehaviour
 			#  @QwebFrame.scroll(0, 10)
 			#  @app.a.scroll()
       def scroll( dx=0, dy=0, tap=0 )   
-              
         temp_id = ""
-        if type == "QwebFrame"
-          temp_id = self.attribute("id")
-        else type != "QWebFrame"
-        
+
+        if type == "QWebFrame"
+          temp_id = self.id
+        else
           temp_id = self.attribute('webFrame')
 
           x_absolute = (@sut.xml_data.xpath( "//object[@id='%s']/attributes/attribute[@name ='x_absolute']/value/text()" % self.attribute('webFrame') )[0]).to_s.to_i
@@ -200,7 +199,6 @@ module MobyBehaviour
               dx = self.attribute("x_absolute").to_i - x_absolute
             end
           end
-          
         end
 
         command = command_params #in qt_behaviour                   
