@@ -23,21 +23,49 @@ module MobyBehaviour
 
 	module QT
 
+    # == description
+    # TypeText specific behaviours
+    #
+    # == behaviour
+    # QtTypeText
+    #
+    # == requires
+    # testability-driver-qt-sut-plugin
+    #
+    # == input_type
+    # *
+    #
+    # == sut_type
+    # QT
+    #
+    # == sut_version
+    # *
+    #
+    # == objects
+    # *
+    #
 		module TypeText
 
 			include MobyBehaviour::QT::Behaviour
 
-			# Write a string text on to a widget (e.g QLineEdit)
-			# == params
-			# text::String of text to be writte. 
-			# == returns  
-			# == raises
-			# TestObjectNotFoundError:: If a graphics item is not visible on screen
-			# ArgumentError:: If the text is not a string.
-			# === examples
-			#  @object.type_text('Text to write')   
+                        # == description
+			# Write text on to a widget (e.g QLineEdit) as if it was typed by user
+			# \n
+			# == arguments
+			# text
+			#  String
+			#   description: Text to type
+			#   example: "abc"
+			#
+			# == returns
+			# NilClass
+			#   description: -
+			#   example: -
+			#
+			# == exceptions
+			# Exception
+			#   description: No special exceptions, may throw any exception
 			def type_text( text )
-
 				ret = nil
 
 				begin

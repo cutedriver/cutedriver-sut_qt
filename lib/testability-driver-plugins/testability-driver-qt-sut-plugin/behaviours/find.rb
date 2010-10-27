@@ -24,7 +24,27 @@ module MobyBehaviour
 
 	module QT
  
-		# Defines methods to find test objects and scroll them to the display
+    # == description
+    # Defines methods to find test objects and scroll them to the display
+    #
+    # == behaviour
+    # QtFind
+    #
+    # == requires
+    # testability-driver-qt-sut-plugin
+    #
+    # == input_type
+    # *
+    #
+    # == sut_type
+    # qt
+    #
+    # == sut_version
+    # *
+    #
+    # == objects
+    # *
+    #
 		module Find   
 			include MobyBehaviour::QT::Behaviour
 			

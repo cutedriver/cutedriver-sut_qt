@@ -17,8 +17,6 @@
 ## 
 ############################################################################
 
-
-
 require 'rubygems'
 require 'rake/gempackagetask'
 
@@ -52,43 +50,92 @@ puts "version " << ( @__revision = read_version )
 
 @__gem_version = @__revision
 
-Rake::GemPackageTask.new( 
+spec = Gem::Specification.new{ | s |
 
-	Gem::Specification.new{ | s |
-	    
-	  	gem_version 	=   PLUGIN_VERSION
-		s.platform      =   Gem::Platform::RUBY
-	  	s.name          =   GEM_NAME
-		s.version       =   "#{ @__gem_version }"
-	  	s.author        =   "TDriver team"
-		s.email         =   "testabilitydriver@nokia.com"
-		s.homepage      =   "http://gitorious.org/tdriver"
-	  	s.summary       =   GEM_SUMMARY
-		s.require_path  =   "lib/testability-driver-plugins/"
-		s.files         =   FileList[ 
-					'env.rb',
-					'lib/**/*',
-					'xml/**/*'
-					].to_a
+  gem_version 	=   PLUGIN_VERSION
+  s.platform      =   Gem::Platform::RUBY
+  s.name          =   GEM_NAME
+  s.version       =   "#{ @__gem_version }"
+  s.author        =   "TDriver team"
+  s.email         =   "testabilitydriver@nokia.com"
+  s.homepage      =   "http://gitorious.org/tdriver"
+  s.summary       =   GEM_SUMMARY
+  s.require_path  =   "lib/testability-driver-plugins/"
+  s.files         =   FileList[ 'env.rb', 'lib/**/*', 'xml/**/*' ].to_a
+	s.has_rdoc      =   false
 
-	  	s.has_rdoc      =   false
+  if( @__release_mode == 'cruise' )
+    s.add_dependency("testability-driver", "=#{ @__gem_version }")
+  else
+    s.add_dependency("testability-driver", ">=0.8.3")
+  end
 
-    if( @__release_mode == 'cruise' )
-       s.add_dependency("testability-driver", "=#{ @__gem_version }")
-    else
-      s.add_dependency("testability-driver", ">=0.8.3")
-    end
+  s.extensions << 'installer/extconf.rb'
+  
+}
 
-    s.extensions << 'installer/extconf.rb'
-	  
-	}
+Rake::GemPackageTask.new( spec ) do | pkg |
+  pkg.gem_spec = spec
+  pkg.package_dir = "pkg"
+end
 
-) do | pkg |
+task :default do | task |
 
-	#pkg.need_tar = true
+  puts "supported tasks: cruise, cruise_linux, gem, gem_install, gem_uninstall, doc, behaviours"
 
 end
 
+def run_tdriver_devtools( params, tests )
+  
+  # reset arguments constant without warnings
+  ARGV.clear; 
+  
+  unless tests.nil?
+    ARGV << "-t"; ARGV << tests;
+  end
+  
+  params.to_s.split(" ").each{ | argument | ARGV << argument }
+    
+  begin
+    require File.expand_path( File.join( File.dirname( __FILE__ ), '../driver/lib/tdriver-devtools/tdriver-devtools.rb' ) )
+  rescue LoadError
+    begin
+     require('tdriver/../tdriver-devtools/tdriver-devtools.rb')
+    rescue LoadError
+      abort("Unable to proceed due to TDriver not found or is too old! (required 0.9.2 or later)")
+    end
+  end
+  
+end
+
+task :behaviours do | task |
+
+  puts "\nGenerating behaviour XML files from implementation... "   
+
+  run_tdriver_devtools( '-g behaviours lib behaviours', nil )
+
+end
+
+
+task :doc, :tests do | task, args |
+  
+  test_results_folder = args[ :tests ] || "../tests/test/feature_xml"
+  
+  if args[:tests].nil?
+    puts "\nWarning: Test results folder not given, using default location (#{ test_results_folder })"
+    puts "\nSame as executing:\nrake doc[#{ test_results_folder }]\n\n"
+    sleep 1  
+  else
+    puts "Using given test results from #{ test_results_folder }"
+  end
+  
+  test_results_folder = File.expand_path( test_results_folder )
+  
+  puts "\nGenerating documentation XML file..."
+
+  run_tdriver_devtools( '-g both lib doc/document.xml', args[:tests] )
+  
+end
 
 desc "Task for installing the generated gem"
 task :gem_install do
@@ -135,4 +182,6 @@ desc "Task for cruise control on Linux"
 task :cruise_linux => ['gem_uninstall', 'gem', 'gem_install'] do    
 	
 end
+
+
 

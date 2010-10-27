@@ -23,48 +23,71 @@ module MobyBehaviour
 
   module QT
 
-	module TreeWidgetItemColumn
+    # == description
+    # TreeWidgetItemColumn specific behaviours
+    #
+    # == behaviour
+    # QtTreeWidgetItemColumn
+    #
+    # == requires
+    # testability-driver-qt-sut-plugin
+    #
+    # == input_type
+    # *
+    #
+    # == sut_type
+    # QT
+    #
+    # == sut_version
+    # *
+    #
+    # == objects
+    # TreeWidgetItemColumn
+    #
+	  module TreeWidgetItemColumn
 
-	  include MobyBehaviour::QT::Behaviour
+	    include MobyBehaviour::QT::Behaviour
 
-	  # Sets the check state of the item in a treewidget
-	  # == params
-	  # == returns  
-	  # == raises
-	  def check_state(new_state)
+	    # Sets the check state of the item in a treewidget
+	    # == params
+	    # == returns  
+	    # == raises
+	    def check_state(new_state)
 
-		ret = nil
+		  ret = nil
 
-		begin    
+		  begin    
 
-		  raise ArgumentError.new( "new_state must be an integer. Check qt docs for allowed values (Qt::CheckState." ) unless new_state.kind_of?(Integer) 
-		  
-		  command = MobyCommand::WidgetCommand.new
-		  command.object_id(self.attribute('parentWidget'))
-		  command.application_id(get_application_id)    
-		  command.object_type(:Standard)                          
-		  command.command_name('CheckState')    
-		  command.set_event_type(MobyUtil::Parameter[ @sut.id ][ :event_type, "0" ])
-		  params = {:state => new_state, :column => self.attribute('column'), :item => self.attribute('parentItem')}      
+		    raise ArgumentError.new( "new_state must be an integer. Check qt docs for allowed values (Qt::CheckState." ) unless new_state.kind_of?(Integer) 
+		    
+		    command = MobyCommand::WidgetCommand.new
+		    command.object_id(self.attribute('parentWidget'))
+		    command.application_id(get_application_id)    
+		    command.object_type(:Standard)                          
+		    command.command_name('CheckState')    
+		    command.set_event_type(MobyUtil::Parameter[ @sut.id ][ :event_type, "0" ])
+		    params = {:state => new_state, :column => self.attribute('column'), :item => self.attribute('parentItem')}      
 
-		  command.command_params(params)
-		  @sut.execute_command(command)
+            command.set_event_type(MobyUtil::Parameter[ @sut.id ][ :event_type, "0" ])
 
-		rescue Exception => e      
+		    command.command_params(params)
+		    @sut.execute_command(command)
 
-		  MobyUtil::Logger.instance.log "behaviour" , "FAIL;Failed select"#{identity};drag;"
-		  Kernel::raise e        
+		  rescue Exception => e      
 
-		end      
+		    MobyUtil::Logger.instance.log "behaviour" , "FAIL;Failed select"#{identity};drag;"
+		    Kernel::raise e        
 
-		MobyUtil::Logger.instance.log "behaviour" , "PASS;Operation select executed successfully"#{identity};drag;"
-		ret
+		  end      
 
+		  MobyUtil::Logger.instance.log "behaviour" , "PASS;Operation select executed successfully"#{identity};drag;"
+		  ret
+
+	    end
+
+	    # enable hooking for performance measurement & debug logging
+	    MobyUtil::Hooking.instance.hook_methods( self ) if defined?( MobyUtil::Hooking )
 	  end
-
-	  # enable hooking for performance measurement & debug logging
-	  MobyUtil::Hooking.instance.hook_methods( self ) if defined?( MobyUtil::Hooking )
-	end
 
   end
 end

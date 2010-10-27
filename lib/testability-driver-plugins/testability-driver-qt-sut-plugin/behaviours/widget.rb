@@ -24,6 +24,27 @@ module MobyBehaviour
 
 	module QT
 
+    # == description
+    # Widget specific behaviours
+    #
+    # == behaviour
+    # QtWidget
+    #
+    # == requires
+    # testability-driver-qt-sut-plugin
+    #
+    # == input_type
+    # touch
+    #
+    # == sut_type
+    # qt
+    #
+    # == sut_version
+    # *
+    #
+    # == objects
+    # *
+    #
 		module Widget
 
 			include MobyBehaviour::QT::Behaviour

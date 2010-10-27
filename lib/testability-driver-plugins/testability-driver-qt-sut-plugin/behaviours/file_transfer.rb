@@ -21,25 +21,55 @@ module MobyBehaviour
 
 	module QT
 
+    # == description
+    # This module contains implementation to control sut file transfers
+    #
+    # == behaviour
+    # FileTransfer
+    #
+    # == requires
+    # testability-driver-qt-sut-plugin
+    #
+    # == input_type
+    # *
+    #
+    # == sut_type
+    # qt
+    #
+    # == sut_version
+    # *
+    #
+    # == objects
+    # sut
+    #
 		module FileTransfer
 
 			include MobyBehaviour::QT::Behaviour
 
+      # == description
       # Delete files from sut
-			# === params
-			# arguments:: Hash containing parameters to be used in file transfer
-			# Following symbols are supported:
-			# [:file]
-			# [:from]
-			# [:dir]
-			# === returns
-			# deleted files or deleted directory
-			# === raises
-			# ArgumentErrors:: For missing / wrong argument types
-			# === examples
+      #
+			# == arguments
+			# arguments
+      #  Hash
+      #   description: Hash containing parameters to be used in file transfer
+			#   example: Following symbols are supported
+			#   [:file]
+			#   [:from]
+			#   [:dir]
+      #
+			# == returns
+			# deleted file array or deleted directory
+      #
+			# == exceptions
+			# ArgumentErrors
+      #  description: For missing / wrong argument types
+      #
+			# == info
 			# @sut.delete_from_sut(:from => 'E:\', :file => '*.log') # delete all files with log file extension from E: drive
       # @sut.delete_from_sut(:file => 'E:\logs\test.log') # delete E:\logs\test.log file from device
       # @sut.delete_from_sut(:dir => 'E:\logs') # delete E:\logs directory from device
+      #
       def delete_from_sut(arguments)
         MobyBase::Error.raise( :WrongArgumentType, arguments.class, "hash" ) unless arguments.kind_of?( Hash )
 
@@ -84,20 +114,29 @@ module MobyBehaviour
 
       end
 
+      # == description
 		  # Copy files from sut
-			# === params
-			# arguments:: Hash containing parameters to be used in file transfer
-			# Following symbols are supported:
-			# [:file]
-			# [:from]
-      # [:to]
-			# === returns
-			# copied files
-			# === raises
-			# ArgumentErrors:: For missing / wrong argument types
-			# === examples
+      #
+			# == arguments
+			# arguments
+      #  Hash
+      #   description: Hash containing parameters to be used in file transfer
+      #   example: Following symbols are supported
+			#   [:file]
+			#   [:from]
+      #   [:to]
+      #
+			# == returns
+			# copied files in array
+      #
+			# == exceptions
+			# ArgumentErrors
+      #  description: For missing / wrong argument types
+      #
+			# == info
 			# @sut.copy_from_sut(:from => 'E:\', :file => '*.log', :to => 'C:\temp\') # copy all files with log file extension from E: drive
       # @sut.copy_from_sut(:file => 'E:\logs\test.log') # copy E:\logs\test.log file from device
+      #
       def copy_from_sut(arguments)
         MobyBase::Error.raise( :WrongArgumentType, arguments.class, "hash" ) unless arguments.kind_of?( Hash )
 
@@ -136,20 +175,29 @@ module MobyBehaviour
         end
       end
 
+      # == description
       # Copy files to sut
-			# === params
-			# arguments:: Hash containing parameters to be used in file transfer
-			# Following symbols are supported:
-			# [:file]
-			# [:from]
-      # [:to]
-			# === returns
-			# copied files
-			# === raises
-			# ArgumentErrors:: For missing / wrong argument types
-			# === examples
+      #
+			# == arguments
+			# arguments
+      #  Hash
+      #   description: Hash containing parameters to be used in file transfer
+			#   example: Following symbols are supported
+			#   [:file]
+			#   [:from]
+      #   [:to]
+      #
+			# == returns
+			# copied files in array
+      #
+			# == exceptions
+			# ArgumentErrors
+      #  description: For missing / wrong argument types
+      #
+			# == info
 			# @sut.copy_to_sut(:from => 'C:\temp', :to => 'E:\logs\') # copy all files to E:\logs folder in sut
       # @sut.copy_to_sut(:file => 'C:\logs\test.log', :to => 'E:\temp\') # copy C:\logs\test.log file to E:\temp folder in sut
+      #
       def copy_to_sut(arguments)
         MobyBase::Error.raise( :WrongArgumentType, arguments.class, "hash" ) unless arguments.kind_of?( Hash )
         Kernel::raise ArgumentError.new( "Argument :to not found") unless arguments.include?( :to )
@@ -210,20 +258,29 @@ module MobyBehaviour
         return transfered_files
       end
 
+      # == description
       # List files from sut
-			# === params
-			# arguments:: Hash containing parameters to be used in file transfer
-			# Following symbols are supported:
-			# [:file]
-			# [:from]
-			# === returns
-			# files
-			# === raises
-			# ArgumentErrors:: For missing / wrong argument types
-			# === examples
+      #
+			# == arguments
+			# arguments
+      #  Hash
+      #   description: Hash containing parameters to be used in file transfer
+			#   example: Following symbols are supported
+			#   [:file]
+			#   [:from]
+      #
+			# == returns
+			# file list array
+      #
+			# == exceptions
+			# ArgumentErrors
+      #  description: For missing / wrong argument types
+      #
+			# == Info
 			# @sut.list_files_from_sut(:from => 'C:\temp', :file => '*.log') # list all files with log file extension
       # @sut.list_files_from_sut(:from = 'C:\') # list alls files from C: drive
       # @sut.list_files_from_sut(:from = 'C:\temp') # list all files from c:\temp
+      #
       def list_files_from_sut(arguments)
         MobyBase::Error.raise( :WrongArgumentType, arguments.class, "hash" ) unless arguments.kind_of?( Hash )
         Kernel::raise ArgumentError.new( "Argument :from not found") unless arguments.include?( :from )
