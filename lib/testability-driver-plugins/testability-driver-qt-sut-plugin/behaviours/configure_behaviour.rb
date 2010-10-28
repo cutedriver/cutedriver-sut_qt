@@ -28,301 +28,290 @@ module MobyBehaviour
     # QtConfigureBehaviour
     #
     # == requires
-    #  sut_qt
+    # testability-driver-qt-sut-plugin
     #
     # == sut_type
     # qt
     #
     # == input_type
     # All
-	#
+    #
     # == sut_version
     # *
     #
     # == objects
     # sut;application
     #
-	module ConfigureBehaviour
+	  module ConfigureBehaviour
 
-	  include MobyBehaviour::QT::Behaviour
+	    include MobyBehaviour::QT::Behaviour
 
-	  @@_valid_levels = [ :FATAL, :ERROR, :INFO, :WARNING, :DEBUG ]
+	    @@_valid_levels = [ :FATAL, :ERROR, :INFO, :WARNING, :DEBUG ]
 
       # == description
-	  # Enabled the logging on the target for the given application or sut (qttasserver). 
-	  # Logs are written to the target in (\logs\testability)
-	  #
-	  # == returns
-	  # NilClass
-	  #   description: -
-	  #   example: -
-	  #
+      # Enabled the logging on the target for the given application or sut (qttasserver). 
+      # Logs are written to the target in (\logs\testability)
+      #
+      # == returns
+      # NilClass
+      #   description: -
+      #   example: -
+      #
       # == exceptions
-	  #
       # ArgumentError
       #  description:  In case the given parameters are not valid.
-      #    
-	  def enable_logger
-		configure_logger( {:logEnabled => true} )
-	  end
+	    def enable_logger
+  		  configure_logger( {:logEnabled => true} )
+	    end
 
       # == description
-	  # Disable the logging on the target for the given application or sut (qttasserver). 
-	  # Logs are left as they are.
-	  #
-	  # == returns
-	  # NilClass
-	  #   description: -
-	  #   example: -
-	  #
+      # Disable the logging on the target for the given application or sut (qttasserver). 
+      # Logs are left as they are.
+      #
+      # == returns
+      # NilClass
+      #   description: -
+      #   example: -
+      #
       # == exceptions
-	  #
       # ArgumentError
       #  description:  In case the given parameters are not valid.
-      #      
-	  def disable_logger		
-		configure_logger( {:logEnabled => false} )
-	  end
-
+	    def disable_logger		
+  		  configure_logger( {:logEnabled => false} )
+	    end
 
       # == description
-	  # Set the log level for the application or sut (qttasserver). Affects only the running process. 
-	  # Will not be stored as permanent setting.
-	  #
+      # Set the log level for the application or sut (qttasserver). Affects only the running process. 
+      # Will not be stored as permanent setting.
+      #
       # == arguments
-	  # level
-	  #  Symbol 
-	  #   description:
-	  #    The log level.
-	  #    See [link="#log_levels_table"]Valid log levels table[/link] for valid keys. 
-	  #    example: :INFO
-	  #
-	  # == tables
-	  # log_levels_table
-	  #  title: Valid log levels
-	  #  |Level|Type|Description|
-	  #  |:FATAL|Symbol|Log fatal level message|
-	  #  |:ERROR|Symbol|Log fatal and error level messages|
-	  #  |:INFO|Symbol|Log fatal, error and info level messages|
-	  #  |:WARNING|Symbol|Log fatal, error, info and warning level messages|
-	  #  |:DEBUG|Symbol|Log all messages|
-	  #
-	  # == returns
-	  # NilClass
-	  #   description: -
-	  #   example: -
-	  #
+      # level
+      #  Symbol 
+      #   description:
+      #    The log level.
+      #    See [link="#log_levels_table"]Valid log levels table[/link] for valid keys. 
+      #    example: :INFO
+      #
+      # == tables
+      # log_levels_table
+      #  title: Valid log levels
+      #  |Level|Type|Description|
+      #  |:FATAL|Symbol|Log fatal level message|
+      #  |:ERROR|Symbol|Log fatal and error level messages|
+      #  |:INFO|Symbol|Log fatal, error and info level messages|
+      #  |:WARNING|Symbol|Log fatal, error, info and warning level messages|
+      #  |:DEBUG|Symbol|Log all messages|
+      #
+      # == returns
+      # NilClass
+      #   description: -
+      #   example: -
+      #
       # == exceptions
-	  #
       # ArgumentError
       #  description:  In case the given level is not valid.
-      #      
-	  def set_log_level(level)
-		configure_logger( {:logLevel => level} )
-	  end
-	  
+	    def set_log_level(level)
+  		  configure_logger( {:logLevel => level} )
+	    end
+	    
       # == description
-	  # Change the folder to where the logs are written to for the application or sut (qttasserver).
-	  #
+      # Change the folder to where the logs are written to for the application or sut (qttasserver).
+      #
       # == arguments
-	  # folder
-	  #  String 
-	  #   description:
-	  #    New location for the logs.
-	  #    example: '/tmp/logs'
-	  #
-	  # == returns
-	  # NilClass
-	  #   description: -
-	  #   example: -
-	  #
-	  def set_log_folder(folder)
-		configure_logger( {:logFolder => folder} )
-	  end
+      # folder
+      #  String 
+      #   description:
+      #    New location for the logs.
+      #    example: '/tmp/logs'
+      #
+      # == returns
+      # NilClass
+      #   description: -
+      #   example: -
+	    def set_log_folder(folder)
+  		  configure_logger( {:logFolder => folder} )
+	    end
 
       # == description
-	  # Can be used to set logging to be done to qDebug. All tdriver target logging
-	  # will go to qDebug not the log file.
-	  #
+      # Can be used to set logging to be done to qDebug. All tdriver target logging
+      # will go to qDebug not the log file.
+      #
       # == arguments
-	  # to_qdebug
-	  #  boolean
-	  #   description:
-	  #    True to logs message to qDebug instead of a file.	  
-	  #    example: true
-	  #
-	  # == returns
-	  # NilClass
-	  #   description: -
-	  #   example: -
-	  #
-	  def log_to_qdebug(to_qdebug = true)
-		configure_logger( {:logToQDebug => to_qdebug} )
-	  end
+      # to_qdebug
+      #  boolean
+      #   description:
+      #    True to logs message to qDebug instead of a file.	  
+      #    example: true
+      #
+      # == returns
+      # NilClass
+      #   description: -
+      #   example: -
+	    def log_to_qdebug(to_qdebug = true)
+  		  configure_logger( {:logToQDebug => to_qdebug} )
+	    end
 
       # == description
-	  # Set the qDebug message to be append to the logs or not.
-	  # By default qDebug messages are not written to the logs.
-	  #
+      # Set the qDebug message to be append to the logs or not.
+      # By default qDebug messages are not written to the logs.
+      #
       # == arguments
-	  # include
-	  #  boolean
-	  #   description:
-	  #    True to log qDebug messages and false to not
-	  #    example: true
-	  #
-	  # == returns
-	  # NilClass
-	  #   description: -
-	  #   example: -
-	  #
-	  def log_qdebug(include = true)
-		configure_logger( {:logQDebug => include} )
-	  end
+      # include
+      #  boolean
+      #   description:
+      #    True to log qDebug messages and false to not
+      #    example: true
+      #
+      # == returns
+      # NilClass
+      #   description: -
+      #   example: -
+	    def log_qdebug(include = true)
+  		  configure_logger( {:logQDebug => include} )
+	    end
 
       # == description
-	  # Set max size for the log file. When the level is reached the log file is renamed
-	  # as old_"name of log file".log and a new file is started. By default the size is 
-	  # 100000.
-	  #
+      # Set max size for the log file. When the level is reached the log file is renamed
+      # as old_"name of log file".log and a new file is started. By default the size is 
+      # 100000.
+      #
       # == arguments
-	  # size
-	  #  integer
-	  #   description:
-	  #    The new log file size
-	  #    example: 500000
-	  #
-	  # == returns
-	  # NilClass
-	  #   description: -
-	  #   example: -
-	  #
-	  def set_log_size(size)
-		configure_logger( {:logSize => size} )
-	  end
+      # size
+      #  integer
+      #   description:
+      #    The new log file size
+      #    example: 500000
+      #
+      # == returns
+      # NilClass
+      #   description: -
+      #   example: -
+	    def set_log_size(size)
+  		  configure_logger( {:logSize => size} )
+	    end
 
       # == description
-	  # Clears the log file.	  
-	  #
-	  #
-	  # == returns
-	  # NilClass
-	  #   description: -
-	  #   example: -
-	  #	  
-	  def clear_log
-		configure_logger( {:clearLog => true} )
-	  end
+      # Clears the log file.	  
+      #
+      # == returns
+      # NilClass
+      #   description: -
+      #   example: -
+	    def clear_log
+  		  configure_logger( {:clearLog => true} )
+	    end
 
       # == description
-	  # Set the logger to log listed events. Events have to be separated by comma.
-	  # e.g MouseEvent, Paint
-	  # The event name does not have to be complete. e.g Mouse will log all events with the
-	  # word Mouse.
-	  # 
+      # Set the logger to log listed events. Events have to be separated by comma.
+      # e.g MouseEvent, Paint
+      # The event name does not have to be complete. e.g Mouse will log all events with the
+      # word Mouse.
+      # 
       # == arguments
-	  # event_list
-	  #  String
-	  #   description:
-	  #    Comma separated list of events
-	  #    example: 'Mouse','Touch'
-	  #
-	  # == returns
-	  # NilClass
-	  #   description: -
-	  #   example: -
-	  #	  
-	  def log_events( event_list = '')
-		begin 
+      # event_list
+      #  String
+      #   description:
+      #    Comma separated list of events
+      #    example: 'Mouse','Touch'
+      #
+      # == returns
+      # NilClass
+      #   description: -
+      #   example: -
+      #	  
+	    def log_events( event_list = '')
+		    begin 
 
-		  params = {:logEvents => 'true'}
-		  perform_command( MobyCommand::ConfigureCommand.new( "configureEventLogging", params, event_list ) )		
+		      params = {:logEvents => 'true'}
+		      perform_command( MobyCommand::ConfigureCommand.new( "configureEventLogging", params, event_list ) )		
 
-		rescue Exception => e
-		  
-		  MobyUtil::Logger.instance.log "behaviour" , "FAIL;Failed to enable event logging. With event_list \"#{event_list};log_events"
-		  Kernel::raise e        
+		    rescue Exception => e
+		      
+		      MobyUtil::Logger.instance.log "behaviour" , "FAIL;Failed to enable event logging. With event_list \"#{event_list};log_events"
+		      Kernel::raise e        
 
-		end      
+		    end      
 
-		MobyUtil::Logger.instance.log "behaviour" , "PASS;Event logging enabled. With event_list \"#{event_list};log_events"
+		    MobyUtil::Logger.instance.log "behaviour" , "PASS;Event logging enabled. With event_list \"#{event_list};log_events"
 
-	  end
+	    end
 
       # == description
-	  # Stop logging events.
-	  #
-	  # == returns
-	  # NilClass
-	  #   description: -
-	  #   example: -
-	  #	  
-	  def stop_event_logging
-		begin
+      # Stop logging events.
+      #
+      # == returns
+      # NilClass
+      #   description: -
+      #   example: -
+      #	  
+	    def stop_event_logging
+		    begin
 
-		  params = {:logEvents => 'false'}
-		  perform_command( MobyCommand::ConfigureCommand.new( "configureEventLogging", params) )		
+		      params = {:logEvents => 'false'}
+		      perform_command( MobyCommand::ConfigureCommand.new( "configureEventLogging", params) )		
 
-		rescue Exception => e
-		  
-		  MobyUtil::Logger.instance.log "behaviour" , "FAIL;Failed to stop event logging.;stop_event_logging"
-		  Kernel::raise e        
+		    rescue Exception => e
+		      
+		      MobyUtil::Logger.instance.log "behaviour" , "FAIL;Failed to stop event logging.;stop_event_logging"
+		      Kernel::raise e        
 
-		end      
+		    end      
 
-		MobyUtil::Logger.instance.log "behaviour" , "PASS;Event logging stopped.;stop_event_logging"
+		    MobyUtil::Logger.instance.log "behaviour" , "PASS;Event logging stopped.;stop_event_logging"
 
-	  end
+	    end
 
-	  private
-	  
-	  # Configure the logger for qttasserver and plugins
-	  # Parameters are to be passed as a hash with one or more
-	  # of the following values:
-	  # :logLevel => :DEBUG (or :FATAL, :ERROR, :INFO or :WARNING. DEBUG will log the most)
- 	  # :logToQDebug => true/false
-	  # :logFolder => '/tmp/logs/'
-	  # :logQDebug => true/false
-	  # :logSize => 10000
-	  # :logEnabled => true/false
-	  def configure_logger( params_hash  = nil)
+    private
+	    
+	    # Configure the logger for qttasserver and plugins
+	    # Parameters are to be passed as a hash with one or more
+	    # of the following values:
+	    # :logLevel => :DEBUG (or :FATAL, :ERROR, :INFO or :WARNING. DEBUG will log the most)
+   	  # :logToQDebug => true/false
+	    # :logFolder => '/tmp/logs/'
+	    # :logQDebug => true/false
+	    # :logSize => 10000
+	    # :logEnabled => true/false
+	    def configure_logger( params_hash  = nil)
 
-		begin 
-		  raise ArgumentError.new( "No parameters given." ) unless params_hash
+		    begin 
+		      raise ArgumentError.new( "No parameters given." ) unless params_hash
 
-		  log_level = params_hash[:logLevel]  
+		      log_level = params_hash[:logLevel]  
 
-		  if log_level
-			raise ArgumentError.new( "Invalid log level." ) unless @@_valid_levels.include?(log_level)
-		  end
+		      if log_level
+			    raise ArgumentError.new( "Invalid log level." ) unless @@_valid_levels.include?(log_level)
+		      end
 
-		  perform_command(MobyCommand::ConfigureCommand.new( "configureLogger", params_hash ))  
-		  
-		rescue Exception => e
-		  
-		  MobyUtil::Logger.instance.log "behaviour" , "FAIL;Failed to configure logger. With params \"#{params_hash.to_s};configure_logger"
-		  Kernel::raise e        
+		      perform_command(MobyCommand::ConfigureCommand.new( "configureLogger", params_hash ))  
+		      
+		    rescue Exception => e
+		      
+		      MobyUtil::Logger.instance.log "behaviour" , "FAIL;Failed to configure logger. With params \"#{params_hash.to_s};configure_logger"
+		      Kernel::raise e        
 
-		end      
+		    end      
 
-		MobyUtil::Logger.instance.log "behaviour" , "PASS;Succesfully configured logger. With params \"#{params_hash.to_s};configure_logger"
+		    MobyUtil::Logger.instance.log "behaviour" , "PASS;Succesfully configured logger. With params \"#{params_hash.to_s};configure_logger"
 
-	  end
+	    end
 
-	  def perform_command(command)
+	    def perform_command(command)
 		
-		if self.class == MobyBase::SUT
-		  execute_command( command ) 
-		else
-		  command.application_id = get_application_id
-		  @sut.execute_command( command )
-		end
-	  end
-	  
-	  # enable hooking for performance measurement & debug logging
-	  MobyUtil::Hooking.instance.hook_methods( self ) if defined?( MobyUtil::Hooking )
+		    if self.class == MobyBase::SUT
+		      execute_command( command ) 
+		    else
+		      command.application_id = get_application_id
+		      @sut.execute_command( command )
+		    end
 
+      end
+	    
+	    # enable hooking for performance measurement & debug logging
+	    MobyUtil::Hooking.instance.hook_methods( self ) if defined?( MobyUtil::Hooking )
 
-	end
-  end
-end
+	  end # ConfigureBehaviour
+
+  end # QT
+
+end # MobyBehaviour

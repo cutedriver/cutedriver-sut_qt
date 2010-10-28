@@ -28,7 +28,8 @@ module MobyBehaviour
     # FileTransfer
     #
     # == requires
-    #  sut_qt
+    # testability-driver-qt-sut-plugin
+    #
     # == input_type
     # *
     #
@@ -39,7 +40,7 @@ module MobyBehaviour
     # *
     #
     # == objects
-    # Sut
+    # sut
     #
 		module FileTransfer
 

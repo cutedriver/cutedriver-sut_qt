@@ -131,6 +131,7 @@ module MobyBehaviour
 
 			end
 
+      # == nodoc
 			def QtMethod
 
 				MobyBehaviour::QT::ApiMethodBehaviour::Method.new( self, "tasqtapiaccessor" )

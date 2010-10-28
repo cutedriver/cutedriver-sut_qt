@@ -493,6 +493,10 @@ module MobyBehaviour
 			# TODO: [2009-04-02] Remove deprevated methods?
 
 			# warning: TestObject#press is deprecated; use TestObject#tap
+      # == deprecated
+      # 0.8.x
+      # == description
+      # TestObject#press is deprecated, use TestObject#tap instead.
 			def press( tap_count = 1, button = :Left )
 
 				$stderr.puts "#{ caller(0).last.to_s } warning: TestObject#press is deprecated; use TestObject#tap"
@@ -528,6 +532,10 @@ module MobyBehaviour
 			end
 
 			# TestObject#long_press is deprecated; use TestObject#long_tap
+      # == deprecated
+      # 0.8.x
+      # == description
+      # TestObject#long_press is deprecated, use TestObject#long_tap instead.
 			def long_press( time = 1, button = :Left )
 
 				$stderr.puts "#{ caller(0).last.to_s } warning: TestObject#long_press is deprecated; use TestObject#long_tap"			
@@ -546,6 +554,10 @@ module MobyBehaviour
 			end
 
 			# TestObject#hold is deprecated; use TestObject#tap_down
+      # == deprecated
+      # 0.8.x
+      # == description
+      # TestObject#hold is deprecated, use TestObject#tap_down instead.
 			def hold(button = :Left, refresh = true)
 
 				$stderr.puts "#{ caller(0).last.to_s } warning: TestObject#hold is deprecated; use TestObject#tap_down"
@@ -568,6 +580,10 @@ module MobyBehaviour
 			end
 
 			# TestObject#release is deprecated; use TestObject#tap_up
+      # == deprecated
+      # 0.8.x
+      # == description
+      # TestObject#release is deprecated, use TestObject#tap_up instead.
 			def release( button = :Left, refresh = true )
 
 				$stderr.puts "#{ caller(0).last.to_s } warning: TestObject#release is deprecated; use TestObject#tap_up"

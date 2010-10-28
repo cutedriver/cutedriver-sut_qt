@@ -427,12 +427,14 @@ module MobyBehaviour
 
 	    end
 
-	    #utility function for getting the x coordinate of the center of the object
+      # == nodoc
+	    # utility function for getting the x coordinate of the center of the object, should this be private method?
 	    def object_center_x
   		  center_x
 	    end
 
-	    #utility function for getting the y coordinate of the center of the object
+      # == nodoc
+	    # utility function for getting the y coordinate of the center of the object, should this be private method?
 	    def object_center_y
   		  center_y
 	    end  
