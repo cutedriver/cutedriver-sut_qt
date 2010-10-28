@@ -1,2 +1,6 @@
 sut_qt/doc/images/*
 doc/images/*
+sut_qt/doc/images/rotate.png
+doc/images/rotate.png
+sut_qt/doc/images/pinch.png
+doc/images/pinch.png
