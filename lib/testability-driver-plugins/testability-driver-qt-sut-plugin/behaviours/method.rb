@@ -46,14 +46,25 @@ module MobyBehaviour
 
 			include MobyBehaviour::QT::Behaviour
 
-			# == params
-			# attribute:: string attribute name to set 
-			# == returns  
-			# nil
-			# == raises
-			# RuntimeError::
-			# === examples
-			#  @sut.application.call_method('close()') #calls close for application 
+			# == description
+			# Calls an invokable method of the Qt test object.
+			# Slots and signals are automatically invokable, but other methods must be explicitly made invokable.
+			# This version does not support method arguments or return values.
+			# 
+			# == arguments
+			# method_name
+			#  String
+			#   description: name of method to invoke, including empty parenthesis
+			#   example: "clear()"
+			#
+			# == returns
+			# Undefined
+			#  description: on success, returns unspecified value of unspecified type
+			#  example: "OK"
+			#
+			# == exceptions
+			# RuntimeError
+			#   description: invoking the method failed
 			def call_method( method_name )
 
 				Kernel::raise ArgumentError.new( "Method name was empty" ) if method_name.empty?
