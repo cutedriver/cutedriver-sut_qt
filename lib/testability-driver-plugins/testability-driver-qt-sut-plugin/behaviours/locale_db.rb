@@ -62,7 +62,7 @@ module MobyBehaviour
       # file
       #  String
       #   description: File names of the translation files to be uploaded.
-      #	  example:"*.ts"
+      #	  example: "*.ts"
       #
       # database_file
       #  String
@@ -75,7 +75,9 @@ module MobyBehaviour
       #   example: {"en" => "en_GB"}
       #
       # == returns
-      # nil
+      # NilClass
+      #   description: -
+      #   example: -
       #
       def create_locale_db(path = "/", file = "*.qm", database_file = nil, column_names_map = {} )
 
