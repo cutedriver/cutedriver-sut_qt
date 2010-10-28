@@ -48,13 +48,7 @@ module MobyBehaviour
 
       # == description
       # Delete files from sut \n
-      #
-      # Example:
-      # [code]
-      # @sut.delete_from_sut(:from => 'E:\', :file => '*.log') # delete all files with log file extension from E: drive
-      # @sut.delete_from_sut(:file => 'E:\logs\test.log') # delete E:\logs\test.log file from device
-      # @sut.delete_from_sut(:dir => 'E:\logs') # delete E:\logs directory from device
-      # [/code]
+      #      
       #
 			# == arguments
 			# arguments
@@ -122,12 +116,7 @@ module MobyBehaviour
 
       # == description
 		  # Copy files from sut \n
-      #
-      # Example:
-      # [code]
-      # @sut.copy_from_sut(:from => 'E:\', :file => '*.log', :to => 'C:\temp\') # copy all files with log file extension from E: drive
-      # @sut.copy_from_sut(:file => 'E:\logs\test.log') # copy E:\logs\test.log file from device
-      # [/code]
+      #      
 			# == arguments
 			# arguments
       #  Hash
@@ -188,12 +177,7 @@ module MobyBehaviour
 
       # == description
       # Copy files to sut \n
-      #
-      # Example:
-      # [code]
-      # @sut.copy_to_sut(:from => 'C:\temp', :to => 'E:\logs\') # copy all files to E:\logs folder in sut
-      # @sut.copy_to_sut(:file => 'C:\logs\test.log', :to => 'E:\temp\') # copy C:\logs\test.log file to E:\temp folder in sut
-      # [/code]
+      #      
 			# == arguments
 			# arguments
       #  Hash
@@ -277,13 +261,7 @@ module MobyBehaviour
 
       # == description
       # List files from sut \n
-      #
-      # Example:
-      # [code]
-      # @sut.list_files_from_sut(:from => 'C:\temp', :file => '*.log') # list all files with log file extension
-      # @sut.list_files_from_sut(:from = 'C:\') # list alls files from C: drive
-      # @sut.list_files_from_sut(:from = 'C:\temp') # list all files from c:\temp
-      # [/code]
+      #      
 			# == arguments
 			# arguments
       #  Hash
