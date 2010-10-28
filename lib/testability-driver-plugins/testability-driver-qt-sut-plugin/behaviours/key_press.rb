@@ -47,7 +47,7 @@ module MobyBehaviour
 			include MobyBehaviour::QT::Behaviour
 
 			# == description
-			# Performs a key press event to a Qt test object.
+			# Perform key press event or a series of events on an object.
 			# 
 			# == arguments
 			# key
