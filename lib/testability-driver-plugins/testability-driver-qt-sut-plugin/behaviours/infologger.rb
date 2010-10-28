@@ -64,6 +64,8 @@ module MobyBehaviour
 			#
 			# == returns
 			# nil
+      #  description: -
+      #  example: -
       #
 			# == exceptions
       # ArgumentError
@@ -100,7 +102,7 @@ module MobyBehaviour
       # Each logEntry contains a timeStamp (yyyyMMddhhmmsszzz) and cpuLoad (%).\n
       #
       # [code]
-      # <object id="0" name="LogEntry" type="logEntry" >
+      #  <object id="0" name="LogEntry" type="logEntry" >
       #    <attributes>
       #      <attribute name="timeStamp" >
       #        <value>20100109184651114</value>
@@ -148,7 +150,18 @@ module MobyBehaviour
 			#   default: No default values, must be set
 			#
 			# == returns
-			# xml data (data is returned in the same format as the ui state xml)
+			# Xml
+      #  description: data is returned in the same format as the ui state xml
+      #  example: <object id="0" name="LogEntry" type="logEntry" >
+      #    <attributes>
+      #      <attribute name="timeStamp" >
+      #        <value>20100109184651114</value>
+      #       </attribute>
+      #      <attribute name="cpuLoad" >
+      #        <value>21.8966</value>
+      #      </attribute>
+      #    </attributes>
+      #   </object>
       #
 			# == exceptions
       # RuntimeError
@@ -181,8 +194,9 @@ module MobyBehaviour
 			#   default: No default values, must be set
 			#
 			# == returns
-			# nil
-      #
+      # nil
+      #  description: -
+      #  example: -
 			# == exceptions
       # ArgumentError
       #  description: For missing / wrong argument types
@@ -261,7 +275,18 @@ module MobyBehaviour
 			#   default: No default values, must be set
 			#
 			# == returns
-			# xml data (data is returned in the same format as the ui state xml)
+			# Xml
+      #  description: data is returned in the same format as the ui state xml
+      #  example: <object id="0" name="LogEntry" type="logEntry" >
+      #    <attributes>
+      #      <attribute name="timeStamp" >
+      #        <value>20100109184651114</value>
+      #       </attribute>
+      #      <attribute name="heapSize" >
+      #        <value>3337448</value>
+      #      </attribute>
+      #    </attributes>
+      #   </object>
       #
 			# == exceptions
       # RuntimeError
@@ -294,8 +319,9 @@ module MobyBehaviour
 			#   default: No default values, must be set
 			#
 			# == returns
-			# nil
-      #
+      # nil
+      #  description: -
+      #  example: -
 			# == exceptions
       # ArgumentError
       #  description: For missing / wrong argument types
@@ -400,7 +426,30 @@ module MobyBehaviour
 			#   default: No default values, must be set
 			#
 			# == returns
-			# xml data (data is returned in the same format as the ui state xml)
+			# Xml
+      #  description: data is returned in the same format as the ui state xml
+      #  example: <object id="0" name="LogEntry" type="logEntry" >
+      #      <attributes>
+      #        <attribute name="timeStamp" >
+      #        <value>20100108190741059</value>
+      #        </attribute>
+      #        <attribute name="totalMem" >
+      #          <value>33554432</value>
+      #        </attribute>
+      #        <attribute name="usedMem" >
+      #          <value>17252576</value>
+      #        </attribute>
+      #        <attribute name="freeMem" >
+      #          <value>16301856</value>
+      #        </attribute>
+      #        <attribute name="processPrivateMem" >
+      #          <value>5170739</value>
+      #        </attribute>
+      #        <attribute name="processSharedMem" >
+      #          <value>0</value>
+      #        </attribute>
+      #      </attributes>
+      #    </object>
       #
 			# == exceptions
       # RuntimeError
@@ -427,7 +476,9 @@ module MobyBehaviour
 			#
       #
 			# == returns
-			# xml data (data is returned in the same format as the ui state xml)
+			# Xml
+      #  description: data is returned in the same format as the ui state xml
+      #  example: -
       #
 			# == exceptions
       # RuntimeError
@@ -454,7 +505,9 @@ module MobyBehaviour
 			#
       #
 			# == returns
-			# xml data (data is returned in the same format as the ui state xml)
+			# Xml
+      #  description: data is returned in the same format as the ui state xml
+      #  example: -
       #
 			# == exceptions
       # RuntimeError
@@ -481,7 +534,9 @@ module MobyBehaviour
 			#
       #
 			# == returns
-			# xml data (data is returned in the same format as the ui state xml)
+			# Xml
+      #  description: data is returned in the same format as the ui state xml
+      #  example: -
       #
 			# == exceptions
       # RuntimeError
