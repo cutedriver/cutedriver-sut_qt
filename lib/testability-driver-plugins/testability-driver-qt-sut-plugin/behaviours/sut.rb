@@ -194,7 +194,14 @@ module MobyBehaviour
 		    MobyBase::StateObject.new( xml_source )			  		
 	    end
 
-	    # returns the memory used by the agent if -1 then memory consumption cannot be read
+	    # == description
+	    # Returns memory usage of the agent
+	    # == arguments
+	    # == returns
+	    # Integer
+	    #   description: Memory usage in bytes, or -1 if there was an error
+	    #   example: 7376896
+	    # == exceptions
 	    def agent_mem_usage
 		    info = self.system_information
 		    begin 
