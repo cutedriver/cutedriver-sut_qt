@@ -46,16 +46,41 @@ module MobyBehaviour
 
 			include MobyBehaviour::QT::Behaviour
 
+      # == description
 			# Captures an object to a file. This can be used on widget or the whole application
-			# == params
-			#  
-			# == returns  
-			# nil
-			# == raises
-			# TestObjectNotFoundError:: If a graphics item is not visible on screen
-			# ArgumentError:: If the text is not a string.
-			# === examples
-			#  @object.screen_capture    
+			# == arguments
+      # format
+      #  String
+      #   description: Image format for output file (currently only PNG supported)
+      #   example: "PNG"
+      #   default: "PNG"
+      #
+      # file_name
+      #  String
+      #   description: Filename of output image with/without absolute or relative path.
+      #   example: output_image.png
+      #   example: my_relative_folder/output_image.png
+      #   example: c:/my_windows_folder/output_image.png
+      #   example: ~/my_linux_folder/output_image.png
+			#   default: nil
+      #
+      # draw
+      #  Boolean
+      #  description:	When set to true repaint signal is sent to object before capturing the bitmap.
+      #  example: true
+      #  default: false
+      #  
+			# == returns
+			# String
+      #  description:	Image binary
+      #  example: File.open("image.PNG", 'wb:binary') { |f2| f2.puts @screen_capture_data }
+      #  
+			# == exceptions
+			# TestObjectNotFoundError
+      #  description: If a graphics item is not visible on screen
+			# ArgumentError
+      #  description: If the text is not a string.
+			#
 			def capture_screen( format = "PNG", file_name = nil, draw = false )
 
 				ret = nil
@@ -103,15 +128,40 @@ module MobyBehaviour
 			end
 
 
-			# Returns the coordinates where the given image is found on the device screen.
+      # == description
+			# Searches the SUT screen for the given image and returns top left coordinates if a match is found. Alternatively the search can be limited to only parts of the display by calling this method for a widget.
 			#
-			# === params
-			# image_or_path:: The image to be searched for on the screen, can be either a RMagick Magic::Image, Magic::ImageList or a path to an image.
-			# tolerance:: Integer defining the maximum percentage difference in RGB value when compared to maximum values where two pixels are still considered to be equal.
-			# === returns
-			# Array:: Array containing x and y coordinates as Integers, or nil if the image cannot be found on the screen. 
-			# === throws
-			# ArgumentError:: image_or_path was not of one of the allowed image types or a non empty String, or tolerance was not an Integer in the [0,100] range.
+			# == arguments
+			# image_or_path
+      #  String
+      #   description: Path to image being searched for. Must not be empty.
+      #   example: 'image_data/icon_help.png'
+      #  Magick::Image
+      #   description: RMagick Image object to be searched for. You must 'require RMagick' in your script prior to using this.
+      #   example: Magick::Image.read('image_data/icon_help.png').first
+      #  Magick::ImageList
+      #   description: RMagick ImageList object where the current image is the one to be searched for. You must 'require RMagick' in your script prior to using this.
+      #   example: Magick::ImageList.new('image_data/icon_help.png')
+      #
+			# tolerance
+      #  Integer
+      #  description: Integer defining the maximum percentage difference in RGB value when compared to maximum values where two pixels are still considered to be equal.
+      #  example: 20
+      #  default: 0
+			# == returns
+			# Array
+      #  description: Array containing x and y coordinates as Integers, or nil if the image cannot be found on the screen.
+      #  example: [24,50]
+      # Nil
+      #  description: The image could not be found
+      #  example: -
+      #  
+			# == exceptions
+			# ArgumentError
+      #  description: image_or_path was not of one of the allowed image types or a non empty String, or tolerance was not an Integer in the [0,100] range.
+      # RuntimeError
+      #  description: No image could be loaded from the path given in image_or_path
+      #
 			def find_on_screen( image_or_path, tolerance = 0 )
 
 			# RuntimeError:: No image could be loaded from the path given in image_or_path
@@ -169,16 +219,38 @@ module MobyBehaviour
 
 			end
 
-			# Verifies if the given image is found on the device screen.
+      # == description
+			# Verifies if the given image is found on the device screen. Alternatively the verification can be limited to only parts of the display by calling this method for a widget.
 			#
-			# === params
-			# image_or_path:: The image to be searched for on the screen, can be either a RMagick Magic::Image, Magic::ImageList or a path to an image.
-			# tolerance:: Integer defining the maximum difference in RGB value where two pixels are still considered to be equal.
-			# === returns
-			# Boolean:: true if the given image is found on the device screen. 
-			# === throws
-			# ArgumentError:: image_or_path was not of one of the allowed image types or a non empty String, or tolerance was not an Integer in the [0,100] range.
-			# RuntimeError:: No image could be loaded from the path given in image_or_path
+			# == arguments
+			# image_or_path
+      #  String
+      #   description: Path to image being searched for. Must not be empty.
+      #   example: 'image_data/icon_help.png'
+      #  Magick::Image
+      #   description: RMagick Image object to be searched for. You must 'require RMagick' in your script prior to using this.
+      #   example: Magick::Image.read('image_data/icon_help.png').first
+      #  Magick::ImageList
+      #   description: RMagick ImageList object where the current image is the one to be searched for. You must 'require RMagick' in your script prior to using this.
+      #   example: Magick::ImageList.new('image_data/icon_help.png')
+      #
+			# tolerance
+      #  Integer
+      #  description: Integer defining the maximum percentage difference in RGB value when compared to maximum values where two pixels are still considered to be equal.
+      #  example: 20
+      #  default: 0
+      #
+			# == returns
+			# Boolean
+      #  description: true if the given image is found on the device screen.
+      #  description: false if the image was not found on the screen.
+      #  example: true
+      #
+			# == exceptions
+			# ArgumentError
+      #  description: image_or_path was not of one of the allowed image types or a non empty String, or tolerance was not an Integer in the [0,100] range.
+			# RuntimeError
+      #  description: No image could be loaded from the path given in image_or_path
 			def screen_contains?( image_or_path, tolerance = 0 )
 
 				begin
