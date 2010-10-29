@@ -46,18 +46,33 @@ module MobyBehaviour
 
 			include MobyBehaviour::QT::Behaviour
 
-			# Perform key press event to object. 
-			# == params
-			# key::Symbol, scancode or MobyCommand::KeySequence
-			# == returns 
-			# nil
-			# == raises
-			# ArgumentError:: Wrong argument type %s for key (Expected: %s)
-			# ArgumentError:: Scan code for :%s not defined in keymap
-			# ArgumentError:: Error occured during keypress (Response: %s)
-			# === examples
-			#  @object.press_key(:kTab)       # Symbol defined in sut specific XML
-			#  @object.press_key(0x01000001)  # Scancode
+			# == description
+			# Perform key press event or a series of events on an object.
+			# 
+			# == arguments
+			# key
+			#  Symbol
+			#   description: Symbol of key
+			#   example: :kRight
+			#  Integer
+			#   description: Scan code of key
+			#   example: 	0x01000001
+			#  MobyCommand::KeySequence
+			#   description: Sequence of key and press types, see [link="#GenericSut:press_key"]KeySequence reference[/link].
+			#   example: MobyCommand::KeySequence.new( :kTab, :KeyDown )
+			#
+			# == returns
+			# NilClass
+			#  description: nil
+			#  example: nil
+			#
+			# == exceptions
+			# ArgumentError
+			#  description: Wrong argument type %s for key (Expected: %s)
+			# ArgumentError
+			#  description: Scan code for :%s not defined in keymap
+			# ArgumentError
+			#  description: Error occured during keypress (Response: %s)
 			def press_key( key )
 
 				begin
@@ -76,7 +91,7 @@ module MobyBehaviour
 
 					) if key.kind_of?( Symbol ) && !MobyUtil::Parameter[ @sut.id ].has_key?( :keymap )
 
-                    @key_sequence = nil
+					@key_sequence = nil
 					if key.kind_of?( Symbol )
 
 					  scancode = MobyUtil::Parameter[ @sut.id ][ :keymap ][ key, nil ]
@@ -112,7 +127,7 @@ module MobyBehaviour
 					end	
 
 					# execute command & verify that execution passed ("OK" expected as response) 
-          @sut.execute_command(command)
+					@sut.execute_command(command)
 					#Kernel::raise RuntimeError.new("Error occured during keypress (Response: %s)" % @response ) unless ( @response = @sut.execute_command(command) ) == "OK" 
 
 				rescue Exception => exception

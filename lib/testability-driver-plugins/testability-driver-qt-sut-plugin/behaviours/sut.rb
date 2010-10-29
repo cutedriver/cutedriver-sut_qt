@@ -189,13 +189,21 @@ module MobyBehaviour
 		    end
 	    end
 
+	    # == description
+	    # Returns details about the tested target. The data is platform/device specific which will make your scripts platform dependant. For devices with mobility apis the data available from them is returned and could be somewhat similar across platforms. Memory details are returned in a fixed format so they can be used and still maintain compatibility cross platforms. However it should be noted that platforms which do not support memory details will return -1 (scripts will not break but data will not be usable).
+	    # == arguments
+	    # == returns
+	    # MobyBase::StateObject
+	    #   description: Similar object to test objects.
+	    #   example: -
+	    # == exceptions
 	    def system_information
 		    xml_source = execute_command( MobyCommand::Application.new( :SystemInfo, nil) )
 		    MobyBase::StateObject.new( xml_source )			  		
 	    end
 
 	    # == description
-	    # Returns memory usage of the agent
+	    # Returns the memory used by the qttassever in bytes. Note that this will query for the details from the device. If you intend to use all of the memory details see system_information on how to get the details in one query.
 	    # == arguments
 	    # == returns
 	    # Integer
@@ -211,7 +219,14 @@ module MobyBehaviour
 		    end
 	    end
 
-	    #returns the total memory of the sut if -1 then memory details cannot be read
+	    # == description
+	    # Returns the total amount of memory in bytes. Note that this will query for the details from the device. If you intend to all of the memory details see system_information on how to get the details in one query.
+	    # == arguments
+	    # == returns
+	    # Integer
+	    #   description: Amount of total memory, or -1 if there was an error
+	    #   example: 2147483647
+	    # == exceptions
 	    def system_total_mem
 		    info = self.system_information
 		    begin 
@@ -221,7 +236,14 @@ module MobyBehaviour
 		    end
 	    end
 
-	    #returns the available (free) memory of the sut if -1 then memory details cannot be read
+	    # == description
+	    # Returns the amount of available memory in bytes. Note that this will query for the details from the device. If you intend to use all of the memory details see system_information on how to get the details in one query.
+	    # == arguments
+	    # == returns
+	    # Integer
+	    #   description: Amount of available memory, or -1 if there was an error
+	    #   example: 1214980096
+	    # == exceptions
 	    def system_available_mem
 		    info = self.system_information
 		    begin 
