@@ -22,8 +22,8 @@ module MobyBehaviour
   module QT
 
     # == description
-    # Gesture specific behaviours
-    #
+    # Gesture behaviour methods are used to do different gestures with UI objects. Various methods exist for different speeds, targets and other options.
+    #    
     # == behaviour
     # QtGesture
     #
@@ -31,10 +31,10 @@ module MobyBehaviour
     # testability-driver-qt-sut-plugin
     #
     # == input_type
-    # touch
+    # *
     #
     # == sut_type
-    # qt
+    # QT
     #
     # == sut_version
     # *
@@ -46,18 +46,41 @@ module MobyBehaviour
 
 	    include MobyBehaviour::QT::Behaviour
 
-	    # Flick the screen from the given object (touch the object and cause a flick gesture).
-	    # Speed and distance of the flick are defined in the tdriver_parameters under the sut used.
-	    # For custom values see gesture.
-	    # == params
-	    # direction::Direction of the flick. Supported direction are: :Up, :Down, :Left, :Right
-	    # button::(optional defaults to :Left) button symbol supported values are: :NoButton, :Left, :Right, :Middle
-	    # == returns  
-	    # == raises
-	    # TestObjectNotFoundError:: If a graphics item is not visible on screen
-	    # ArgumentError:: If an invalid direction or button is given
-	    # === examples
-	    #  @object.flick(:Up)   
+	    # == description
+      # Flick the screen at the location of the object (touch the object and do a flick gesture).
+      # Speed and distance of the flick are defined in the tdriver_parameters under the sut used.
+      # By default a flick is a fast gesture.
+      # For custom values see the gesture method.
+      #
+      # == arguments
+      # direction
+      #  Symbol
+      #   description: Direction of the flick. Please see this table for valid direction symbols.  
+      #   example: :Left
+      #  Integer
+      #   description: Direction of the flick as degrees with 0 being up and 90 right.
+      #   example: 270
+      #
+      # button
+      #  Symbol
+      #   description: The mouse button pressed while the drag is executed can be defined. Please see this table for valid button symbols.
+      #   example: :Middle
+      #   default: :Left
+      #
+      # optional_params
+      #  Hash
+      #   description: The only optional argument supported by flick is :use_tap_screen.
+      #   example: { :use_tap_screen => 'true' }
+      #   default: { :use_tap_screen => 'false' }  
+      #
+      # == returns
+      # NilClass
+      #   description: Always returns nil
+      #   example: nil
+      #
+      # == exceptions
+      # ArgumentError
+      #   description: One of the arguments is not valid  
 	    def flick( direction, button = :Left, optional_params = {} )
 
 		  begin
@@ -84,20 +107,43 @@ module MobyBehaviour
 		  nil
 	    end
 
-	    # Flick the screen from the given object (touch the object and cause a flick gesture)
-	    # to the given coordinates. Coordinates must be absolute to the screen.
-	    # Speed and distance of the flick are defined in the tdriver_parameters under the sut used.
-	    # For custom values see gesture_to.
-	    # == params
-	    # x: target x coordinate, must be an absolute screen coordinate  
-	    # y: target y coordinate, must be an absolute screen coordinate
-	    # button::(optional defaults to :Left) button symbol supported values are: :NoButton, :Left, :Right, :Middle
-	    # == returns  
-	    # == raises
-	    # TestObjectNotFoundError:: If a graphics item is not visible on screen
-	    # ArgumentError:: If an invalid button is given
-	    # === examples
-	    #  @object.flick_to(150, 120, 1)
+	    # == description
+      # Flick the screen at the location of the object (touch the object and do a flick gesture), ending the flick at the specified coordinates.
+      # Speed and distance of the flick are defined in the tdriver_parameters under the sut used.
+      # By default a flick is a fast gesture.
+      # For custom values see the gesture_to method.
+      #
+      # == arguments
+      # x
+      #  Integer
+      #   description: X coordinate of the target point. The coordinate is an absolute screen coordinate, relative to the display top left corner.
+      #   example: 300
+      #
+      # y
+      #  Integer
+      #   description: Y coordinate of the target point. The coordinate is an absolute screen coordinate, relative to the display top left corner.
+      #   example: 300
+      #
+      # button
+      #  Symbol
+      #   description: The mouse button pressed while the flick is executed can be defined. Please see this table for valid button symbols.
+      #   example: :Middle
+      #   default: :Left
+      #
+      # optional_params
+      #  Hash
+      #   description: The only optional argument supported by flick_to is :use_tap_screen.
+      #   example: { :use_tap_screen => 'true' }
+      #   default: { :use_tap_screen => 'false' }  
+      #
+      # == returns
+      # NilClass
+      #  description: Always returns nil
+      #  example: nil
+      #
+      # == exceptions
+      # ArgumentError
+      #  description: One of the arguments is not valid  	
 	    def flick_to( x, y, button = :Left, optional_params = {})
 
 		  begin
@@ -124,20 +170,43 @@ module MobyBehaviour
 	    end
 
 
-	    # Cause a gesture (flick or drag) for the given object. Nature of the operetion depends on the give parameters.
-	    # == params
-	    # direction::Direction of the flick. Supported direction are: :Up, :Down, :Left, :Right
-	    # speed:: speed of the flick motion in seconds (duration of the motion)
-	    # distance::distance in pixels of the flick motion
-	    # optional_params: 
-	    #   :button: (optional defaults to :Left) button symbol supported values are: :NoButton, :Left, :Right, :Middle
-	    #   :isDrag: true or false
-	    # == returns  
-	    # == raises
-	    # TestObjectNotFoundError:: If a graphics item is not visible on screen
-	    # ArgumentError:: If an invalid direction or button is given
-	    # === examples
-	    #  @object.gesture(:Up, 1, 200)   
+	    # == description
+      # Perform a gesture with the object
+      #
+      # == arguments
+      # direction
+      #  Symbol
+      #   description: Direction of the gesture. Please see this table for valid direction symbols.  
+      #   example: :Left
+      #
+      #  Integer
+      #   description: Direction of the gesture as degrees with 0 being up and 90 right.
+      #   example: 270
+      #
+      # speed
+      #  Numeric
+      #   description: Duration of the gesture in seconds. The value may be an interger or a fractional value as a floating point number.
+      #   example: 1
+      #
+      # distance
+      #  Integer
+      #   description: Number of pixels that the object is to be moved in the gesture.
+      #   example: 100
+      #
+      # optional_params
+      #  Hash
+      #   description: This method supports :use_tap_screen, :isDrag and :button optional arguments. The first two can be either true or false, for :button values please see this table.
+      #   example: { :button => :Right }
+      #   default: { :use_tap_screen => 'false', :isDrag => false, :button => :Left }  
+      #
+      # == returns
+      # NilClass
+      #  description: Always returns nil
+      #  example: nil
+      #
+      # == exceptions
+      # ArgumentError
+      #  description: One of the arguments is not valid    
 	    def gesture( direction, speed, distance, optional_params = {:button => :Left, :isDrag => false}) 
 
 		  begin
@@ -166,21 +235,39 @@ module MobyBehaviour
 		  nil
 	    end
 
-	    # Flick/drag the screen from the given object (touch the object and cause a flick or drag gesture)
-	    # to the given coordinates. Coordinates must be absolute to the screen.
-	    # == params
-	    # x: target x coordinate, must be an absolute screen coordinate  
-	    # y: target y coordinate, must be an absolute screen coordinate
-	    # speed: speed of the flick. smaller the faster 
-	    # optional_params: 
-	    #   :button: (optional defaults to :Left) button symbol supported values are: :NoButton, :Left, :Right, :Middle
-	    #   :isDrag: true or false
-	    # == returns  
-	    # == raises
-	    # TestObjectNotFoundError:: If a graphics item is not visible on screen
-	    # ArgumentError:: If an invalid button is given
-	    # === examples
-	    #  @object.gesture_to(150, 120, 1)  
+	    # == description
+      # Perform a gesture with the object, ending the gesture at the specified point.
+      #
+      # == arguments
+      # x
+      #  Integer
+      #   description: X coordinate of the target point. The coordinate is an absolute screen coordinate, relative to the display top left corner.
+      #   example: 300
+      #
+      # y
+      #  Integer
+      #   description: Y coordinate of the target point. The coordinate is an absolute screen coordinate, relative to the display top left corner.
+      #   example: 300
+      #
+      # speed
+      #  Numeric
+      #   description: Duration of the gesture in seconds. The value may be an interger or a fractional value as a floating point number.
+      #   example: 1
+      #
+      # optional_params
+      #  Hash
+      #   description: This method supports :use_tap_screen, :isDrag and :button optional arguments. The first two can be either true or false, for :button values please see this table.
+      #   example: { :button => :Right }
+      #   default: { :use_tap_screen => 'false', :isDrag => false, :button => :Left }  
+      #
+      # == returns
+      # NilClass
+      #  description: Always returns nil
+      #  example: nil
+      #
+      # == exceptions
+      # ArgumentError
+      #  description: One of the arguments is not valid   
         def gesture_to(x, y, speed, optional_params = {:button => :Left, :isDrag => false})
 
 		  begin      
@@ -205,23 +292,54 @@ module MobyBehaviour
 		  nil
 	    end
 
-    	  # Flick/drag the screen from the given coordinates (touch the object and cause a flick or drag gesture)
-	    # the given distance. Coordinates must be inside the target object.
-	    # == params
-	    # x: target x coordinate, must be an absolute screen coordinate  
-	    # y: target y coordinate, must be an absolute screen coordinate
-	    # speed: speed of the flick. smaller the faster 
-	    # distance: distance of the gesture
-	    # optional_params: 
-	    #   :button: (optional defaults to :Left) button symbol supported values are: :NoButton, :Left, :Right, :Middle
-	    #   :isDrag: true or false
-	    # == returns  
-	    # == raises
-	    # TestObjectNotFoundError:: If a graphics item is not visible on screen
-	    # ArgumentError:: If an invalid button is given
-	    # === examples
-	    #  @object.gesture_to(150, 120, 1)  
-
+    	# == description
+      # Perform a gesture with the object, starting the gesture at the specified point inside it.
+      #
+      # == arguments
+      # x
+      #  Integer
+      #   description: X coordinate of the start point. The coordinate is relative to the object top left corner.
+      #   example: 20
+      #
+      # y
+      #  Integer
+      #   description: Y coordinate of the start point. The coordinate is relative to the object top left corner.
+      #   example: 15
+      #
+      # speed
+      #  Numeric
+      #   description: Duration of the gesture in seconds. The value may be an interger or a fractional value as a floating point number.
+      #   example: 1
+      #
+      # direction
+      #  Symbol
+      #   description: Direction of the gesture. Please see this table for valid direction symbols.  
+      #   example: :Left
+      #
+      #  Integer
+      #   description: Direction of the gesture as degrees with 0 being up and 90 right.
+      #   example: 270
+      #
+      # distance
+      #  Integer
+      #   description: Number of pixels that the object is to be moved in the gesture.
+      #   example: 100
+      #
+      # optional_params
+      #  Hash
+      #   description: This method supports :use_tap_screen, :isDrag and :button optional arguments. The first two can be either true or false, for :button values please see this table.
+      #   example: { :button => :Right }
+      #   default: { :use_tap_screen => 'false', :isDrag => false, :button => :Left }  
+      #
+      # == returns
+      # NilClass
+      #  description: Always returns nil
+      #  example: nil
+      #
+      # == exceptions
+      # ArgumentError
+      #  description: One of the arguments is not valid, or the initial point is outside the target object.
+      #
 	    def gesture_from(x, y, speed, distance, direction, optional_params = {:button => :Left, :isDrag => false})
 		  begin
 		    raise ArgumentError.new( "Coordinate x:#{x} x_abs:#{x} outside object." ) unless ( x <= attribute( 'width' ).to_i and x >= 0 )
@@ -245,7 +363,34 @@ module MobyBehaviour
 		  nil
 	    end
 
-	    #see drag_to_object
+	    # == description
+      # Perform a gesture with the object, ending the gesture at the center of another object.
+      #
+      # == arguments
+      # target_object
+      #  TestObject
+      #   description: The object where the gesture should end.
+      #   example: @app.Node
+      #
+      # duration
+      #  Numeric
+      #   description: Duration of the gesture in seconds. The value may be an interger or a fractional value as a floating point number.
+      #   example: 1
+      #
+      # optional_params
+      #  Hash
+      #   description: This method supports :use_tap_screen, :isDrag and :button optional arguments. The first two can be either true or false, for :button values please see this table.
+      #   example: { :button => :Right }
+      #   default: { :use_tap_screen => 'false', :isDrag => false, :button => :Left }  
+      #
+      # == returns
+      # NilClass
+      #  description: Always returns nil
+      #  example: nil
+      #
+      # == exceptions
+      # ArgumentError
+      #  description: One of the arguments is not valid  
 	    def gesture_to_object(target_object, duration, optional_params = {:button => :Left, :isDrag => false})    
 
 		  begin
@@ -276,171 +421,40 @@ module MobyBehaviour
 
 	    end
 
-
-	    # Cause a drag operation on the screen. Basically the same as flick /gesture but done slowly.
-	    # == params
-	    # direction::Direction of the drag. Supported direction are: :Up, :Down, :Left, :Right  
-	    # distance::distance in pixels of the flick motion
-	    # button::(optional defaults to :Left) button symbol supported values are: :NoButton, :Left, :Right, :Middle
-	    # == returns  
-	    # == raises
-	    # TestObjectNotFoundError:: If a graphics item is not visible on screen
-	    # ArgumentError:: If an invalid direction or button is given
-	    # === examples
-	    #  @object.drag(:Up, 200) 
-	    #  @sut.application.GraphWidget.QGraphicsItem(:tooltip => 'node1').drag(:Down, 50) # on elasticnode application - drags item with tooltip 'node1' down 50 pixels
-	    def drag(direction, distance, button = :Left, optional_params = {})
-
-		  begin
-            use_tap_screen = optional_params[:use_tap_screen].nil? ? MobyUtil::Parameter[ @sut.id][ :use_tap_screen, 'false'] :
-              optional_params[:use_tap_screen].to_s
-            optional_params[:useTapScreen] = use_tap_screen
-
-		    speed = calculate_speed( distance, @sut.parameter[ :gesture_drag_speed ] )
-            params = {:gesture_type => :MouseGesture, :direction => direction, :speed => speed, :distance => distance, :isDrag => true, :button => button}
-            params.merge!(optional_params)
-            do_gesture(params)		
-		    do_sleep( speed )
-
-		  rescue Exception => e      
-		    
-		    MobyUtil::Logger.instance.log "behaviour" , "FAIL;Failed drag with direction \"#{direction}\", distance \"#{distance}\", button \"#{button.to_s}\".;#{identity};drag;"
-		    Kernel::raise e        
-
-		  end      
-
-		  MobyUtil::Logger.instance.log "behaviour" , "PASS;Operation drag executed successfully with direction \"#{direction}\", distance \"#{distance}\", button \"#{button.to_s}\".;#{identity};drag;"
-
-		  nil
-	    end
-
-	    # Moves the pointer the given distance to the given direction.
-	    def move(direction, distance, button = :Left, optional_params = {})
-
-		    begin
-
-          use_tap_screen = optional_params[:use_tap_screen].nil? ? MobyUtil::Parameter[ @sut.id][ :use_tap_screen, 'false'] :
-          optional_params[:use_tap_screen].to_s
-          optional_params[:useTapScreen] = use_tap_screen
-
-		      speed = calculate_speed( distance, @sut.parameter[ :gesture_drag_speed ] )
-          params = {:gesture_type => :MouseGesture, :direction => direction, :speed => speed, :distance => distance, :isDrag => false, :button => button, :isMove => true}
-          params.merge!(optional_params)
-          do_gesture(params)
-		      do_sleep( speed )
-
-		    rescue Exception => e      
-
-		      MobyUtil::Logger.instance.log "behaviour" , "FAIL;Failed move with direction \"#{direction}\", distance \"#{distance}\",.;#{identity};move;"
-		      Kernel::raise e        
-
-		    end      
-
-		    MobyUtil::Logger.instance.log "behaviour" , "PASS;Operation move executed successfully with direction \"#{direction}\", distance \"#{distance}\",.;#{identity};move;"
-
-		    nil
-	    end
-
-	    # Cause a drag operation on the screen for an object to a certain point.
-	    # == params
-	    # x: target x coordinate, must be an absolute screen coordinate  
-	    # y: target y coordinate, must be an absolute screen coordinate
-	    # button::(optional defaults to :Left) button symbol supported values are: :NoButton, :Left, :Right, :Middle
-	    # == returns  
-	    # == raises
-	    # TestObjectNotFoundError:: If a graphics item is not visible on screen
-	    # ArgumentError:: If an invalid button is given
-	    # === examples
-	    #  @object.drag_to(120, 340) 
-	    #  @sut.application.GraphWidget.QGraphicsItem(:tooltip => 'node1').drag_to(134, 250) # on elasticnode application - drags item with tooltip 'node1' to given coordinates
-	    def drag_to( x, y, button = :Left, optional_params= {} )
-
-		    begin
-          use_tap_screen = optional_params[:use_tap_screen].nil? ? MobyUtil::Parameter[ @sut.id][ :use_tap_screen, 'false'] :
-          optional_params[:use_tap_screen].to_s
-          optional_params[:useTapScreen] = use_tap_screen
-
-
-		      distance = distance_to_point(x,y)
-		      return if distance == 0
-
-		      speed = calculate_speed(distance, @sut.parameter[:gesture_drag_speed])
-          params = {:gesture_type => :MouseGestureToCoordinates, :x => x, :y => y, :speed => speed, :isDrag => true, :button => button}
-          params.merge!(optional_params)
-          do_gesture(params)		
-		      do_sleep( speed )
-
-		    rescue Exception => e      
-
-		      MobyUtil::Logger.instance.log "behaviour" , "FAIL;Failed drag_to with x \"#{x}\", y \"#{y}\", button \"#{button.to_s}\".;#{identity};drag;"
-		      Kernel::raise e        
-
-		    end      
-
-		    MobyUtil::Logger.instance.log "behaviour" , "PASS;Operation drag_to executed successfully with x \"#{x}\", y \"#{y}\", button \"#{button.to_s}\".;#{identity};drag;"
-
-		    nil
-
-	    end
-
-	    # Cause a drag operation for an object by dragging it to the coordinates of an another object.
-	    # Object center points are used.
-	    # == params
-	    # object::the object that this this object will dragged over.
-	    # button::(optional defaults to :Left) button symbol supported values are: :NoButton, :Left, :Right, :Middle
-	    # == returns  
-	    # == raises
-	    # TestObjectNotFoundError:: If a graphics item is not visible on screen
-	    # ArgumentError:: If an invalid button is given
-	    # === examples
-	    #  @object.drag_to_object(object2)     
-	    def drag_to_object(target_object, button = :Left, optional_params = {})       
-
-		    begin
-
-          use_tap_screen = optional_params[:use_tap_screen].nil? ? MobyUtil::Parameter[ @sut.id][ :use_tap_screen, 'false'] :
-          optional_params[:use_tap_screen].to_s
-          optional_params[:useTapScreen] = use_tap_screen
-
-		      distance = distance_to_point(target_object.object_center_x, target_object.object_center_y)
-		      #no drag needed, maybe even attempting to drag to it self
-		      return if distance == 0
-
-		      speed = calculate_speed(distance, @sut.parameter[:gesture_drag_speed])
-          params = {:gesture_type => :MouseGestureTo, :speed => speed, :isDrag => true, :button => button}
-          params[:targetId] = target_object.id
-          params[:targetType] = target_object.attribute('objectType')
-          params.merge!(optional_params)
-          do_gesture(params)
-		      do_sleep(speed)
-
-		    rescue Exception => e      
-
-		      MobyUtil::Logger.instance.log "behaviour" , "FAIL;Failed drag_to_object with button \"#{button.to_s}\".;#{identity};drag;"
-		      Kernel::raise e        
-
-		    end      
-
-		    MobyUtil::Logger.instance.log "behaviour" , "PASS;Operation drag_to_object executed successfully with button \"#{button.to_s}\".;#{identity};drag;"
-
-		    nil
-
-	    end
-
-      # == nodoc
-	    # utility function for getting the x coordinate of the center of the object, should this be private method?
-	    def object_center_x
-  		  center_x
-	    end
-
-      # == nodoc
-	    # utility function for getting the y coordinate of the center of the object, should this be private method?
-	    def object_center_y
-  		  center_y
-	    end  
-
-	    #Gesture on specific poinst on the screen. Points have to be passed as a array of hashes:
-	    #[{"x" => 200,"y" => 100, interval => 100},{"x" => 200,"y" => 110, interval => 80}]
+      # == description
+      # Perform a gesture following a track of points.
+      #
+      # == arguments
+      # points
+      #  Array
+      #   description: Each element of this Array defines a point of the gesture as a Hash. Three keys with Integer values are defined for a point: the coordinate as "x" and "y" keys and "interval" as seconds (Note that this is likely a very short time, i.e. fraction of a second).
+      #   example: [{"x" => 200,"y" => 100, "interval" => 0.15},{"x" => 200,"y" => 110, "interval" => 0.30}]
+      #
+      # duration
+      #  Numeric
+      #   description: Duration of the gesture in seconds. The value may be an interger or a fractional value as a floating point number.
+      #   example: 1
+      #
+      # mouse_details
+      #  Hash
+      #   description: Mouse usage details can be defined by setting the :press, :release and :isDrag keys to true or false. Valid values for the :button key are described in this table.
+      #   example: { :press => true, :release => true, :button => :Right, :isDrag => false}
+      #   default: { :press => true, :release => true, :button => :Left, :isDrag => true}  
+      #
+      # optional_params
+      #  Hash
+      #   description: This method only supports the :use_tap_screen optional parameter.
+      #   example: { :use_tap_screen => true }  
+      #   default: { :use_tap_screen => false }  
+      #
+      # == returns
+      # NilClass
+      #  description: Always returns nil
+      #  example: nil
+      #
+      # == exceptions
+      # ArgumentError
+      #  description: One of the arguments is not valid
 	    def gesture_points( points, duration, mouse_details = { :press => true, :release => true, :button => :Left, :isDrag => true}, optional_params = {} )
 
 		    begin
@@ -493,6 +507,277 @@ module MobyBehaviour
 
 		    nil
 	    end
+
+	    # == description
+      # Drag the object for the given distance.      
+      # By default a drag is a slow gesture.
+      #
+      # == arguments
+      # direction
+      #  Symbol
+      #   description: Direction of the drag. Please see this table for valid direction symbols.  
+      #   example: :Left
+      #
+      #  Integer
+      #   description: Direction of the drag as degrees with 0 being up and 90 right.
+      #   example: 270
+      #
+      # distance
+      #  Integer
+      #   description: Number of pixels that the object is to be dragged.
+      #   example: 100
+      #
+      # button
+      #  Symbol
+      #   description: The mouse button pressed while the drag is executed can be defined. Please see this table for valid button symbols.
+      #   example: :Right
+      #   default: :Left
+      #
+      # optional_params
+      #  Hash
+      #   description: The only optional argument supported by drag is :use_tap_screen.
+      #   example: { :use_tap_screen => 'true' }
+      #   default: { :use_tap_screen => 'false' }  
+      #
+      # == returns
+      # NilClass
+      #  description: Always returns nil
+      #  example: nil
+      #
+      # == exceptions
+      # ArgumentError
+      #  description: One of the arguments is not valid  
+	    def drag(direction, distance, button = :Left, optional_params = {})
+
+		  begin
+            use_tap_screen = optional_params[:use_tap_screen].nil? ? MobyUtil::Parameter[ @sut.id][ :use_tap_screen, 'false'] :
+              optional_params[:use_tap_screen].to_s
+            optional_params[:useTapScreen] = use_tap_screen
+
+		    speed = calculate_speed( distance, @sut.parameter[ :gesture_drag_speed ] )
+            params = {:gesture_type => :MouseGesture, :direction => direction, :speed => speed, :distance => distance, :isDrag => true, :button => button}
+            params.merge!(optional_params)
+            do_gesture(params)		
+		    do_sleep( speed )
+
+		  rescue Exception => e      
+		    
+		    MobyUtil::Logger.instance.log "behaviour" , "FAIL;Failed drag with direction \"#{direction}\", distance \"#{distance}\", button \"#{button.to_s}\".;#{identity};drag;"
+		    Kernel::raise e        
+
+		  end      
+
+		  MobyUtil::Logger.instance.log "behaviour" , "PASS;Operation drag executed successfully with direction \"#{direction}\", distance \"#{distance}\", button \"#{button.to_s}\".;#{identity};drag;"
+
+		  nil
+	    end
+      
+      # == description
+      # Drag the object to the given coordinates.
+      # By default a drag is a slow gesture.
+      #
+      # == arguments
+      # x
+      #  Integer
+      #   description: X coordinate of the target point. The coordinate is an absolute screen coordinate, relative to the display top left corner.
+      #   example: 300
+      #
+      # y
+      #  Integer
+      #   description: Y coordinate of the target point. The coordinate is an absolute screen coordinate, relative to the display top left corner.
+      #   example: 300
+      #
+      # button
+      #  Symbol
+      #   description: The mouse button pressed while the drag is executed can be defined. Please see this table for valid button symbols.
+      #   example: :Right
+      #   default: :Left
+      #
+      # optional_params
+      #  Hash
+      #   description: The only optional argument supported by drag_to is :use_tap_screen.
+      #   example: { :use_tap_screen => 'true' }
+      #   default: { :use_tap_screen => 'false' }  
+      #
+      # == returns
+      # NilClass
+      #  description: Always returns nil
+      #  example: nil
+      #
+      # == exceptions
+      # ArgumentError
+      #  description: One of the arguments is not valid  
+	    def drag_to( x, y, button = :Left, optional_params= {} )
+
+		    begin
+          use_tap_screen = optional_params[:use_tap_screen].nil? ? MobyUtil::Parameter[ @sut.id][ :use_tap_screen, 'false'] :
+          optional_params[:use_tap_screen].to_s
+          optional_params[:useTapScreen] = use_tap_screen
+
+
+		      distance = distance_to_point(x,y)
+		      return if distance == 0
+
+		      speed = calculate_speed(distance, @sut.parameter[:gesture_drag_speed])
+          params = {:gesture_type => :MouseGestureToCoordinates, :x => x, :y => y, :speed => speed, :isDrag => true, :button => button}
+          params.merge!(optional_params)
+          do_gesture(params)		
+		      do_sleep( speed )
+
+		    rescue Exception => e      
+
+		      MobyUtil::Logger.instance.log "behaviour" , "FAIL;Failed drag_to with x \"#{x}\", y \"#{y}\", button \"#{button.to_s}\".;#{identity};drag;"
+		      Kernel::raise e        
+
+		    end      
+
+		    MobyUtil::Logger.instance.log "behaviour" , "PASS;Operation drag_to executed successfully with x \"#{x}\", y \"#{y}\", button \"#{button.to_s}\".;#{identity};drag;"
+
+		    nil
+
+	    end
+
+      # == description
+      # Drag the object to the center of another object.
+      # By default a drag is a slow gesture.
+      #
+      # == arguments
+      # target_object
+      #  TestObject
+      #   description: The object that this object should be dragged to.
+      #   example: @app.Node
+      #
+      # button
+      #  Symbol
+      #   description: The mouse button pressed while the drag is executed can be defined. Please see this table for valid button symbols.
+      #   example: :Right
+      #   default: :Left
+      #
+      # optional_params
+      #  Hash
+      #   description: The only optional argument supported by drag_to_object is :use_tap_screen.
+      #   example: { :use_tap_screen => 'true' }
+      #   default: { :use_tap_screen => 'false' }  
+      #
+      # == returns
+      # NilClass
+      #   description: Always returns nil
+      #   example: nil
+      #
+      # == exceptions
+      # ArgumentError
+      #   description: One of the arguments is not valid   
+	    def drag_to_object(target_object, button = :Left, optional_params = {})       
+
+		    begin
+
+          use_tap_screen = optional_params[:use_tap_screen].nil? ? MobyUtil::Parameter[ @sut.id][ :use_tap_screen, 'false'] :
+          optional_params[:use_tap_screen].to_s
+          optional_params[:useTapScreen] = use_tap_screen
+
+		      distance = distance_to_point(target_object.object_center_x, target_object.object_center_y)
+		      #no drag needed, maybe even attempting to drag to it self
+		      return if distance == 0
+
+		      speed = calculate_speed(distance, @sut.parameter[:gesture_drag_speed])
+          params = {:gesture_type => :MouseGestureTo, :speed => speed, :isDrag => true, :button => button}
+          params[:targetId] = target_object.id
+          params[:targetType] = target_object.attribute('objectType')
+          params.merge!(optional_params)
+          do_gesture(params)
+		      do_sleep(speed)
+
+		    rescue Exception => e      
+
+		      MobyUtil::Logger.instance.log "behaviour" , "FAIL;Failed drag_to_object with button \"#{button.to_s}\".;#{identity};drag;"
+		      Kernel::raise e        
+
+		    end      
+
+		    MobyUtil::Logger.instance.log "behaviour" , "PASS;Operation drag_to_object executed successfully with button \"#{button.to_s}\".;#{identity};drag;"
+
+		    nil
+
+	    end
+      
+	    # == description
+      # Perform a pointer move starting at the object
+      #
+      # == arguments
+      # direction
+      #  Symbol
+      #   description: Direction of the move. Please see this table for valid direction symbols.  
+      #   example: :Left
+      #
+      #  Integer
+      #   description: Direction of the move as degrees with 0 being up and 90 right.
+      #   example: 270
+      #
+      # distance
+      #  Integer
+      #   description: Number of pixels to be moved.
+      #   example: 100
+      #
+      # button
+      #  Symbol
+      #   description: The mouse button used with the move can be defined. Please see this table for valid button symbols.
+      #   example: :Right
+      #   default: :Left
+      #
+      # optional_params
+      #  Hash
+      #   description: The only optional argument supported by drag_to_object is :use_tap_screen.
+      #   example: { :use_tap_screen => 'true' }
+      #   default: { :use_tap_screen => 'false' }  
+      #
+      # == returns
+      # NilClass
+      #  description: Always returns nil
+      #  example: nil
+      #
+      # == exceptions
+      # ArgumentError
+      #  description: One of the arguments is not valid    
+	    def move(direction, distance, button = :Left, optional_params = {})
+
+		    begin
+
+          use_tap_screen = optional_params[:use_tap_screen].nil? ? MobyUtil::Parameter[ @sut.id][ :use_tap_screen, 'false'] :
+          optional_params[:use_tap_screen].to_s
+          optional_params[:useTapScreen] = use_tap_screen
+
+		      speed = calculate_speed( distance, @sut.parameter[ :gesture_drag_speed ] )
+          params = {:gesture_type => :MouseGesture, :direction => direction, :speed => speed, :distance => distance, :isDrag => false, :button => button, :isMove => true}
+          params.merge!(optional_params)
+          do_gesture(params)
+		      do_sleep( speed )
+
+		    rescue Exception => e      
+
+		      MobyUtil::Logger.instance.log "behaviour" , "FAIL;Failed move with direction \"#{direction}\", distance \"#{distance}\",.;#{identity};move;"
+		      Kernel::raise e        
+
+		    end      
+
+		    MobyUtil::Logger.instance.log "behaviour" , "PASS;Operation move executed successfully with direction \"#{direction}\", distance \"#{distance}\",.;#{identity};move;"
+
+		    nil
+	    end
+       
+
+      # == nodoc
+	    # utility function for getting the x coordinate of the center of the object, should this be private method?
+	    def object_center_x
+  		  center_x
+	    end
+
+      # == nodoc
+	    # utility function for getting the y coordinate of the center of the object, should this be private method?
+	    def object_center_y
+  		  center_y
+	    end  
+
+	    
 
 
 	    private
