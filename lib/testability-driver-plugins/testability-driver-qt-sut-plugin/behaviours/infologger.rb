@@ -229,14 +229,14 @@ module MobyBehaviour
       # Each logEntry contains a timeStamp (yyyyMMddhhmmsszzz) and heapSize.
       #
       # [code]
-      #    <object id="0" name="LogEntry" type="logEntry" >
+      #   <object id="0" name="LogEntry" type="logEntry" >
       #    <attributes>
-      #      <attribute name="timeStamp" >
-      #        <value>20100109184651114</value>
-      #       </attribute>
-      #      <attribute name="heapSize" >
-      #        <value>3337448</value>
-      #      </attribute>
+      #     <attribute name="timeStamp" >
+      #      <value>20100109184651114</value>
+      #     </attribute>
+      #     <attribute name="heapSize" >
+      #      <value>3337448</value>
+      #     </attribute>
       #    </attributes>
       #   </object>
       # [/code]
@@ -244,28 +244,26 @@ module MobyBehaviour
       # You can use xpath to access the data directly to form any your own reports. Another way is to create a state object out of the data. This way you can access the data as you access ui state objects.
       #
       # [code]
-      #     #start log
-      #      @app.log_mem({:interval => 1, :filePath => 'C:\Data'})
+      #   # start log
+      #   @app.log_mem( :interval => 1, :filePath => 'C:\Data' )
+      #  
+      #   # perform the tests here...
+      # 
+      #   # stop logging and get data as state object
+      #   mem_data = MobyBase::StateObject.new( @app.stop_mem_log )
+      # 
+      #   # collect Array of heapSize entries
+      #   heapSize = ( 0 .. mem_data.logData.attribute( 'entryCount' ).to_i ).collect do | index | 
+      #     mem_data.logEntry( :id => index.to_s ).attribute( 'heapSize' ).to_i 
+      #   end
+      # 
+      #   g = Gruff::Line.new
+      #   g.title = "Application memory usage"
+      #   g.data( "Memory Usage", heapSize )
+      #   g.write( "info_mem_load.png" )
+      # [/code]
       #
-      #      #perform tests...
-      #
-      #      #stop logging and get data as state object
-      #      mem_data = MobyBase::StateObject.new( @app.stop_mem_log )
-      #      count = mem_data.logData.attribute('entryCount').to_i
-      #      i = 0
-      #      heapSize = Array.new
-      #      while i < count do
-      #        heapSize.push(mem_data.logEntry(:id => i.to_s).attribute('heapSize').to_i)
-      #        i += 1
-      #      end
-      #      g = Gruff::Line.new
-      #      g.title = "Application memory usage"
-      #      g.data('Memory Usage', heapSize)
-      #      g.write("info_mem_load.png")
-      #
-      #[/code]
-      #
-      #The example produces a graph which shows the memory usage (values depend on the testing steps, device, platform etc...).
+      # Above example produces a graph which shows the memory usage (values depend on the testing steps, device, platform etc...).
       #
 			# == arguments
 			# params
