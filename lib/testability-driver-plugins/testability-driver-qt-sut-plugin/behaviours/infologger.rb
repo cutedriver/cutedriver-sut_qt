@@ -117,27 +117,25 @@ module MobyBehaviour
       # You can use xpath to access the data directly to form any your own reports. Another way is to create a state object out of the data. This way you can access the data as you access ui state objects.
       #
       # [code]
-      #     #start logging
-      #      @app.log_cpu({:interval => 1, :filePath => 'C:\Data'})
-      #
-      #     #perform testing...
-      #
-      #     #stop logging and get data as state object
-      #      cpu_data = MobyBase::StateObject.new( @app.stop_cpu_log )
-      #
-      #      #loop the data to make a graph using gruf
-      #      count = cpu_data.logData.attribute('entryCount').to_i
-      #      i = 0
-      #      data = Array.new
-      #      while i < count do
-      #        data.push(cpu_data.logEntry(:id => i.to_s).attribute('cpuLoad').to_i)
-      #        i += 1
-      #      end
-      #      g = Gruff::Line.new
-      #      g.title = "Application cpu usage%"
-      #      g.data('Cpu Usage', data)
-      #      g.write("Cpu_load.png")
-      #
+      #   # start logging
+      #   @app.log_cpu( :interval => 1, :filePath => 'C:\Data' )
+      #  
+      #   # perform the tests here...
+      # 
+      #   # stop logging and get data as state object
+      #   log_data_object = MobyBase::StateObject.new( @app.stop_cpu_log )
+      # 
+      #   # collect values from log_data_object to result array
+      #   result = ( 0 .. log_data_object.logData.attribute( 'entryCount' ).to_i ).collect do | index | 
+      # 
+      #     log_data_object.logEntry( :id => index.to_s ).attribute( 'cpuLoad' ).to_i 
+      # 
+      #   end
+      # 
+      #   g = Gruff::Line.new
+      #   g.title = "Application cpu usage"
+      #   g.data( "Cpu Usage", result )
+      #   g.write( "cpu_load.png" )
       # [/code]
       #
       # The example produces a graph which shows the cpu load (values depend on the testing steps, device, platform etc...).
@@ -244,25 +242,26 @@ module MobyBehaviour
       # You can use xpath to access the data directly to form any your own reports. Another way is to create a state object out of the data. This way you can access the data as you access ui state objects.
       #
       # [code]
-      #   # start log
+      #   # start logging
       #   @app.log_mem( :interval => 1, :filePath => 'C:\Data' )
       #  
       #   # perform the tests here...
       # 
       #   # stop logging and get data as state object
-      #   mem_data = MobyBase::StateObject.new( @app.stop_mem_log )
+      #   log_data_object = MobyBase::StateObject.new( @app.stop_mem_log )
       # 
-      #   # collect Array of heapSize entries
-      #   heapSize = ( 0 .. mem_data.logData.attribute( 'entryCount' ).to_i ).collect do | index | 
-      #     mem_data.logEntry( :id => index.to_s ).attribute( 'heapSize' ).to_i 
+      #   # collect values from log_data_object to result array
+      #   result = ( 0 .. log_data_object.logData.attribute( 'entryCount' ).to_i ).collect do | index | 
+      # 
+      #     log_data_object.logEntry( :id => index.to_s ).attribute( 'heapSize' ).to_i 
+      # 
       #   end
       # 
       #   g = Gruff::Line.new
       #   g.title = "Application memory usage"
-      #   g.data( "Memory Usage", heapSize )
+      #   g.data( "Memory Usage", result )
       #   g.write( "info_mem_load.png" )
       # [/code]
-      #
       # Above example produces a graph which shows the memory usage (values depend on the testing steps, device, platform etc...).
       #
 			# == arguments
@@ -380,38 +379,44 @@ module MobyBehaviour
       # You can use xpath to access the data directly to form any your own reports. Another way is to create a state object out of the data. This way you can access the data as you access ui state objects.
       #
       # [code]
-      #     #start log
-      #      @app.log_gpu_mem({:interval => 1, :filePath => 'C:\Data'})
-      #      #perform testing...
-      #
-      #      #stop logging and get data as state object
-      #      gpu_data = MobyBase::StateObject.new( @app.stop_gpu_log )
-      #
-      #
-      #      count = gpu_data.logData.attribute('entryCount').to_i
-      #      i = 0
-      #      totalMem = Array.new
-      #      usedMem = Array.new
-      #      freeMem = Array.new
-      #      processPrivateMem = Array.new
-      #      processSharedMem = Array.new
-      #      while i < count do
-      #        totalMem.push(gpu_data.logEntry(:id => i.to_s).attribute('totalMem').to_i)
-      #        usedMem.push(gpu_data.logEntry(:id => i.to_s).attribute('usedMem').to_i)
-      #        freeMem.push(gpu_data.logEntry(:id => i.to_s).attribute('freeMem').to_i)
-      #        processPrivateMem.push(gpu_data.logEntry(:id => i.to_s).attribute('processPrivateMem').to_i)
-      #        processSharedMem.push(gpu_data.logEntry(:id => i.to_s).attribute('processSharedMem').to_i)
-      #        i += 1
-      #      end
-      #      g = Gruff::Line.new
-      #      g.title = "Application cpu usage%"
-      #      g.data('Total memory', totalMem)
-      #      g.data('Used memory', usedMem)
-      #      g.data('Free memory', freeMem)
-      #      g.data('Process private memory', processPrivateMem)
-      #      g.data('Process shared memory', processSharedMem)
-      #      g.write("info_gpu_load.png")
-      #
+      #   # start logging
+      #   @app.log_gpu_mem( :interval => 1, :filePath => 'C:\Data' )
+      #  
+      #   # perform the tests here...
+      # 
+      #   # stop logging and get data as state object
+      #   log_data_object = MobyBase::StateObject.new( @app.stop_gpu_log )
+      # 
+      #   # create arrays for the results
+      #   total_memory            = [] 
+      #   used_memory             = [] 
+      #   free_memory             = [] 
+      #   process_private_memory  = [] 
+      #   process_shared_memory   = [] 
+      # 
+      #   # collect values from each log entry and store to results array
+      #   ( 0 .. log_data_object.logData.attribute( 'entryCount' ).to_i ).each do | index |
+      # 
+      #     # store log entry reference to variable  
+      #     entry = log_data_object.logEntry( :id => index.to_s ) 
+      # 
+      #     # store entry values to array
+      #     total_memory            << entry.attribute( 'totalMem' ).to_i
+      #     used_memory             << entry.attribute( 'usedMem' ).to_i
+      #     free_memory             << entry.attribute( 'freeMem' ).to_i
+      #     process_private_memory  << entry.attribute( 'processPrivateMem' ).to_i
+      #     process_shared_memory   << entry.attribute( 'processSharedMem' ).to_i
+      # 
+      #   end 
+      # 
+      #   g = Gruff::Line.new
+      #   g.title = "Application cpu usage%"
+      #   g.data( "Total memory", total_memory )
+      #   g.data( "Used memory", used_memory )
+      #   g.data( "Free memory", free_memory )
+      #   g.data( "Process private memory", process_private_memory )
+      #   g.data( "Process shared memory", process_shared_memory )
+      #   g.write( "info_gpu_load.png" )
       # [/code]
       #
       # The example produces a graph which shows the cpu load (values depend on the testing steps, device, platform etc...).
