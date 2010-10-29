@@ -267,7 +267,7 @@ task :doc_sut, :tests do | task, args |
 
   doc_tasks( 
     [ 
-      [ :generate, [ '-r -g both lib doc/output/document.xml', test_results_folder ] ], 
+      [ :generate, [ '-d -r -g both lib doc/output/document.xml', test_results_folder ] ], 
       [ :copy, [ './doc/images/*', './doc/output/images' ] ] 
     ],
     test_results_folder, 
