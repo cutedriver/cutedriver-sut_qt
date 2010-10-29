@@ -161,7 +161,7 @@ module MobyBehaviour
 	    end
 	    
 	    # == description
-	    # Bring the application to foreground
+	    # Bring the application to foreground. Note! Currently this works only for Symbian OS target!
 	    # 
 	    # == returns
 	    # NilClass
