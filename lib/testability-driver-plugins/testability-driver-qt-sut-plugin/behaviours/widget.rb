@@ -420,17 +420,37 @@ module MobyBehaviour
         tap_params[:command] = 'MouseRelease'
         tap_object(x,y,1,button,tap_params)
       end
-
+      
+      # == description
       # Taps the screen on the coordinates of the object for the period of time given is seconds.
-      # == params
-      # time::(optional defaults to 1) number of seconds to hold the pointer down.
-      # button::(optional defaults to :Left) button symbol supported values are: :NoButton, :Left, :Right, :Middle
+      # 
+      # == arguments
+      # time
+      #  Integer
+      #   description: Number of seconds to hold the pointer down.
+      #   example: 5
+      #   default: 1
+      #
+      # button
+      #  Symbol
+      #   description: Button symbol supported values are: :NoButton, :Left, :Right, :Middle .
+      #   example: :Right
+      #   default: :Left
+      #
+      # tap_params
+      #  Hash
+      #   description:
+      #   example:
+      #   default: {}
+      #
       # == returns
-      # == raises
-      # TestObjectNotFoundError:: If a graphics item is not visible on screen
-      # ArgumentError:: If an invalid button type is given
-      # === examples
-      #  @object.long_tap(2, :Left)
+      # NilClass
+      #  description:-
+      #
+      # == exceptions
+      # ArgumentError
+      #  description: If tap_params is not a Hash or a Fixnum type
+      #      
       def long_tap( time = 1, button = :Left, tap_params = {} )
 
         logging_enabled = MobyUtil::Logger.instance.enabled
@@ -457,18 +477,43 @@ module MobyBehaviour
 
       end
 
+      # == description
       # Long tap on the screen on the given relative coordinates of the object for the period of time given is seconds.
-      # == params
-      # x::x coordinate inside object
-      # y::y coordinate inside object
-      # time::(optional defaults to 1) number of seconds to hold the pointer down.
-      # button::(optional defaults to :Left) button symbol supported values are: :NoButton, :Left, :Right, :Middle
+      # 
+      # == arguments
+      # x
+      #  Integer
+      #   description: X-coordinate inside the object
+      #   example: 10
+      # y
+      #  Integer
+      #   description: Y-coordinate inside the object
+      #   example: 11  
+      #
+      # time
+      #  Integer
+      #   description: Number of seconds to hold the pointer down.
+      #   example: 5
+      #   default: 1
+      #
+      # button
+      #  Symbol
+      #   description: Button symbol supported values are: :NoButton, :Left, :Right, :Middle .
+      #   example: :Right
+      #   default: :Left
+      #
+      # tap_params
+      #  Hash
+      #   description:
+      #   example:
+      #   default: {}
+      #
       # == returns
-      # == raises
-      # TestObjectNotFoundError:: If a graphics item is not visible on screen
-      # ArgumentError:: If an invalid button type is given
-      # === examples
-      #  @object.long_tap_object(1, 2, 1, :Left)
+      # NilClass
+      #  description:-
+      #
+      # == exceptions
+      #      
       def long_tap_object( x, y, time = 1, button = :Left, tap_params = {} )
 
         begin
