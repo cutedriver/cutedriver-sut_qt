@@ -228,18 +228,47 @@ module MobyBehaviour
 
       end
 
+      # == description
 			# Taps the screen on the specified coordinates of the object. Given coordinates are relative to the object.
-			# == params  
-			# x::x coordinate inside object to click 
-			# y::y coordinate inside object to click
-			# tap_count::(optional defaults to 1)number of times to tap the screen
-			# button::(optional defaults to :Left) button symbol supported values are: :NoButton, :Left, :Right, :Middle 
-			# == returns  
-			# == raises
-			# TestObjectNotFoundError:: If a graphics item is not visible on screen  
-			# ArgumentError:: If coordinates are outside of the object
-			# === examples
-			#  @object.tap_object(5, 5)    
+      #
+			# == arguments
+			# x
+      #  Integer
+      #   description: x coordinate inside object to click 
+      #   example: 5
+      #
+			# y
+      #  Integer
+      #   description: y coordinate inside object to click
+      #   example: 5
+      #
+			# tap_count
+      #  Integer
+      #   description: number of times to tap the screen
+      #   example: 1
+      #
+			# button
+      #  Symbol
+      #   description: button symbol supported values are: :NoButton, :Left, :Right, :Middle 
+      #   example: :Left
+      #
+      # tap_params
+      #  Hash
+      #   description: parameter that also incorporate all previous tap_object_* commands :command, :behavior_name and :use_tap_screen
+      #   example: { }
+      #      
+			# == returns
+      # NilClass
+      #  description: -
+      #  example: -
+      #
+			# == exceptions
+			# TestObjectNotFoundError
+      #  description: If a graphics item is not visible on screen  
+      #
+			# ArgumentError
+      #  description: If coordinates are outside of the object
+      #
 			def tap_object( x, y, tap_count = 1, button = :Left, tap_params = nil )
 
 				begin
