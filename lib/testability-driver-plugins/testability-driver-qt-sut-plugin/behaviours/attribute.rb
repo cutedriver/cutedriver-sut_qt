@@ -22,7 +22,7 @@ module MobyBehaviour
 	module QT
 
     # == description
-    # Attribute specific behaviours
+    # Behaviours for handling attributes
     #
     # == behaviour
     # QtAttribute
@@ -46,20 +46,54 @@ module MobyBehaviour
 
 			include MobyBehaviour::QT::Behaviour
 
-			#TODO: add error checking
-			# Tries to set attributes for an widget/object also maybe?
-			# == params
-			# attribute:: String, attribute name to set
-			# value:: String/ Integer, new value for attribute
-			# type:: (Optional) Explicit type of attribute. If no type is given, it will be determined based on the format if the value attribute. 
-			# == returns
-			# nil
-			# == raises
-			# RuntimeError::
-			# === examples
-			#  @sut.application.set_attribute('toolTip', 'ToolTip here') 
-			#  @sut.application.set_attribute('visible', true) #do not do this, application will only be visible in process list
-
+			# == description
+      # Sets an attribute of the target object.
+      #
+      # == arguments
+      # attribute
+      #  String
+      #   description: Name of the attribute to be set
+      #   example: "text"
+      #
+      # value
+      #  String
+      #   description: New value of the attribute.
+      #   example: "Menu"
+      #
+      #  Integer
+      #   description: New value of the attribute.
+      #   example: 200
+      #
+      #  Boolean
+      #   description: New value of the attribute.
+      #   example: true
+      #
+      # type
+      #  String
+      #   description: Type of the value. If this argument is not given, the type will be detected based on the class of the value argument. 
+      #   example: "QPoint"
+      #   default: nil
+      #
+      # == tables
+	    # attribute_types_table
+	    #  title: Valid type argument values
+      #  |Type|Example|
+      #  |QRect|'10,10,150,150'|
+      #  |QPoint|'100,200'|
+      #  |QSize|'50,80'|
+      #  |QDate|'15.08.2009'|
+      #  |QDateTime|'1373352400'|
+      #
+      # == returns
+      # NilClass
+      #  description: Always returns nil
+      #  example: nil
+      #
+      # == exceptions
+      # ArgumentError
+      #  description: One of the arguments is not valid   
+      # RuntimeError
+      #  description: Setting of the attribute failed
 			def set_attribute(attribute, value, type = nil)
 
 				Kernel::raise ArgumentError.new( "Attribute-name was empty" ) if attribute.empty?
