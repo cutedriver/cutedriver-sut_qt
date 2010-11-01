@@ -98,7 +98,7 @@ module MobyBehaviour
       # == arguments
       # tap_params
       #  Hash
-      #   description: arguments, see table below
+      #   description: arguments hash, see table below. If integer instead of a Hash, then this has deprecated meaning tap_count, which is also why default value is a number.
       #   example: -
       # interval
       #  Integer
@@ -106,7 +106,7 @@ module MobyBehaviour
       #   example: -
       # button
       #  Symbol
-      #   description: DEPRECATED, use hash key :button
+      #   description: DEPRECATED, use hash key :button instead
       #   example: -
       #
       # == tables
