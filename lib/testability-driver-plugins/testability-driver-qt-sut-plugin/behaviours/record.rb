@@ -46,6 +46,10 @@ module MobyBehaviour
 
 			include MobyBehaviour::QT::Behaviour
 
+      # == returns
+      # NilClass
+      #  description: -
+      #  example: -
 			def start_recording
 
 				begin
@@ -67,6 +71,10 @@ module MobyBehaviour
 				nil
 			end
 
+      # == returns
+      # NilClass
+      #  description: -
+      #  example: -
 			def stop_recording
 
 				begin
