@@ -439,14 +439,14 @@ module MobyBehaviour
       #
       # tap_params
       #  Hash
-      #   description:
-      #   example:
+      #   description: Hash with additional tap parameters. Link to table TBA
+      #   example: {:behavior_name => 'long_tap', :use_tap_screen => true}
       #   default: {}
       #
       # == returns
       # NilClass
       #  description: -
-      #  example: nil
+      #  example: -
       #
       # == exceptions
       # ArgumentError
@@ -505,14 +505,14 @@ module MobyBehaviour
       #
       # tap_params
       #  Hash
-      #   description:
-      #   example:
+      #   description: Hash with additional tap parameters. Link to table TBA
+      #   example: {:behavior_name => 'long_tap', :use_tap_screen => true}
       #   default: {}
       #
       # == returns
       # NilClass
       #  description: -
-      #  example: nil
+      #  example: -
       #
       # == exceptions
       #      
