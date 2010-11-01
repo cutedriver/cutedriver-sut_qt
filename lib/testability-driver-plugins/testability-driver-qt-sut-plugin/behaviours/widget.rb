@@ -445,7 +445,8 @@ module MobyBehaviour
       #
       # == returns
       # NilClass
-      #  description:-
+      #  description: -
+      #  example: nil
       #
       # == exceptions
       # ArgumentError
@@ -510,7 +511,8 @@ module MobyBehaviour
       #
       # == returns
       # NilClass
-      #  description:-
+      #  description: -
+      #  example: nil
       #
       # == exceptions
       #      
