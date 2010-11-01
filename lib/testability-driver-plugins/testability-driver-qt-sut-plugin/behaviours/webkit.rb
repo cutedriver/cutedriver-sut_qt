@@ -46,6 +46,7 @@ module MobyBehaviour
 
 			include MobyBehaviour::QT::Behaviour
 
+            # == description
             # Send javascript to target object on the screen
             # == params
             # java_script::( )java script to be executed to target object
@@ -107,6 +108,7 @@ module MobyBehaviour
 
 
 			
+      # == description
 			# Send javascript to target object on the screen
 			# == params
 			# java_script::( )java script to be executed to target object
