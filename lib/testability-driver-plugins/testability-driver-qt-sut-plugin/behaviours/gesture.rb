@@ -55,7 +55,7 @@ module MobyBehaviour
       # == arguments
       # direction
       #  Symbol
-      #   description: Direction of the flick. Please see this table for valid direction symbols.  
+      #   description: Direction of the flick. Please see [link="#directions_table"]the directions table[/link] for valid direction symbols.  
       #   example: :Left
       #  Integer
       #   description: Direction of the flick as degrees with 0 being up and 90 right.
@@ -63,7 +63,7 @@ module MobyBehaviour
       #
       # button
       #  Symbol
-      #   description: The mouse button pressed while the drag is executed can be defined. Please see this table for valid button symbols.
+      #   description: The mouse button pressed while the drag is executed can be defined. Please see [link="#buttons_table"]the buttons table[/link] for valid button symbols.
       #   example: :Middle
       #   default: :Left
       #
@@ -126,7 +126,7 @@ module MobyBehaviour
       #
       # button
       #  Symbol
-      #   description: The mouse button pressed while the flick is executed can be defined. Please see this table for valid button symbols.
+      #   description: The mouse button pressed while the flick is executed can be defined. Please see [link="#buttons_table"]the buttons table[/link] for valid button symbols.
       #   example: :Middle
       #   default: :Left
       #
@@ -176,7 +176,7 @@ module MobyBehaviour
       # == arguments
       # direction
       #  Symbol
-      #   description: Direction of the gesture. Please see this table for valid direction symbols.  
+      #   description: Direction of the gesture. Please see [link="#directions_table"]the directions table[/link] for valid direction symbols.  
       #   example: :Left
       #
       #  Integer
@@ -195,9 +195,26 @@ module MobyBehaviour
       #
       # optional_params
       #  Hash
-      #   description: This method supports :use_tap_screen, :isDrag and :button optional arguments. The first two can be either true or false, for :button values please see this table.
+      #   description: This method supports :use_tap_screen, :isDrag and :button optional arguments. The first two can be either true or false, for :button values please see [link="#buttons_table"]the buttons table[/link].
       #   example: { :button => :Right }
       #   default: { :use_tap_screen => 'false', :isDrag => false, :button => :Left }  
+      #
+      # == tables
+	    # directions_table
+	    #  title: Direction symbols table
+      #  |Symbol|
+      #  |:Left|
+      #  |:Right|
+      #  |:Up|
+      #  |:Down|
+      #
+      # buttons_table
+	    #  title: Mouse button symbols table
+      #  |Symbol|Description|
+      #  |:Left|Simulate left mouse button|
+      #  |:Middle|Simulate middle mouse button|
+      #  |:Right|Simulate right mouse button|
+      #  |:NoButton|Do not simulate any mouse button|
       #
       # == returns
       # NilClass
@@ -256,7 +273,7 @@ module MobyBehaviour
       #
       # optional_params
       #  Hash
-      #   description: This method supports :use_tap_screen, :isDrag and :button optional arguments. The first two can be either true or false, for :button values please see this table.
+      #   description: This method supports :use_tap_screen, :isDrag and :button optional arguments. The first two can be either true or false, for :button values please see [link="#buttons_table"]the buttons table[/link].
       #   example: { :button => :Right }
       #   default: { :use_tap_screen => 'false', :isDrag => false, :button => :Left }  
       #
@@ -327,7 +344,7 @@ module MobyBehaviour
       #
       # optional_params
       #  Hash
-      #   description: This method supports :use_tap_screen, :isDrag and :button optional arguments. The first two can be either true or false, for :button values please see this table.
+      #   description: This method supports :use_tap_screen, :isDrag and :button optional arguments. The first two can be either true or false, for :button values please see [link="#buttons_table"]the buttons table[/link].
       #   example: { :button => :Right }
       #   default: { :use_tap_screen => 'false', :isDrag => false, :button => :Left }  
       #
@@ -379,7 +396,7 @@ module MobyBehaviour
       #
       # optional_params
       #  Hash
-      #   description: This method supports :use_tap_screen, :isDrag and :button optional arguments. The first two can be either true or false, for :button values please see this table.
+      #   description: This method supports :use_tap_screen, :isDrag and :button optional arguments. The first two can be either true or false, for :button values please see [link="#buttons_table"]the buttons table[/link].
       #   example: { :button => :Right }
       #   default: { :use_tap_screen => 'false', :isDrag => false, :button => :Left }  
       #
@@ -437,7 +454,7 @@ module MobyBehaviour
       #
       # mouse_details
       #  Hash
-      #   description: Mouse usage details can be defined by setting the :press, :release and :isDrag keys to true or false. Valid values for the :button key are described in this table.
+      #   description: Mouse usage details can be defined by setting the :press, :release and :isDrag keys to true or false. Valid values for the :button key are described in [link="#buttons_table"]the buttons table[/link].
       #   example: { :press => true, :release => true, :button => :Right, :isDrag => false}
       #   default: { :press => true, :release => true, :button => :Left, :isDrag => true}  
       #
@@ -515,7 +532,7 @@ module MobyBehaviour
       # == arguments
       # direction
       #  Symbol
-      #   description: Direction of the drag. Please see this table for valid direction symbols.  
+      #   description: Direction of the drag. Please see [link="#directions_table"]the directions table[/link] for valid direction symbols.  
       #   example: :Left
       #
       #  Integer
@@ -529,7 +546,7 @@ module MobyBehaviour
       #
       # button
       #  Symbol
-      #   description: The mouse button pressed while the drag is executed can be defined. Please see this table for valid button symbols.
+      #   description: The mouse button pressed while the drag is executed can be defined. Please see [link="#buttons_table"]the buttons table[/link] for valid button symbols.
       #   example: :Right
       #   default: :Left
       #
@@ -589,7 +606,7 @@ module MobyBehaviour
       #
       # button
       #  Symbol
-      #   description: The mouse button pressed while the drag is executed can be defined. Please see this table for valid button symbols.
+      #   description: The mouse button pressed while the drag is executed can be defined. Please see [link="#buttons_table"]the buttons table[/link] for valid button symbols.
       #   example: :Right
       #   default: :Left
       #
@@ -649,7 +666,7 @@ module MobyBehaviour
       #
       # button
       #  Symbol
-      #   description: The mouse button pressed while the drag is executed can be defined. Please see this table for valid button symbols.
+      #   description: The mouse button pressed while the drag is executed can be defined. Please see [link="#buttons_table"]the buttons table[/link] for valid button symbols.
       #   example: :Right
       #   default: :Left
       #
@@ -706,7 +723,7 @@ module MobyBehaviour
       # == arguments
       # direction
       #  Symbol
-      #   description: Direction of the move. Please see this table for valid direction symbols.  
+      #   description: Direction of the move. Please see [link="#directions_table"]the directions table[/link] for valid direction symbols.  
       #   example: :Left
       #
       #  Integer
@@ -720,7 +737,7 @@ module MobyBehaviour
       #
       # button
       #  Symbol
-      #   description: The mouse button used with the move can be defined. Please see this table for valid button symbols.
+      #   description: The mouse button used with the move can be defined. Please see [link="#buttons_table"]the buttons table[/link] for valid button symbols.
       #   example: :Right
       #   default: :Left
       #
