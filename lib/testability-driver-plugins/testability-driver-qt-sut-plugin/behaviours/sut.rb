@@ -92,11 +92,12 @@ module MobyBehaviour
 
 	    end
 	    
+	    # == description
 	    # Returns list of crashed applications running on SUT known to qttasserver
-	    # ==usage
-	    # apps = sut.list_crashed_apps()
-	    # ==return
-	    # String:: Xml string containing crashed applications, their names, process ids and crash times
+	    # == returns
+	    # String
+	    #  description: Xml string containing crashed applications, their names, process ids and crash times
+	    #  example: "<tasMessage dateTime="2010.11.02 14:48:11.056" version="0.9.1" ><tasInfo id="1" name="Qt4.6.2" type="qt" ><object id="" name="QApplications" type="applications" ></object></tasInfo></tasMessage>"
 	    def list_crashed_apps
 		
 		    apps = nil
@@ -210,10 +211,10 @@ module MobyBehaviour
 	    #  |output|Command output|
 	    #  |exitCode|Return code of the command if finished|
 	    #	    
-	    # === returns
+	    # == returns
 	    # Hash
 	    #  description: The return hash will be empty if no pid is found.
-	    #  example: {}
+	    #  example: {:status=>'FINISHED', :output=>'example_output', :exitCode=>0}
       #
 	    # Hash:: Information about the shell command.
 	    # === raises

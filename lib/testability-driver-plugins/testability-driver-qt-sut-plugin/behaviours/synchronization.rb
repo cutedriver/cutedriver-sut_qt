@@ -50,18 +50,39 @@ module MobyBehaviour
     
       end
     
-      # Execution of the test script is stopped and TDriver waits for the given signal. If no signals of the
-      # given type are found before the timeout an error is raised.
+      # == description
+      # Synchronizes script execution to a signal. Test script execution is stopped until the expected signal is emitted or the timeout occurs. 
+      # If no signals of the given type are found before the timeout an error is raised.\n
+      # \n
+      # [b]NOTE:[/b] Using wait_for_signal will reset and clear any previously set signal listening status.
+      # == arguments
+      # signal_timeout
+      #  Fixnum
+      #    description: Timeout, in seconds. A timeout of zero means that the signal must have been listened to and emitted before this method is called.
+      #    example: 60
       #
-      # === params
-      # signal_timeout:: Integer, time to wait for signal, in seconds
-      # signal_name:: String, name of the signal to wait for. Note that most signals end with ()
-      # block:: (optional) code block to be executed while listening signals
-      # === returns
-      # nil
-      # === errors
-      # SignalNotEmittedException:: The given signal was n ot received before the timeout
-      # ArgumentError:: signal_timeout was not a positive Integer or signal_name was not a nonempty String  
+      # signal_name
+      #  String
+      #   description: Name of the signal that is to be emitted.
+      #   example: "clicked()"
+      #
+      # &block
+      #  Proc
+      #   description: Optional code block to be executed while listening signals
+      #   example: -
+      #
+      # == returns
+      # NilClass
+      #  description: -
+      #  example: -
+      #
+      # == exceptions
+      # SignalNotEmittedException
+      #  description: The expected signal was not emitted before the timeout was reached.
+      #
+      # ArgumentError
+      #  description: signal_name was not a valid String or signal_timeout was not a non negative Integer
+      #
       def wait_for_signal( signal_timeout, signal_name, &block )
     
         Kernel::raise ArgumentError.new("The timeout argument was of wrong type: expected 'Integer' was '%s'" % signal_timeout.class ) unless signal_timeout.kind_of?( Integer )
