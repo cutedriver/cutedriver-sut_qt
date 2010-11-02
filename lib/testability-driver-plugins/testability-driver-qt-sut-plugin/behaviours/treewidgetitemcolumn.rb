@@ -57,6 +57,11 @@ module MobyBehaviour
 	    #   description: State of checkable item, see supported values in [link="#check_state_enums"]table[/link] below
 	    #   example: 0
 	    #
+	    # == returns
+	    # NilClass
+	    #  description: -
+	    #  example: -
+	    #
       # == tables
       # check_state_enums
       #  title: Supported item states (Qt 4.7)
