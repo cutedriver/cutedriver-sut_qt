@@ -744,8 +744,8 @@ module MobyBehaviour
       # optional_params
       #  Hash
       #   description: The only optional argument supported by drag_to_object is :use_tap_screen.
-      #   example: { :use_tap_screen => 'true' }
-      #   default: { :use_tap_screen => 'false' }  
+      #   example: {:use_tap_screen => 'true'}
+      #   default: {:use_tap_screen => 'false'}  
       #
       # == returns
       # NilClass
