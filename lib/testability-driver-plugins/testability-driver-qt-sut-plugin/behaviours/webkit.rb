@@ -146,20 +146,29 @@ module MobyBehaviour
 			end
 
       # == description
-			# Scroll QWebFrame to correct position.
+			# Scroll QWebFrame to correct position. Valid target object types are: QWebFrame, all QWebElements.
 			#
 			# == arguments
 			# dx
 			#  Fixnum
-			#
+			#   description: Delta x in pixels, positive value to right negative to left. Ignored for QWebElements. 
+			#   example: 313
+      #
 			# dy
 			#  Fixnum
+			#   description: Delta y in pixels, positive value to down negative to up. Ignored for QWebElements.
+			#   example: 313
 			#
 			# pixels 
 			#  Fixnum
-			
-			# to scroll down (value may be negative)
+			#   description: Value 1 means that scroll is done only to reveal the center position of the element. Value 0 means that element is tried to bring fully visible. Ignored for QWebFrame.
+			#   example: 1
+			#
 			# == returns  
+      # NilClass
+      #  description: -
+      #  example: -
+      #
 			# == exceptions
 			# RuntimeError
 			#  description: Scrollign webframe failed with error: %s
@@ -167,7 +176,7 @@ module MobyBehaviour
 			# === examples
 			#  @QwebFrame.scroll(0, 10)
 			#  @app.a.scroll()
-      def scroll( dx=0, dy=0, tap=0 )   
+      def scroll( dx = 0, dy = 0, tap = 0 )   
         temp_id = ""
 
         if type == "QWebFrame"
