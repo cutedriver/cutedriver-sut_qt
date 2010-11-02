@@ -46,6 +46,7 @@ module MobyBehaviour
 
 			include MobyBehaviour::QT::Behaviour
 
+            # == nodoc
             # == description
             # Send javascript to target object on the screen
             # == params
@@ -159,12 +160,12 @@ module MobyBehaviour
 			#   description: Delta y in pixels, positive value to down negative to up. Ignored for QWebElements.
 			#   example: 313
 			#
-			# pixels 
+			# center 
 			#  Fixnum
 			#   description: Value 1 means that scroll is done only to reveal the center position of the element. Value 0 means that element is tried to bring fully visible. Ignored for QWebFrame.
 			#   example: 1
 			#
-			# == returns  
+			# == returns
       # NilClass
       #  description: -
       #  example: -
@@ -176,7 +177,7 @@ module MobyBehaviour
 			# === examples
 			#  @QwebFrame.scroll(0, 10)
 			#  @app.a.scroll()
-      def scroll( dx = 0, dy = 0, tap = 0 )   
+      def scroll( dx = 0, dy = 0, center = 0 )   
         temp_id = ""
 
         if type == "QWebFrame"
@@ -196,7 +197,7 @@ module MobyBehaviour
           frame_down_border = y_absolute + height - horizontalScrollBarHeight
           frame_right_border = x_absolute + width - verticalScrollBarWidth
 
-          if(tap==1)
+          if(center==1)
             
             #adjust image to be visible for tap
             if(center_y.to_i > frame_down_border)
@@ -244,8 +245,8 @@ module MobyBehaviour
       end
 
 
-				# enable hooking for performance measurement & debug logging
-				MobyUtil::Hooking.instance.hook_methods( self ) if defined?( MobyUtil::Hooking )
+			# enable hooking for performance measurement & debug logging
+			MobyUtil::Hooking.instance.hook_methods( self ) if defined?( MobyUtil::Hooking )
 
 
 		end # Webkit
