@@ -40,7 +40,7 @@ module MobyBehaviour
     # *
     #
     # == objects
-    # Web
+    # *
     #
 		module Webkit
 
