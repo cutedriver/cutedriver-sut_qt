@@ -131,7 +131,7 @@ module MobyBehaviour
 	    end
 
 	    # == description
-	    # Verify was the popup on the screen or not. The method uses matti verify internally for the verification. 
+	    # Verify was the popup on the screen or not. The method uses TDriver verify internally for the verification. 
 	    # If the popup was shown then the entire application ui state is returned as a test object. 
 	    # More detailed verification can be done for the object (e.g. the content of the popup, labels etc...).
 	    # \n
