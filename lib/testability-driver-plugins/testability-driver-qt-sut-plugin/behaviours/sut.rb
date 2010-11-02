@@ -113,15 +113,43 @@ module MobyBehaviour
 		    apps     
 	    end
 
-	    # Executes the given command as a new process
+	    # == description
+	    # Executes the command in a shell in the target sut. Note that the executable need to be in path or otherwise you need to use full absolute path. No relative paths can be used with this command. If the process started will take more than 4 seconds to exit then you should launch the process in detached mode by adding the parameter hash ":detached => 'true'" to the arguments. By default processes are launched in "synchronus" mode.
 	    #
-	    # === params
-	    # command:: String containing the command to execute and any arguments
-	    # param:: Hash with the flags for the command
-	    # === returns
-	    # String:: Output of the command, if any
-	    # === raises
-	    # ArgumentError:: The command argument was not a non empty String
+	    # == arguments
+	    # command
+	    #  String
+	    #   description: String containing the command executable to execute and any arguments it might need. Executable can be used without path if it is in PATH. Otherwise full absolute path is needed. A shell is required for piped commands (UNIX).
+	    #   example: "ruby script.rb" or 'sh -c "ruby script.rb|grep output'"
+	    #
+	    # param
+	    #  Hash
+	    #   description: Hash with the flags for the command
+ 	    #   example: {:wait => 'true', :timeout => 13}
+ 	    #
+	    # == tables
+	    # execute_shell_command_hash
+	    #  title: Parameter hash keys
+	    #  |Key|Description|Default|
+	    #  |:detached|Hash containing the ':detached' key with 'true' or 'false' strings as value.|false|
+	    #  |:threaded|If :thread is set true, the command will be run in a background thrad and the command will return the PID of the process. See [link="#QtSUT:shell_command"]shell_command[/link] for information about controlling the command.|false|
+	    #  |:wait|Execute a threaded command and wait for the command to complete. Return value will contain the output of the command. Use :wait if the shell command execution taks longer than 4 seconds.|false|
+	    #  |:timeout|Timeout for :wait, in seconds. If timeout is reached, the command will be killed. RunTimeError occurs if timeout is reached.|300|
+      #
+	    # == returns
+	    # String
+	    #  description: Output of the command if any
+	    #  example: "OK"
+	    #
+	    # == Exceptions
+	    # ArgumentError
+	    #  description: The command argument was not a non empty String.
+	    # 
+	    # ArgumentError
+	    #  description: The parameters argumet must be a Hash.
+	    #
+	    # RuntimeError
+	    #  description: Timeout of %s seconds reached. %s
 	    def execute_shell_command(command, param = { :detached => "false"} )      
 		    Kernel::raise ArgumentError.new("The command argument must be a non empty String.") unless ( command.kind_of?( String ) and !command.empty? )
 		    Kernel::raise ArgumentError.new("The parameters argumet must be a Hash.") unless ( param.kind_of?(Hash) )
@@ -160,12 +188,31 @@ module MobyBehaviour
 		    return execute_command( MobyCommand::Application.new( :Shell, command, nil, nil, nil, nil, nil, nil, param ) ).to_s
 	    end
 
-	    # Returns the command status of given shell command
+      # == description
+      # Control and retrieve data from a command started by [link="#QtSUT:execute_shell_command"]execute_shell_command[/link]. On a running process, the status and produced output is returned. The command will remove all output from the server that has already been retrieved by the testability driver script. If the command status is FINISHED, all information is removed from the server.
 	    #
-	    # === params
-	    # pid:: Integer of the process id given.
-	    # param:: Hash with the flags for the command
+	    # == arguments
+	    # pid
+	    #  Integer
+	    #   description: Process id of the command returned by the threaded execute_shell_command.
+	    #   example: 23442 
+	    # 
+	    # param
+	    #  Hash
+	    #   description: Additional parameters for the command. Currently supported is ":kill", which will kill the process.
+	    #   example: {:kill => 'true'}
+	    #
+	    # == tables
+	    # shell_command_return_values
+	    #  title: Shell command return values
+	    #  description: The return hash will be empty if no pid is found.
+	    #  |Key|Description|
+	    #  |status|RUNNING, ERROR, FINISHED|
+	    #  |output|Command output|
+	    #  |exitCode|Return code of the command if finished|
+	    #	    
 	    # === returns
+      #
 	    # Hash:: Information about the shell command.
 	    # === raises
 	    # ArgumentError:: The command argument was not a non empty String

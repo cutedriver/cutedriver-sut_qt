@@ -106,20 +106,34 @@ module MobyBehaviour
               returnValue
 
             end
-
-
-			
+            
       # == description
-			# Send javascript to target object on the screen
-			# == params
-			# java_script::( )java script to be executed to target object
-			# == returns  
+			# Executes java script on the target test object			
+			#
+			# == arguments
+			# java_script
+			#  String
+			#   description: Script to be executed to target object
+			#   example: "this.onclick();"
+			#
+			# == returns
+			# MobyBase::TestObject
+			#  description: Target test object 
+			#  example: -
+			#
 			# == raises
-			# TestObjectNotFoundError:: If a graphics item is not visible on screen
-			# ArgumentError:: If an invalid button type is given
-			# ArgumentError:: If coordinates are outside of the object
-			# === examples
-			#  @object.execute_javascript
+			# RuntimeError
+			#  description: When executing JavaScript to QWebFrame: QWebPage not found.
+      #
+      # RuntimeError
+      #  description: When executing JavaScript to QWebFrame: QWebFrame not found.
+      #
+      # RuntimeError
+      #  description: When executing JavaScript to WebElement: QWebPage not found.
+      #
+      # RuntimeError
+      #  description: When executing JavaScript to WebElement: QWebElement not found.
+      #
 			def execute_javascript( java_script )   
                 
               webframe_id = 0
