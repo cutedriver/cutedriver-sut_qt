@@ -217,13 +217,16 @@ module MobyBehaviour
               width      = (@sut.xml_data.xpath( "//object[@id='%s']/attributes/attribute[@name ='width']/value/text()" % self.attribute('webFrame') )[0]).to_s.to_i
               height     = (@sut.xml_data.xpath( "//object[@id='%s']/attributes/attribute[@name ='height']/value/text()" % self.attribute('webFrame') )[0]).to_s.to_i
 
+              horizontalScrollBarHeight = (@sut.xml_data.xpath( "//object[@id='%s']/attributes/attribute[@name ='horizontalScrollBarHeight']/value/text()" % self.attribute('webFrame') )[0]).to_s.to_i
+              verticalScrollBarWidth    = (@sut.xml_data.xpath( "//object[@id='%s']/attributes/attribute[@name ='verticalScrollBarWidth']/value/text()" % self.attribute('webFrame') )[0]).to_s.to_i
+
              # puts "tap: " + (Time.now - tapMeasure).to_s + " s - x_a(#{x_absolute}), y_a(#{y_absolute}), w(#{width}), h(#{height})"
 
 
               if((center_x.to_i < x_absolute) or
-                 (center_x.to_i > x_absolute + width) or
+                 (center_x.to_i > x_absolute + width - verticalScrollBarWidth) or
                  (center_y.to_i < y_absolute) or
-                 (center_y.to_i > y_absolute + height)
+                 (center_y.to_i > y_absolute + height - horizontalScrollBarHeight)
                 )
                 #puts "web element scroll"
                 self.scroll(0,0,1) # enable tap centralization
