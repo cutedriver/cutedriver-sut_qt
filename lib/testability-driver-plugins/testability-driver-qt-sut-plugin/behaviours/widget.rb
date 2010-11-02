@@ -49,10 +49,14 @@ module MobyBehaviour
 
       include MobyBehaviour::QT::Behaviour
 
+      # == description
       # Moves the mouse to the object it was called on.
-      # == params
-      # refresh::(optional) if true will cause the framework to refresh the ui state. Default is false.
-      # === examples
+      # == arguments
+      # refresh
+      #  Boolean
+      #   description: if true will cause the framework to refresh the UI state
+      #   example: true
+      # == examples
       # @object.move_mouse
       def move_mouse( move_params = false )
 

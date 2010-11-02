@@ -138,7 +138,7 @@ module MobyBehaviour
       #
       # == arguments
       # to_qdebug
-      #  boolean
+      #  Boolean
       #   description:
       #    True to logs message to qDebug instead of a file.	  
       #    example: true
@@ -157,7 +157,7 @@ module MobyBehaviour
       #
       # == arguments
       # include
-      #  boolean
+      #  Boolean
       #   description:
       #    True to log qDebug messages and false to not
       #    example: true
@@ -177,7 +177,7 @@ module MobyBehaviour
       #
       # == arguments
       # size
-      #  integer
+      #  Fixnum
       #   description:
       #    The new log file size
       #    example: 500000

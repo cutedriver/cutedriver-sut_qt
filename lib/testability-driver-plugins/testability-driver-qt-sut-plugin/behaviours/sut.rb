@@ -290,9 +290,9 @@ module MobyBehaviour
       # Starts process memory logging. Information about the given application's
       # heap memory usage will be stored in a file. In addition to application,
       # used log file can be specified as well as the type of timestamp and
-      # interval length (in seconds).
-      #
-      # Note! Currently only supported on Symbian platform.
+      # interval length (in seconds).\ŋ
+      # \n
+      # [b]NOTE:[/b] Currently only supported on Symbian platform.
       #
       # == arguments
       # thread_name
@@ -340,11 +340,10 @@ module MobyBehaviour
 	    end
 
       # == description
-      # Stops process memory logging. Logging of the given application's heap
-      # memory usage is stopped. Either the full log file name or the log file
-      # contents will be returned.
-      #
-      # Note! Currently only supported on Symbian platform.
+      # Stops process memory logging. Logging of the given application's heap memory usage is stopped. Either the full log file name or the log file
+      # contents will be returned.\n
+      # \n
+      # [b]NOTE:[/b] Currently only supported on Symbian platform.
       #
       # == arguments
       # thread_name
@@ -382,9 +381,9 @@ module MobyBehaviour
 
       # == description
       # Starts generating CPU load. Tries to generate CPU load as accurately as
-      # it can but depending on other activities on the system it might vary.
-      #
-      # Note! Currently only supported on Symbian platform.
+      # it can but depending on other activities on the system it might vary. \n
+      # \n
+      # [b]NOTE:[/b] Currently only supported on Symbian platform.
       #
       # == arguments
       # load
@@ -412,9 +411,9 @@ module MobyBehaviour
       end
 
       # == description
-      # Stops generating CPU load.
-      #
-      # Note! Currently only supported on Symbian platform.
+      # Stops generating CPU load.\n
+      # \n
+      # [b]NOTE:[/b] Currently only supported on Symbian platform.
       #
       # == returns
 	    # NilClass
@@ -431,6 +430,25 @@ module MobyBehaviour
         end
       end
 
+      # == description
+      # Groups behaviours into a single message. Commands are executed in the target in sequence using the given interval as timeout between the commands. The interval is not quaranteed to be exactly the specified amount and will vary depending on the load in the target device. Therefore it is not recommended to use the interval as basis for the test results. The commands are all executed in the target device in a single roundtrip from TDriver to the target device so no verification will or can be done between the commands so do not group behaviours which change the ui in a way that the next command may fail. Best use cases for the grouping is static behaviours such as virtual keyboard button taps. Behaviours can only be qrouped for one application at a time and you need to provide the application object as parameter. Sut behaviours cannot be grouped.
+      # == arguments
+      # interval
+      #  Fixnum
+      #   description: Inteval time in seconds (0.1 is an acceptable value)
+      #   example: 1
+      # app
+      #  MobyBase::TestObject
+      #   description: The target application for the grouped behaviours
+      #   example: -
+      # &block
+      #  Proc
+      #   description: Code block containing the behaviours to group as one.
+      #   example: {app.Object.tap;app.Object_two.tap}
+      # == returns
+      # NilClass
+      #  description: -
+      #  example: -
 	    def group_behaviours( interval, app, &block )
 		    begin		  
 		      raise ArgumentError.new("Application must be defined!") unless app
@@ -461,24 +479,32 @@ module MobyBehaviour
 		      MobyUtil::Logger.instance.log "behaviour", "FAIL;Failed to execute grouped behaviours.;#{ id };sut;{};group_behaviours;"
 		      Kernel::raise RuntimeError.new( "Unable to execute grouped behaviours: Exception: #{ e.message } (#{ e.class })" )
 		    end
+		    nil
 	    end
 
+      # == description
 	    # Set the event type used to interact with the target. Possible methods are :Mouse, :Touch and :Both.
 	    # Event generation depends on this setting. If set to :Mouse or :Touch then only those events are generated.
 	    # If set to :Both then both mouse and touch events are sent. In this situation touch events are set as primary.
-	    # This setting has no affect when using multitouch. Note that if you generate multitouch type events e.g. a.tap_down, 
+	    # This setting has no affect when using multitouch.\n\n 
+	    # [b]NOTE:[/b] If you generate multitouch type events e.g. a.tap_down, 
 	    # b.tap_down then a.tap_up, b.tap_up you must set the type to :Touch to avoid mouse events to be generated.
-	    # === params
-	    # new_type:: Symbol defining which method to use: :Mouse, :Touch and :Both.
-	    # === raises
-	    # ArgumentError:: If invalid type is given.
+	    # == arguments
+	    # new_type
+	    #  Symbol
+	    #   description: Symbol defining which method to use: :Mouse, :Touch and :Both.
+	    #   example: :Touch
+	    # == raises
+	    # ArgumentError
+	    #  description: If invalid type is given.
+	    #
 	    def set_event_type(new_type)
      		raise ArgumentError.new("Invalid event type. Accepted values :" << @@_event_type_map.keys.join(", :") ) unless @@_event_type_map.include?(new_type)
 		    MobyUtil::Parameter[ self.id ][ :event_type] = @@_event_type_map[new_type]
       end
 
       # {:name => '', id => '', applicationUid => ''},[ {:objectName => '' , :className => , :text =>} ,..]
-      def find_object(app_details = nil, objects = nil)
+      def find_object( app_details = nil, objects = nil )
 		    ret = execute_command( MobyCommand::FindObjectCommand.new(self, app_details, objects) )
       end
 

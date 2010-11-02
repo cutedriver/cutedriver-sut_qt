@@ -145,11 +145,25 @@ module MobyBehaviour
               execute_javascript_query( java_script, nil, index, webframe_id)
 			end
 
-			# Scrolls the 
-			# == params
-			# dx, dy. pixels to scroll down (value may be negative)
+      # == description
+			# Scroll QWebFrame to correct position.
+			#
+			# == arguments
+			# dx
+			#  Fixnum
+			#
+			# dy
+			#  Fixnum
+			#
+			# pixels 
+			#  Fixnum
+			
+			# to scroll down (value may be negative)
 			# == returns  
-			# == raises
+			# == exceptions
+			# RuntimeError
+			#  description: Scrollign webframe failed with error: %s
+			#
 			# === examples
 			#  @QwebFrame.scroll(0, 10)
 			#  @app.a.scroll()
