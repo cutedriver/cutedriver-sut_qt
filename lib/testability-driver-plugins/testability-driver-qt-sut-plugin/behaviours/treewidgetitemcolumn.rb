@@ -48,40 +48,55 @@ module MobyBehaviour
 
 	    include MobyBehaviour::QT::Behaviour
 
-	    # Sets the check state of the item in a treewidget
-	    # == params
-	    # == returns  
-	    # == raises
-	    def check_state(new_state)
+      # == description
+	    # Sets the check state of the item in QTreeWidgetItemColumn.\n
+	    #
+	    # == arguments
+	    # new_state
+	    #  Integer
+	    #   description: State of checkable item, see supported values in [link="#check_state_enums"]table[/link] below
+	    #   example: 0
+	    #
+      # == tables
+      # check_state_enums
+      #  title: Supported item states (Qt 4.7)
+      #  description: See Qt documentation for allowed values to QT::CheckState
+      #  |Enum|Value|Description|
+      #  |Qt::Unchecked|0|The item is unchecked.|
+      #  |Qt::PartiallyChecked|1|The item is partially checked.|
+      #  |Qt::Checked|2|The item is checked.|
+      #
+	    # == returns
+	    def check_state( new_state )
 
-		  ret = nil
+		    ret = nil
 
-		  begin    
+		    begin    
 
-		    raise ArgumentError.new( "new_state must be an integer. Check qt docs for allowed values (Qt::CheckState." ) unless new_state.kind_of?(Integer) 
-		    
-		    command = MobyCommand::WidgetCommand.new
-		    command.object_id(self.attribute('parentWidget'))
-		    command.application_id(get_application_id)    
-		    command.object_type(:Standard)                          
-		    command.command_name('CheckState')    
-		    command.set_event_type(MobyUtil::Parameter[ @sut.id ][ :event_type, "0" ])
-		    params = {:state => new_state, :column => self.attribute('column'), :item => self.attribute('parentItem')}      
+		      raise ArgumentError.new( "new_state must be an integer. Check qt docs for allowed values (Qt::CheckState." ) unless new_state.kind_of?(Integer) 
+		      
+		      command = MobyCommand::WidgetCommand.new
+		      command.object_id(self.attribute('parentWidget'))
+		      command.application_id(get_application_id)    
+		      command.object_type(:Standard)                          
+		      command.command_name('CheckState')    
+		      command.set_event_type(MobyUtil::Parameter[ @sut.id ][ :event_type, "0" ])
+		      params = {:state => new_state, :column => self.attribute('column'), :item => self.attribute('parentItem')}      
 
-            command.set_event_type(MobyUtil::Parameter[ @sut.id ][ :event_type, "0" ])
+              command.set_event_type(MobyUtil::Parameter[ @sut.id ][ :event_type, "0" ])
 
-		    command.command_params(params)
-		    @sut.execute_command(command)
+		      command.command_params(params)
+		      @sut.execute_command(command)
 
-		  rescue Exception => e      
+		    rescue Exception => e      
 
-		    MobyUtil::Logger.instance.log "behaviour" , "FAIL;Failed select"#{identity};drag;"
-		    Kernel::raise e        
+		      MobyUtil::Logger.instance.log "behaviour" , "FAIL;Failed select"#{identity};drag;"
+		      Kernel::raise e        
 
-		  end      
+		    end      
 
-		  MobyUtil::Logger.instance.log "behaviour" , "PASS;Operation select executed successfully"#{identity};drag;"
-		  ret
+		    MobyUtil::Logger.instance.log "behaviour" , "PASS;Operation select executed successfully"#{identity};drag;"
+		    ret
 
 	    end
 
