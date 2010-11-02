@@ -541,6 +541,10 @@ module MobyBehaviour
 	    #  Symbol
 	    #   description: Symbol defining which method to use: :Mouse, :Touch and :Both.
 	    #   example: :Touch
+	    # == returns
+	    # NilClass
+	    #  description: -
+	    #  example: -
 	    # == raises
 	    # ArgumentError
 	    #  description: If invalid type is given.
@@ -548,11 +552,13 @@ module MobyBehaviour
 	    def set_event_type(new_type)
      		raise ArgumentError.new("Invalid event type. Accepted values :" << @@_event_type_map.keys.join(", :") ) unless @@_event_type_map.include?(new_type)
 		    MobyUtil::Parameter[ self.id ][ :event_type] = @@_event_type_map[new_type]
+        nil
       end
 
+      # == nodoc
       # {:name => '', id => '', applicationUid => ''},[ {:objectName => '' , :className => , :text =>} ,..]
       def find_object( app_details = nil, objects = nil )
-		    ret = execute_command( MobyCommand::FindObjectCommand.new(self, app_details, objects) )
+		    execute_command( MobyCommand::FindObjectCommand.new( self, app_details, objects ) )
       end
 
       # enable hooking for performance measurement & debug logging
