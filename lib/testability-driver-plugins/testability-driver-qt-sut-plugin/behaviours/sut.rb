@@ -218,10 +218,12 @@ module MobyBehaviour
       # == returns
       # Hash
       #  description: The return hash will be empty if no pid is found.
-      #  example: {:status=>'FINISHED', :output=>'example_output', :exitCode=>0}
+      #  example: {:status => 'FINISHED', :output => 'example_output', :exitCode => 0}
+      # 
+      # == exceptions
+      # ArgumentError
+      #  description: The command argument was not a non empty String
       #
-      # === raises
-      # ArgumentError:: The command argument was not a non empty String
       def shell_command(pid, param = {} )
         Kernel::raise ArgumentError.new("pid argument should be positive integer.") unless pid.to_i > 0
         param[ :status ] = 'true'
