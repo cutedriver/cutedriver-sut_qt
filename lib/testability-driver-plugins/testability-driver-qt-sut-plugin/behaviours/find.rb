@@ -48,6 +48,8 @@ module MobyBehaviour
 		module Find   
 			include MobyBehaviour::QT::Behaviour
 			
+			# nodoc
+			# TODO: fix this
 			def find_and_center (find_hash = {})
 			  begin
 				search_result = find(find_hash)
