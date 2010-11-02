@@ -50,13 +50,17 @@ module MobyBehaviour
 
 	    @@_event_type_map = { :Mouse => '0', :Touch => '1', :Both => '2' }
 
-	    # QT specific feature.
-	    # Kills all of the application processed started through the server.
+      # == description
+      # Kills all of the applications started through the server.
+      # == returns
+      # NilClass
+      #  description: -
+      #  example: -      
 	    def kill_started_processes
 
 		    # execute the application control service request
 		    execute_command( MobyCommand::Application.new( :KillAll ) )
-
+        nil
 	    end
 
       # == description
@@ -216,7 +220,6 @@ module MobyBehaviour
 	    #  description: The return hash will be empty if no pid is found.
 	    #  example: {:status=>'FINISHED', :output=>'example_output', :exitCode=>0}
       #
-	    # Hash:: Information about the shell command.
 	    # === raises
 	    # ArgumentError:: The command argument was not a non empty String
 	    def shell_command(pid, param = {} )
@@ -344,16 +347,25 @@ module MobyBehaviour
 
 	    end
 
+      # == description
+      # Request the qttasserver to shutdown. This command will cause the qttasserver to close. The sut will no longer be usable after this command. To resume testing qttasserver must be restarted.
+      # == returns
+      # NilClass
+      #  description: -
+      #  example: -
+      # == exceptions
+      # RuntimeError
+      #  description: Unable to close qttas: Exception: %s (%s) 
 	    def close_qttas
 		    begin
 		      # execute the application control service request
-		      apps = execute_command( MobyCommand::Application.new( :CloseQttas ) )
+		      execute_command( MobyCommand::Application.new( :CloseQttas ) )
 		      MobyUtil::Logger.instance.log "behaviour", "PASS;Successfully closed qttas.;#{ id };sut;{};close_qttas;"
 		    rescue Exception => e
 		      MobyUtil::Logger.instance.log "behaviour", "FAIL;Failed to close qttas.;#{ id };sut;{};close_qttas;"
 		      Kernel::raise RuntimeError.new( "Unable to close qttas: Exception: #{ e.message } (#{ e.class })" )
 		    end
-
+        nil
 	    end
 
       # == description
