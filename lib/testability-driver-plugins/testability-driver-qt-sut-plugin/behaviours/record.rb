@@ -46,6 +46,7 @@ module MobyBehaviour
 
 			include MobyBehaviour::QT::Behaviour
 
+      # == nodoc
       # == returns
       # NilClass
       #  description: -
@@ -71,6 +72,7 @@ module MobyBehaviour
 				nil
 			end
 
+      # == nodoc
       # == returns
       # NilClass
       #  description: -
@@ -97,6 +99,7 @@ module MobyBehaviour
 
 			end
 
+      # == nodoc
 			def print_recordings
 
 				ret = nil
@@ -123,7 +126,6 @@ module MobyBehaviour
 
 			# enable hooking for performance measurement & debug logging
 			MobyUtil::Hooking.instance.hook_methods( self ) if defined?( MobyUtil::Hooking )
-
 
 		end # Record
 

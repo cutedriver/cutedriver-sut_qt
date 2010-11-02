@@ -205,13 +205,15 @@ module MobyBehaviour
 	    # == tables
 	    # shell_command_return_values
 	    #  title: Shell command return values
-	    #  description: The return hash will be empty if no pid is found.
 	    #  |Key|Description|
 	    #  |status|RUNNING, ERROR, FINISHED|
 	    #  |output|Command output|
 	    #  |exitCode|Return code of the command if finished|
 	    #	    
 	    # === returns
+	    # Hash
+	    #  description: The return hash will be empty if no pid is found.
+	    #  example: {}
       #
 	    # Hash:: Information about the shell command.
 	    # === raises
@@ -300,12 +302,32 @@ module MobyBehaviour
 		    end
 	    end
 
-	    # tap screen on given coordinates
-	    # x:: X Coordinate to tap
-	    # y:: Y Coordinate to tap
-	    # time_to_hold:: How long is the ta pressed down, in seconds. default 0.1s
-	    # == params
-	    def tap_screen(x,y,time_to_hold = 0.1) # todo count
+      # == description
+	    # Taps the SUT screen at the specified coordinates.\n
+	    # \n
+      # [b]NOTE:[/b] Method is only implemented in *nix enviroments.
+	    #
+	    # == arguments
+	    # x
+	    #  Fixnum
+	    #   description: Target point vertical axis coordinate.
+	    #   example: 50
+      # y
+      #  Fixnum
+      #   description: Target point horizontal axis coordinate.
+      #   example: 100
+      #
+	    # time_to_hold
+	    #  Float
+	    #   description: Duration of the tap, in seconds.
+	    #   example: 0.1
+	    #
+	    # == returns
+	    # NilClass
+	    #  description: Always returns nil
+	    #  example: -
+      #
+	    def tap_screen( x, y, time_to_hold = 0.1 ) # todo count
 		
 		    command = MobyCommand::Tap.new(x,y,time_to_hold)
 

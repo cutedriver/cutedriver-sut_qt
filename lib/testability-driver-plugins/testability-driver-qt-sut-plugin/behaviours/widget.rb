@@ -52,7 +52,7 @@ module MobyBehaviour
       # == description
       # Moves the mouse to the object it was called on.
       # == arguments
-      # refresh
+      # move_params
       #  Boolean
       #   description: if true will cause the framework to refresh the UI state
       #   example: true
