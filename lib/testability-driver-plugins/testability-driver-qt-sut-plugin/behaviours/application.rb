@@ -135,7 +135,7 @@ module MobyBehaviour
 	    # If the popup was shown then the entire application ui state is returned as a test object. 
 	    # More detailed verification can be done for the object (e.g. the content of the popup, labels etc...).
 	    # \n
-	    # Note: If the popup does not close the verification will fail. Detection is based on grabbing the ui state just before the popup closes.
+	    # [b]NOTE:[/b] If the popup does not close the verification will fail. Detection is based on grabbing the ui state just before the popup closes.
 	    # 
       # == arguments
 	    # class_name
@@ -161,7 +161,9 @@ module MobyBehaviour
 	    end
 	    
 	    # == description
-	    # Bring the application to foreground. Note! Currently this works only for Symbian OS target!
+	    # Bring the application to foreground.\n
+	    # \n
+	    # [b]NOTE:[/b] Currently this works only for Symbian OS target!
 	    # 
 	    # == returns
 	    # NilClass
@@ -170,8 +172,8 @@ module MobyBehaviour
 	    #
 	    #
 	    def bring_to_foreground
-		  @sut.execute_command(MobyCommand::Application.new(:BringToForeground, nil, self.uid, self.sut))
-        end
+		    @sut.execute_command(MobyCommand::Application.new(:BringToForeground, nil, self.uid, self.sut))
+      end
 
 	    # == description
 	    # Taps the given objects at the same time (multitouch).
@@ -259,8 +261,9 @@ module MobyBehaviour
 	    end
 
 	    # == description
-	    # Performs the given operations at the same time (when possible). 
-	    # Note that only ui behaviours can be used here (e.g. taps, gestures).
+	    # Performs the given operations at the same time (when possible).\n
+	    # \n 
+	    # [b]NOTE:[/b] Only UI behaviours can be used here (e.g. taps, gestures).
 	    # 
       # == arguments
 	    # &block

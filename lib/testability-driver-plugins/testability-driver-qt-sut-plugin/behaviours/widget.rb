@@ -56,6 +56,10 @@ module MobyBehaviour
       #  Boolean
       #   description: if true will cause the framework to refresh the UI state
       #   example: true
+      # == returns
+      # NilClass
+      #  description: -
+      #  example: -
       # == examples
       # @object.move_mouse
       def move_mouse( move_params = false )

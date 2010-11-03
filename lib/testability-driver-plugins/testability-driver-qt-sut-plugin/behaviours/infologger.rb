@@ -60,7 +60,6 @@ module MobyBehaviour
       #   The file path given must exist on the target.
       #   Optional append parameter can also be given and if true the log file will not be cleared if one exists (by default a new file will always be started).
 			#   example: {:interval => 1, :filePath => 'C:\Data', :append => true}
-			#   default: No default values, must be set
 			#
 			# == returns
 			# nil
@@ -145,7 +144,6 @@ module MobyBehaviour
       #  Hash
       #   description: Optional parameters.
 			#   example: {:clearLog => true}
-			#   default: No default values, must be set
 			#
 			# == returns
 			# Xml
@@ -189,7 +187,6 @@ module MobyBehaviour
       #   The file path given must exist on the target.
       #   Optional append parameter can also be given and if true the log file will not be cleared if one exists (by default a new file will always be started).
 			#   example: {:interval => 1, :filePath => 'C:\Data', :append => true}
-			#   default: No default values, must be set
 			#
 			# == returns
       # nil
@@ -269,7 +266,6 @@ module MobyBehaviour
       #  Hash
       #   description: Optional parameters.
 			#   example: {:clearLog => true}
-			#   default: No default values, must be set
 			#
 			# == returns
 			# Xml
@@ -313,7 +309,6 @@ module MobyBehaviour
       #   The file path given must exist on the target.
       #   Optional append parameter can also be given and if true the log file will not be cleared if one exists (by default a new file will always be started).
 			#   example: {:interval => 1, :filePath => 'C:\Data', :append => true}
-			#   default: No default values, must be set
 			#
 			# == returns
       # nil
@@ -426,7 +421,6 @@ module MobyBehaviour
       #  Hash
       #   description: Optional parameters.
 			#   example: {:clearLog => true}
-			#   default: No default values, must be set
 			#
 			# == returns
 			# Xml
@@ -475,7 +469,6 @@ module MobyBehaviour
       #  Hash
       #   description: Optional params hash. If :clearLog => true given will clear the log when loading by default log will not be cleared.
 			#   example: {:clearLog = true}
-			#   default: nil
 			#
       #
 			# == returns
@@ -504,7 +497,6 @@ module MobyBehaviour
       #  Hash
       #   description: Optional params hash. If :clearLog => true given will clear the log when loading by default log will not be cleared.
 			#   example: {:clearLog = true}
-			#   default: nil
 			#
       #
 			# == returns
@@ -533,7 +525,6 @@ module MobyBehaviour
       #  Hash
       #   description: Optional params hash. If :clearLog => true given will clear the log when loading by default log will not be cleared.
 			#   example: {:clearLog = true}
-			#   default: nil
 			#
       #
 			# == returns
