@@ -807,9 +807,9 @@ module MobyBehaviour
 	    def do_gesture(params)
 		    validate_gesture_params!(params)
 
-		    if attribute('objectType') == 'Embedded'
+		    if attribute('objectType') == 'Embedded' or attribute('objectType') == 'Web'
 		      params['x'] = center_x
-		      params['y'] = center_y					
+		      params['y'] = center_y
 		      params['useCoordinates'] = 'true'
 		    end
 
