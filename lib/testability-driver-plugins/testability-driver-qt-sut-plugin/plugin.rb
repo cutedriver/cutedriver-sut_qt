@@ -18,7 +18,7 @@
 ############################################################################
 
 # verify that TDriver is loaded
-Kernel::raise RuntimeError.new( "SUT plugin requires TDriver" ) unless (defined?( MATTI ) || defined?( TDriver ))
+Kernel::raise RuntimeError.new( "This SUT plugin requires Testability Driver and cannot be launched in standalone mode" ) unless (defined?( MATTI ) || defined?( TDriver ))
 
 module MobyPlugin
 
