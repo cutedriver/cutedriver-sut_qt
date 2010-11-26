@@ -287,27 +287,38 @@ module MobyBehaviour
       #  description: One of the arguments is not valid   
         def gesture_to(x, y, speed, optional_params = {:button => :Left, :isDrag => false})
 
-		  begin      
+          begin      
             # change the format for api consitency
             use_tap_screen = optional_params[:use_tap_screen].nil? ? MobyUtil::Parameter[ @sut.id][ :use_tap_screen, 'false'] :
               optional_params[:use_tap_screen].to_s
             optional_params[:useTapScreen] = use_tap_screen
 
-
-            params = {:gesture_type => :MouseGestureToCoordinates, :x => x, :y => y, :speed => speed}
+            params = {:gesture_type => :MouseGestureToCoordinates, :speed => speed}
+            if attribute('objectType') == 'Web'
+              frame_x_absolute = (@sut.xml_data.xpath( "//object[@id='%s']/attributes/attribute[@name ='x_absolute']/value/text()" % self.attribute('webFrame') )[0]).to_s.to_i
+              frame_y_absolute = (@sut.xml_data.xpath( "//object[@id='%s']/attributes/attribute[@name ='y_absolute']/value/text()" % self.attribute('webFrame') )[0]).to_s.to_i
+              new_params = {:x=>(frame_x_absolute + x.to_i + (attribute('width' ).to_i/2)),
+                            :y=>(frame_y_absolute + y.to_i + (attribute('height').to_i/2))}
+              params.merge!(new_params)
+            else
+              new_params = {:x=>x, :y=>y}
+              params.merge!(new_params)
+            end
+            
+            
             params.merge!(optional_params)
-		    do_gesture(params)
-		    do_sleep(speed) 
+            do_gesture(params)
+            do_sleep(speed) 
 
-		  rescue Exception => e
+          rescue Exception => e
 
-		    MobyUtil::Logger.instance.log "behaviour" , "FAIL;Failed gesture_to with x \"#{x}\", y \"#{y}\", speed \"#{speed.to_s}\", button \".;#{identity};gesture;"
-		    Kernel::raise e        
-		  end
+            MobyUtil::Logger.instance.log "behaviour" , "FAIL;Failed gesture_to with x \"#{x}\", y \"#{y}\", speed \"#{speed.to_s}\", button \".;#{identity};gesture;"
+            Kernel::raise e        
+          end
 
-		  MobyUtil::Logger.instance.log "behaviour" , "PASS;Operation gesture_to executed successfully with x \"#{x}\", y \"#{y}\", speed \"#{speed.to_s}\".;#{identity};gesture;"
-		  nil
-	    end
+          MobyUtil::Logger.instance.log "behaviour" , "PASS;Operation gesture_to executed successfully with x \"#{x}\", y \"#{y}\", speed \"#{speed.to_s}\".;#{identity};gesture;"
+          nil
+        end
 
     	# == description
       # Perform a gesture with the object, starting the gesture at the specified point inside it.
@@ -409,6 +420,13 @@ module MobyBehaviour
       # ArgumentError
       #  description: One of the arguments is not valid  
 	    def gesture_to_object(target_object, duration, optional_params = {:button => :Left, :isDrag => false})    
+            if attribute('objectType') == 'Web'
+              gesture_to(target_object.attribute('x').to_i + (target_object.attribute('width' ).to_i/2) - (attribute('width' ).to_i/2),
+                         target_object.attribute('y').to_i + (target_object.attribute('height').to_i/2) - (attribute('height').to_i/2) - ,
+                         duration, optional_params)
+              nil
+              return 
+            end
 
 		  begin
             # change the format for api consitency
@@ -422,8 +440,8 @@ module MobyBehaviour
             params[:targetId] = target_object.id
             params[:targetType] = target_object.attribute('objectType')
             params.merge!(optional_params)
-		    do_gesture(params)
-		    do_sleep(duration)
+            do_gesture(params)
+            do_sleep(duration)
 
 		  rescue Exception => e      
 
@@ -626,33 +644,22 @@ module MobyBehaviour
       #  description: One of the arguments is not valid  
 	    def drag_to( x, y, button = :Left, optional_params= {} )
 
-		    begin
-          use_tap_screen = optional_params[:use_tap_screen].nil? ? MobyUtil::Parameter[ @sut.id][ :use_tap_screen, 'false'] :
-          optional_params[:use_tap_screen].to_s
-          optional_params[:useTapScreen] = use_tap_screen
+        begin
+          optional_params.merge!({ :isDrag => true , :button=>button})
+          distance = distance_to_point(x,y)
+          speed = calculate_speed(distance, @sut.parameter[:gesture_drag_speed])
+          gesture_to(x, y, speed, optional_params )
 
+        rescue Exception => e      
+          MobyUtil::Logger.instance.log "behaviour" , "FAIL;Failed drag_to with x \"#{x}\", y \"#{y}\", button \"#{button.to_s}\".;#{identity};drag;"
+          Kernel::raise e        
+        end      
 
-		      distance = distance_to_point(x,y)
-		      return if distance == 0
+        MobyUtil::Logger.instance.log "behaviour" , "PASS;Operation drag_to executed successfully with x \"#{x}\", y \"#{y}\", button \"#{button.to_s}\".;#{identity};drag;"
 
-		      speed = calculate_speed(distance, @sut.parameter[:gesture_drag_speed])
-          params = {:gesture_type => :MouseGestureToCoordinates, :x => x, :y => y, :speed => speed, :isDrag => true, :button => button}
-          params.merge!(optional_params)
-          do_gesture(params)		
-		      do_sleep( speed )
+        nil
 
-		    rescue Exception => e      
-
-		      MobyUtil::Logger.instance.log "behaviour" , "FAIL;Failed drag_to with x \"#{x}\", y \"#{y}\", button \"#{button.to_s}\".;#{identity};drag;"
-		      Kernel::raise e        
-
-		    end      
-
-		    MobyUtil::Logger.instance.log "behaviour" , "PASS;Operation drag_to executed successfully with x \"#{x}\", y \"#{y}\", button \"#{button.to_s}\".;#{identity};drag;"
-
-		    nil
-
-	    end
+      end
 
       # == description
       # Drag the object to the center of another object.
