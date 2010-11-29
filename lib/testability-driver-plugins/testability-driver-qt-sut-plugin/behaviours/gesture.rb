@@ -422,7 +422,7 @@ module MobyBehaviour
 	    def gesture_to_object(target_object, duration, optional_params = {:button => :Left, :isDrag => false})    
             if attribute('objectType') == 'Web'
               gesture_to(target_object.attribute('x').to_i + (target_object.attribute('width' ).to_i/2) - (attribute('width' ).to_i/2),
-                         target_object.attribute('y').to_i + (target_object.attribute('height').to_i/2) - (attribute('height').to_i/2) - ,
+                         target_object.attribute('y').to_i + (target_object.attribute('height').to_i/2) - (attribute('height').to_i/2),
                          duration, optional_params)
               nil
               return 
