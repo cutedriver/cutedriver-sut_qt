@@ -22,6 +22,7 @@ module MobyController
 	module QT
 
 		module Fixture 
+		  include MobyUtil::MessageComposer
 
 			# Execute the command
 			# Sends the message to the device using the @sut_adapter (see base class)     
@@ -30,25 +31,10 @@ module MobyController
 			# == raises
 			# NotImplementedError: raised if unsupported command type       
 			def execute
-				
-				Kernel::raise ArgumentError.new( "Fixture '%s' not found for sut id '%s'" % [ @name, @sut_adapter.sut_id ] ) if ( fixture_plugin =  MobyUtil::Parameter[ @sut_adapter.sut_id.to_sym ][ :fixtures ][ @name.to_sym, nil ] ).nil?
+				Kernel::raise ArgumentError.new( "Fixture '%s' not found for sut id '%s'" % [ @name, @sut_adapter.sut_id ] ) if ( plugin_params =  MobyUtil::Parameter[ @sut_adapter.sut_id.to_sym ][ :fixtures ][ @params[:name].to_sym, nil ] ).nil?
 
-
-				@sut_adapter.send_service_request(
-					Comms::MessageGenerator.generate(
- 						Nokogiri::XML::Builder.new{
-							TasCommands( :id => @context.application_id, :transitions => @context.transitions, :service => "fixture", :async => @context.asynchronous ) {
-								Target( :TasId => @context.object_id, :type => @context.object_type ) {
-									Command( :name => "Fixture", :plugin => fixture_plugin, :method => @context.command ) {
-										@context.params.collect{ | name, value | 
-											param( :name => name, :value => value )
-										}
-									}
-								}
-							}
-						}.to_xml
-					)
-				)
+     		    fixture_plugin = plugin_params[:plugin]
+				@sut_adapter.send_service_request(Comms::MessageGenerator.generate(make_fixture_message(fixture_plugin, @params)))
 
 			end
 

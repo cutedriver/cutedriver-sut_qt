@@ -86,11 +86,14 @@ module MobyBehaviour
 		ret = nil
 
 		begin
+		  params = {:name => fixture_name, :command_name => fixture_method, :parameters => parameters_hash, :async => false}
 		  #for sut send the fixture command to qttasserver (appid nil)
 		  if self.class == MobyBase::SUT
-			ret = self.execute_command( MobyCommand::Fixture.new( nil, self.id, :Application, fixture_name, fixture_method, parameters_hash ) )
+			params.merge!( {:application_id => nil, :object_id => self.id, :object_type => :Application} )
+			ret = self.execute_command( MobyCommand::Fixture.new( params ) )
 		  else
-			ret = @sut.execute_command( MobyCommand::Fixture.new( get_application_id, self.id, self.attribute( 'objectType' ).intern, fixture_name, fixture_method, parameters_hash ) )
+			params.merge!( {:application_id => get_application_id, :object_id => self.id, :object_type => self.attribute( 'objectType' ).intern} )
+			ret = @sut.execute_command( MobyCommand::Fixture.new( params ) )
 		  end				  
 		rescue Exception => e
 
@@ -148,11 +151,14 @@ module MobyBehaviour
 		ret = nil
 
 		begin
+		  params = {:name => fixture_name, :command_name => fixture_method, :parameters => parameters_hash, :async => true}
 		  #for sut send the fixture command to qttasserver (appid nil)
 		  if self.class == MobyBase::SUT
-			ret = self.execute_command( MobyCommand::Fixture.new( nil, self.id, :Application, fixture_name, fixture_method, parameters_hash, true ) )
+			params.merge!( {:application_id => nil, :object_id => self.id, :object_type => :Application} )
+			ret = self.execute_command( MobyCommand::Fixture.new( params ) )
 		  else
-			ret = @sut.execute_command( MobyCommand::Fixture.new( get_application_id, self.id, self.attribute( 'objectType' ).intern, fixture_name, fixture_method, parameters_hash, true ) )
+			params.merge!( {:application_id => get_application_id, :object_id => self.id, :object_type => self.attribute( 'objectType' ).intern} )
+			ret = @sut.execute_command( MobyCommand::Fixture.new( params ) )
 		  end
 		rescue Exception => e
 
