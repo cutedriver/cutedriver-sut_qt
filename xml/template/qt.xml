@@ -11,6 +11,7 @@
 		<parameter name="type" value="QT" /> <!-- overwrites default value -->
 		<parameter name="product" value="qt_windows" /> <!-- overwrites default value -->
 		<parameter name="version" value="200839" /> <!-- overwrites default value -->
+		<parameter name="env" value="qt" /> <!-- overwrites default value -->
 
 		<!-- device input type (e.g. key, touch) -->
 		<parameter name="input_type" value="touch" /> <!-- overwrites default value -->

@@ -2,7 +2,7 @@
 
 <behaviours plugin="testability-driver-qt-sut-plugin">
 
-    <behaviour name="QtSut" object_type="sut" sut_type="QT" input_type="*" version="*">
+    <behaviour name="QtSut" object_type="sut" sut_type="QT" env="qt" input_type="*" version="*">
 
         <module name="MobyBehaviour::QT::SUT" />
 
@@ -86,7 +86,7 @@
 
     </behaviour>
 
-    <behaviour name="QtApplication" object_type="application" sut_type="QT" input_type="*" version="*">
+    <behaviour name="QtApplication" object_type="application" sut_type="QT" env="qt" input_type="*" version="*">
 
         <module name="MobyBehaviour::QT::Application" />
 
@@ -136,7 +136,7 @@
 
     </behaviour>
 
-    <behaviour name="QtEvents" object_type="*;application" sut_type="QT" input_type="*" version="*">
+    <behaviour name="QtEvents" object_type="*;application" sut_type="QT" env="qt" input_type="*" version="*">
 
         <module name="MobyBehaviour::QT::Events" />
 
@@ -158,7 +158,7 @@
     </behaviour>
 
 
-    <behaviour name="QtRecord" object_type="application" sut_type="QT" input_type="*" version="*">
+    <behaviour name="QtRecord" object_type="application" sut_type="QT" env="qt" input_type="*" version="*">
 
         <module name="MobyBehaviour::QT::Record" />
 
@@ -180,7 +180,7 @@
     </behaviour>
 
 
-    <behaviour name="QtOs" object_type="sut" sut_type="QT" input_type="*" version="*">
+    <behaviour name="QtOs" object_type="sut" sut_type="QT" env="qt" input_type="*" version="*">
 
         <module name="MobyBehaviour::QT::Os" />
 
@@ -197,7 +197,7 @@
 
     </behaviour>
 
-    <behaviour name="QtWidget" object_type="*" sut_type="QT" input_type="touch" version="*">
+    <behaviour name="QtWidget" object_type="*" sut_type="QT" env="qt" input_type="touch" version="*">
 
         <module name="MobyBehaviour::QT::Widget" />
 
@@ -280,7 +280,7 @@
     </behaviour>
 
 
-    <behaviour name="QtSynchronization" object_type="*" sut_type="QT" input_type="touch" version="*">
+    <behaviour name="QtSynchronization" object_type="*" sut_type="QT" env="qt" input_type="touch" version="*">
 
         <module name="MobyBehaviour::QT::Synchronization" />
 
@@ -293,7 +293,7 @@
 
     </behaviour>
 
-    <behaviour name="QtFixture" object_type="sut;*" sut_type="QT" input_type="*" version="*">
+    <behaviour name="QtFixture" object_type="sut;*" sut_type="QT" env="qt" input_type="*" version="*">
 
         <module name="MobyBehaviour::QT::Fixture" />
 
@@ -310,7 +310,7 @@
 
     </behaviour>
 
-    <behaviour name="QtFileTransfer" object_type="sut" sut_type="QT" input_type="*" version="*">
+    <behaviour name="QtFileTransfer" object_type="sut" sut_type="QT" env="qt" input_type="*" version="*">
 
         <module name="MobyBehaviour::QT::FileTransfer" />
 
@@ -336,7 +336,7 @@
     </behaviour>
     
 
-    <behaviour name="QtTypeText" object_type="*" sut_type="QT" input_type="*" version="*">
+    <behaviour name="QtTypeText" object_type="*" sut_type="QT" env="qt" input_type="*" version="*">
 
         <module name="MobyBehaviour::QT::TypeText" />
 
@@ -349,7 +349,7 @@
 
     </behaviour>
 
-    <behaviour name="QtKeyPress" object_type="*" sut_type="QT" input_type="*" version="*">
+    <behaviour name="QtKeyPress" object_type="*" sut_type="QT" env="qt" input_type="*" version="*">
 
         <module name="MobyBehaviour::QT::KeyPress" />
 
@@ -362,7 +362,7 @@
 
     </behaviour>
 
-    <behaviour name="QtAttribute" object_type="*" sut_type="QT" input_type="*" version="*">
+    <behaviour name="QtAttribute" object_type="*" sut_type="QT" env="qt" input_type="*" version="*">
 
         <module name="MobyBehaviour::QT::Attribute" />
 
@@ -375,7 +375,7 @@
 
     </behaviour>
 
-    <behaviour name="QtMethod" object_type="*" sut_type="QT" input_type="*" version="*">
+    <behaviour name="QtMethod" object_type="*" sut_type="QT" env="qt" input_type="*" version="*">
 
         <module name="MobyBehaviour::QT::Method" />
 
@@ -388,7 +388,7 @@
 
     </behaviour>
 
-    <behaviour name="QtGesture" object_type="*" sut_type="QT" input_type="touch" version="*">
+    <behaviour name="QtGesture" object_type="*" sut_type="QT" env="qt" input_type="touch" version="*">
 
         <module name="MobyBehaviour::QT::Gesture" />
 
@@ -445,7 +445,7 @@
 
     </behaviour>
 
-    <behaviour name="QtScreenCapture" object_type="*" sut_type="QT" input_type="*" version="*">
+    <behaviour name="QtScreenCapture" object_type="*" sut_type="QT" env="qt" input_type="*" version="*">
 
         <module name="MobyBehaviour::QT::ScreenCapture" />
 
@@ -466,7 +466,7 @@
 
     </behaviour>
 
-    <behaviour name="QtAction" object_type="QAction" sut_type="QT" input_type="touch" version="*">
+    <behaviour name="QtAction" object_type="QAction" sut_type="QT" env="qt" input_type="touch" version="*">
 
         <module name="MobyBehaviour::QT::Action" />
 
@@ -483,7 +483,7 @@
 
     </behaviour>
 
-    <behaviour name="QtFind" object_type="*" sut_type="QT" input_type="touch" version="*">
+    <behaviour name="QtFind" object_type="*" sut_type="QT" env="qt" input_type="touch" version="*">
 
         <module name="MobyBehaviour::QT::Find" />
 
@@ -496,7 +496,7 @@
 
     </behaviour>
 
-    <behaviour name="QtViewItem" object_type="ItemData;QTreeWidgetItem;QListWidgetItem;QTableWidgetItem" sut_type="QT" input_type="*" version="*">
+    <behaviour name="QtViewItem" object_type="ItemData;QTreeWidgetItem;QListWidgetItem;QTableWidgetItem" sut_type="QT" env="qt" input_type="*" version="*">
 
         <module name="MobyBehaviour::QT::ViewItem" />
 
@@ -510,7 +510,7 @@
     </behaviour>
 
 
-    <behaviour name="QtTreeWidgetItemColumn" object_type="TreeWidgetItemColumn" sut_type="QT" input_type="*" version="*">
+    <behaviour name="QtTreeWidgetItemColumn" object_type="TreeWidgetItemColumn" sut_type="QT" env="qt" input_type="*" version="*">
 
         <module name="MobyBehaviour::QT::TreeWidgetItemColumn" />
                                          
@@ -524,7 +524,7 @@
     </behaviour>
 
 
-    <behaviour name="QtConfigureBehaviour" object_type="sut;application" sut_type="QT" input_type="*" version="*">
+    <behaviour name="QtConfigureBehaviour" object_type="sut;application" sut_type="QT" env="qt" input_type="*" version="*">
 
         <module name="MobyBehaviour::QT::ConfigureBehaviour" />
 
@@ -578,7 +578,7 @@
     </behaviour>
 
 
-	<behaviour name="QtMultitouch" object_type="*" sut_type="QT" input_type="touch" version="*">
+	<behaviour name="QtMultitouch" object_type="*" sut_type="QT" env="qt" input_type="touch" version="*">
 
 		<module name="MobyBehaviour::QT::Multitouch" />
 
@@ -611,7 +611,7 @@
 
 	</behaviour>
 
-        <behaviour name="Switchbox" object_type="sut" sut_type="QT" input_type="*" version="*">
+        <behaviour name="Switchbox" object_type="sut" sut_type="QT" env="qt" input_type="*" version="*">
 
         <module name="MobyBehaviour::SwitchboxBehaviour" />
 
@@ -637,7 +637,7 @@
     </behaviour>
 
 <!--
-    <behaviour name="Flash" object_type="sut" sut_type="QT" input_type="*" version="*">
+    <behaviour name="Flash" object_type="sut" sut_type="QT" env="qt" input_type="*" version="*">
 
         <module name="MobyBehaviour::FlashBehaviour" />
 
@@ -655,7 +655,7 @@
     </behaviour>
 -->
 
-    <behaviour name="QtInfoLoggerBehaviour" object_type="sut;application" sut_type="QT" input_type="*" version="*">
+    <behaviour name="QtInfoLoggerBehaviour" object_type="sut;application" sut_type="QT" env="qt" input_type="*" version="*">
 
         <module name="MobyBehaviour::QT::InfoLoggerBehaviour" />
 
@@ -701,7 +701,7 @@
     </behaviour>
 	
 	
-	<behaviour name="QtLocalisationDB" object_type="sut" sut_type="QT" input_type="*" version="*">
+	<behaviour name="QtLocalisationDB" object_type="sut" sut_type="QT" env="qt" input_type="*" version="*">
 		
 		<module name="MobyBehaviour::QT::LocalisationDB" />
 		
