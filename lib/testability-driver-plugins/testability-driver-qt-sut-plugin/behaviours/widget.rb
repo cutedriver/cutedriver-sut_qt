@@ -205,8 +205,8 @@ module MobyBehaviour
           # puts "tap: " + (Time.now - tapMeasure).to_s + " s - before webs"
 
           if attribute('objectType') == 'Web' or attribute('objectType') == 'Embedded'
-            params['x'] = (center_x.to_i - 1).to_s
-            params['y'] = (center_y.to_i - 1).to_s
+            params['obj_x'] = (center_x.to_i - 1).to_s
+            params['obj_y'] = (center_y.to_i - 1).to_s
             params['useCoordinates'] = 'true'
           end
 
