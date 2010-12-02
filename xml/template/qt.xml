@@ -76,11 +76,12 @@
 	    	<fixtures>
            		<fixture name="signal" plugin="tassignal" />
            		<fixture name="qt" plugin="tasfixture" />
-                	<fixture name="dialog" plugin="dialogfixture" />
-                	<fixture name="file" plugin="filefixture" />
+                <fixture name="dialog" plugin="dialogfixture" />
+                <fixture name="file" plugin="filefixture" />
            		<fixture name="fps" plugin="fpsfixture" />
           		<fixture name="popup" plugin="popupfixture" />	
           		<fixture name="tap_object" plugin="tapfixture" />
+          		<fixture name="mobilitysysinfo" plugin="mobilitysysinfofixture" />
         	</fixtures>
 	</template>
 
