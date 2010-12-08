@@ -207,6 +207,8 @@ module MobyBehaviour
           if attribute('objectType') == 'Web' or attribute('objectType') == 'Embedded'
             params['obj_x'] = (center_x.to_i - 1).to_s
             params['obj_y'] = (center_y.to_i - 1).to_s
+            params['x'] = (center_x.to_i - 1).to_s
+            params['y'] = (center_y.to_i - 1).to_s
             params['useCoordinates'] = 'true'
           end
 
