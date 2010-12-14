@@ -83,7 +83,7 @@ end
 
 task :default do | task |
 
-  puts "supported tasks: cruise, cruise_linux, gem, gem_install, gem_uninstall, doc, behaviours"
+  puts "supported tasks: cruise, cruise_linux, gem, gem_install, gem_uninstall, doc, doc[../tests], behaviours"
 
 end
 
