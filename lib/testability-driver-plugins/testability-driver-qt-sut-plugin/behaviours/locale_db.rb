@@ -52,6 +52,11 @@ module MobyBehaviour
       # == description
       # Creates a new localisation able for translation using the tdriver_parameters to locate the Localization DB. 
       # It uses the temporary folder to store temporary translation files.
+      # The table structure will have the different languages as columns and the comun names will be set as the 
+      # postfix language code from the source filenames for .qm and .ts files. For .loc files, the two-digit postfix
+      # will be mapped to the same language codes as in .qm or .ts when possible forlowing the mapping table on 
+      # symbian reference documentation. To see the full mapping used please check the localization.rb implementation 
+      # file on testability-driver gem.
       #
       # == arguments
       # path
