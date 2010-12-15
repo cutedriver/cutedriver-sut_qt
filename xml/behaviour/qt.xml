@@ -258,7 +258,7 @@
 
     </behaviour>
 
-    <behaviour name="QtWebkit" object_type="*" sut_type="QT;S60QT" input_type="*" version="*">
+    <behaviour name="QtWebkit" object_type="*" sut_type="QT;S60QT" env="qt" input_type="*" version="*">
 
         <module name="MobyBehaviour::QT::Webkit" />
 
