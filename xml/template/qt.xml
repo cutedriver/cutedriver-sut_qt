@@ -75,14 +75,14 @@
 
 	<template name="qt_fixtures">
 	    	<fixtures>
-           		<fixture name="signal" plugin="tassignal" />
-           		<fixture name="qt" plugin="tasfixture" />
-                <fixture name="dialog" plugin="dialogfixture" />
-                <fixture name="file" plugin="filefixture" />
-           		<fixture name="fps" plugin="fpsfixture" />
-          		<fixture name="popup" plugin="popupfixture" />	
-          		<fixture name="tap_object" plugin="tapfixture" />
-          		<fixture name="mobilitysysinfo" plugin="mobilitysysinfofixture" />
+           		<fixture name="signal" plugin="tassignal" env="qt"/>
+           		<fixture name="qt" plugin="tasfixture" env="qt"/>
+                <fixture name="dialog" plugin="dialogfixture" env="qt"/>
+                <fixture name="file" plugin="filefixture" env="qt"/>
+           		<fixture name="fps" plugin="fpsfixture" env="qt"/>
+          		<fixture name="popup" plugin="popupfixture" env="qt"/>	
+          		<fixture name="tap_object" plugin="tapfixture" env="qt"/>
+          		<fixture name="mobilitysysinfo" plugin="mobilitysysinfofixture" env="qt"/>
         	</fixtures>
 	</template>
 
