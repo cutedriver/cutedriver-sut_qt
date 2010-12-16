@@ -349,7 +349,7 @@ module MobyBehaviour
 
       end
 
-      # == nodocy
+      # == nodoc
       # == description
       # Request the qttasserver to shutdown. This command will cause the qttasserver to close. The sut will no longer be usable after this command. To resume testing qttasserver must be restarted.
       # == returns
