@@ -21,90 +21,95 @@ require 'zlib'
 
 module MobyController
 
-	module QT
+  module QT
 
-		module Comms
+	module Comms
 
-			# Command types
-			ERROR_MSG = 0
-			VALID_MSG = 1
-			OK_MESSAGE = "OK"
+	  # Command types
+	  ERROR_MSG = 0
+	  VALID_MSG = 1
+	  OK_MESSAGE = "OK"
 
-			class Inflator
+	  class Inflator
 
-				def self.inflate( response )
-					# strip 4 extra bytes written by qt compression, return empty string if no raw data found, otherwise inflate it
-					( raw_data = response[ 4 .. -1 ] ).empty? ? "" : Zlib::Inflate.inflate( raw_data )
-				end
+		def self.inflate( response )
+		  # strip 4 extra bytes written by qt compression, return empty string if no raw data found, otherwise inflate it
+		  ( raw_data = response[ 4 .. -1 ] ).empty? ? "" : Zlib::Inflate.inflate( raw_data )
+		end
 
-				# enable hooking for performance measurement & debug logging
-				MobyUtil::Hooking.instance.hook_methods( self ) if defined?( MobyUtil::Hooking )
+		# enable hooking for performance measurement & debug logging
+		MobyUtil::Hooking.instance.hook_methods( self ) if defined?( MobyUtil::Hooking )
 
-			end
+	  end
 
       # deprecated: see send_service_request#adapter.rb
-			# Wrapper for protocol message.
-			class QTResponse
+	  # Wrapper for protocol message.
+	  class QTResponse
 
-				attr_accessor :msg_body, :flag, :crc, :message_id
-
-        # deprecated: see send_service_request#adapter.rb
-				# Initialize QT Response.      
-				# == params
-				# command_flag Indicator flad for message type (error or ok)
-				# message_code 0 or an error code
-				# msg_body Body of the message. For command a simple "OK" message for ui state the xml document as string  
-				# == returns
-				def initialize( command_flag, msg_body, crc, message_id )
-
-
-					@flag, @msg_body, @crc, @message_id = command_flag, msg_body, crc, message_id
-
-				end
+		attr_accessor :msg_body, :flag, :crc, :message_id
 
         # deprecated: see send_service_request#adapter.rb
-				def validate_message( msg_id )
+		# Initialize QT Response.      
+		# == params
+		# command_flag Indicator flad for message type (error or ok)
+		# message_code 0 or an error code
+		# msg_body Body of the message. For command a simple "OK" message for ui state the xml document as string  
+		# == returns
+		def initialize( command_flag, msg_body, crc, message_id )
 
-					#check that response matches the request
-					if @message_id != msg_id 
-					
-						MobyUtil::Logger.instance.log "fatal" , "Response to request did not match: \"#{@message_id}\"!=\"#{msg_id.to_s}\""
-						MobyUtil::Logger.instance.log "fatal" , @msg_body 
-						
-						Kernel::raise RuntimeError.new("Response to request did not match: \"#{@message_id}\"!=\"#{msg_id.to_s}\"") 
-						
-					end
 
-					#raise error if error flag
-				  Kernel::raise RuntimeError.new( @msg_body ) if @flag == Comms::ERROR_MSG
-          
-				end
+		  @flag, @msg_body, @crc, @message_id = command_flag, msg_body, crc, message_id
 
-				# enable hooking for performance measurement & debug logging
-				MobyUtil::Hooking.instance.hook_methods( self ) if defined?( MobyUtil::Hooking )
+		end
 
-			end #class
+        # deprecated: see send_service_request#adapter.rb
+		def validate_message( msg_id )
 
-			# Message generator for qt tas messages
-			class MessageGenerator
+		  #check that response matches the request
+		  if @message_id != msg_id 
+			
+			MobyUtil::Logger.instance.log "fatal" , "Response to request did not match: \"#{@message_id}\"!=\"#{msg_id.to_s}\""
+			MobyUtil::Logger.instance.log "fatal" , @msg_body 
+			
+			Kernel::raise RuntimeError.new("Response to request did not match: \"#{@message_id}\"!=\"#{msg_id.to_s}\"") 
+			
+		  end
 
-				def self.generate( message_data, message_flag = VALID_MSG )
-
-					MobyController::QT::Comms::QtMessage.new( message_flag, message_data )
-
-				end
-
-				# enable hooking for performance measurement & debug logging
-				MobyUtil::Hooking.instance.hook_methods( self ) if defined?( MobyUtil::Hooking )
-
+		  #raise error if error flag
+		  if @flag == Comms::ERROR_MSG
+			if @msg_body =~ /The application with Id \d+ is no longer available/
+			  Kernel::raise MobyBase::ApplicationNotAvailableError.new( @msg_body) 
+			else
+			  Kernel::raise RuntimeError.new( @msg_body ) 
 			end
+          end
+		end
 
-			class QtMessage
+		# enable hooking for performance measurement & debug logging
+		MobyUtil::Hooking.instance.hook_methods( self ) if defined?( MobyUtil::Hooking )
 
-				attr_reader :flag, :data, :crc, :compression, :size
-				attr_accessor :message_id 
+	  end #class
 
-				def initialize( message_flag, message_data )
+	  # Message generator for qt tas messages
+	  class MessageGenerator
+
+		def self.generate( message_data, message_flag = VALID_MSG )
+
+		  MobyController::QT::Comms::QtMessage.new( message_flag, message_data )
+
+		end
+
+		# enable hooking for performance measurement & debug logging
+		MobyUtil::Hooking.instance.hook_methods( self ) if defined?( MobyUtil::Hooking )
+
+	  end
+
+	  class QtMessage
+
+		attr_reader :flag, :data, :crc, :compression, :size
+		attr_accessor :message_id 
+
+		def initialize( message_flag, message_data )
           # message flag
           @flag = message_flag
 
@@ -116,23 +121,23 @@ module MobyController
 
           # calculate outgoing message crc; sent in message header to receiver for data validation
           @crc = CRC::Crc16.crc16_ibm( @data, 0xffff )
-				end
+		end
 
-				def make_binary_message( message_id )
+		def make_binary_message( message_id )
 
-					[ @flag, @size, @crc, @compression, message_id, @data ].pack( 'CISCIa*' )
+		  [ @flag, @size, @crc, @compression, message_id, @data ].pack( 'CISCIa*' )
 
-				end
+		end
 
-				def compression
-					@compression
-				end           
+		def compression
+		  @compression
+		end           
 
-				def deflate
-				  @compression = 2
-				  #qUncompress required the data length at the beginning so append it
-				  #the bytes need to be arranged in the below method (see QByteArray::qUncompress)
-				  @data = [
+		def deflate
+		  @compression = 2
+		  #qUncompress required the data length at the beginning so append it
+		  #the bytes need to be arranged in the below method (see QByteArray::qUncompress)
+		  @data = [
             (@data.size & 0xff000000) >> 24, (@data.size & 0x00ff0000) >> 16,
             (@data.size & 0x0000ff00) >> 8, (@data.size & 0x000000ff),
             Zlib::Deflate.deflate( @data, 9)
@@ -141,14 +146,14 @@ module MobyController
           # update data size
           @size = @data.size
           
-				end			
+		end			
 
-				# enable hooking for performance measurement & debug logging
-				MobyUtil::Hooking.instance.hook_methods( self ) if defined?( MobyUtil::Hooking )
+		# enable hooking for performance measurement & debug logging
+		MobyUtil::Hooking.instance.hook_methods( self ) if defined?( MobyUtil::Hooking )
 
-			end # class
+	  end # class
 
-		end # module Comms
+	end # module Comms
 
-	end
+  end
 end
