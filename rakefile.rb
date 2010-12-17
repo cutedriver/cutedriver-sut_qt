@@ -256,7 +256,7 @@ task :doc, :tests do | task, args |
       [ :copy, [ './doc/images/*', './doc/output/images' ] ] 
     ],
     test_results_folder, 
-    args[:tests].nil? 
+    !args[:tests].nil? 
   )
 
 end
