@@ -45,7 +45,7 @@ module MobyBehaviour
     # Application
     #
 	  module Application
-
+      # == nodoc
 	    # == description
 	    # Drag from the start coordinates to the end coordinates.
 	    # 

@@ -184,7 +184,13 @@ module MobyController
         #   0 -> ERROR_MSG
         #   1 -> VALID_MSG
         #   2 -> OK_MESSAGE
-        Kernel::raise RuntimeError.new( body ) if header[ 0 ] == 0
+		if header[ 0 ] == 0
+		  if body =~ /The application with Id \d+ is no longer available/
+			Kernel::raise MobyBase::ApplicationNotAvailableError.new( body ) 
+		  else
+			Kernel::raise RuntimeError.new( body ) 
+		  end
+		end
 
         # return the body ( and crc if required )
         return_crc ? [ body, header[ 2 ] ] : body
