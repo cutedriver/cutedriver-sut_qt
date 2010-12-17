@@ -79,8 +79,14 @@ module MobyBehaviour
           command.command_name('MouseMove')
 
           if attribute('objectType') == 'Web' or attribute('objectType') == 'Embedded'
-            params = {'x' => center_x, 'y' => center_y, 'useCoordinates' => 'true',
-            'useTapScreen' => use_tap_screen}
+            params = {
+              'x' => center_x, 
+              'y' => center_y, 
+              'useCoordinates' => 'true',
+              'useTapScreen' => use_tap_screen,
+              'x_off' => MobyUtil::Parameter[ @sut.id ][:tap_x_offset , '0' ],
+              'y_off' => MobyUtil::Parameter[ @sut.id ][:tap_y_offset , '0' ]
+            }
           else
             params = {'useTapScreen' => use_tap_screen.to_s}
           end
@@ -194,7 +200,9 @@ module MobyBehaviour
             'count' => tap_count.to_s,
             'button' => @@_buttons_map[button],
             'mouseMove' => MobyUtil::Parameter[ @sut.id ][ :in_tap_move_pointer, 'false' ],
-            'useTapScreen' => use_tap_screen
+            'useTapScreen' => use_tap_screen,
+            'x_off' => MobyUtil::Parameter[ @sut.id ][:tap_x_offset , '0' ],
+            'y_off' => MobyUtil::Parameter[ @sut.id ][:tap_y_offset , '0' ]
           }
 
 
@@ -205,12 +213,12 @@ module MobyBehaviour
           # puts "tap: " + (Time.now - tapMeasure).to_s + " s - before webs"
 
           if attribute('objectType') == 'Web' or attribute('objectType') == 'Embedded'
-            params['obj_x'] = (center_x.to_i - 1).to_s
-            params['obj_y'] = (center_y.to_i - 1).to_s
+            #params['obj_x'] = (center_x.to_i - 1).to_s
+            #params['obj_y'] = (center_y.to_i - 1).to_s
             params['x'] = (center_x.to_i - 1).to_s
             params['y'] = (center_y.to_i - 1).to_s
             params['useCoordinates'] = 'true'
-          end
+				end
 
           # puts "tap: " + (Time.now - tapMeasure).to_s + " s - before 2 webs"
 
@@ -345,7 +353,10 @@ module MobyBehaviour
                                  'button' => @@_buttons_map[ button ],
                                  'mouseMove' => MobyUtil::Parameter[ @sut.id ][ :in_tap_move_pointer, 'false' ],
                                  'useCoordinates' => 'true',
-                                 'useTapScreen' => use_tap_screen
+                                 'useTapScreen' => use_tap_screen,
+                                 'x_off' => MobyUtil::Parameter[ @sut.id ][:tap_x_offset , '0' ],
+                                 'y_off' => MobyUtil::Parameter[ @sut.id ][:tap_y_offset , '0' ]
+                                 
                                  )
 
           @sut.execute_command(command)
@@ -587,9 +598,13 @@ module MobyBehaviour
           command = command_params #in qt_behaviour
           command.command_name('MousePress')
 
-          params = {'button' => @@_buttons_map[button],
+          params = {
+            'button' => @@_buttons_map[button],
             'mouseMove' => MobyUtil::Parameter[ @sut.id ][ :in_tap_move_pointer, 'false' ],
-            'useTapScreen' => use_tap_screen}
+            'useTapScreen' => use_tap_screen,
+            'x_off' => MobyUtil::Parameter[ @sut.id ][:tap_x_offset , '0' ],
+            'y_off' => MobyUtil::Parameter[ @sut.id ][:tap_y_offset , '0' ]
+          }
 
           if attribute('objectType') == 'Web' or attribute('objectType') == 'Embedded'
             params['x'] = center_x
@@ -661,6 +676,9 @@ module MobyBehaviour
             params['x'] = center_x
             params['y'] = center_y
             params['useCoordinates'] = 'true'
+            params['x_off'] = MobyUtil::Parameter[ @sut.id ][:tap_x_offset , '0' ]
+            params['y_off'] = MobyUtil::Parameter[ @sut.id ][:tap_y_offset , '0' ]
+
           end
           params.merge!(tap_params)
 
@@ -706,7 +724,9 @@ module MobyBehaviour
                                  'y' => center_y,
                                  'count' => tap_count.to_s,
                                  'button' => @@_buttons_map[button],
-                                 'mouseMove'=>'true'
+                                 'mouseMove'=>'true',
+                                 'x_off' => MobyUtil::Parameter[ @sut.id ][:tap_x_offset , '0' ],
+                                 'y_off' => MobyUtil::Parameter[ @sut.id ][:tap_y_offset , '0' ]
                                  )
 
           @sut.execute_command(command)
