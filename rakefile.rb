@@ -23,6 +23,8 @@ require 'fileutils'
 require 'tmpdir'
 
 require File.expand_path( File.join( File.dirname( __FILE__ ), 'env' ) )
+require File.expand_path( File.join( File.dirname( __FILE__ ), 'webdav' ) )
+include DocumentDavupload
 
 @__release_mode = ENV['rel_mode']
 @__release_mode = 'minor' if @__release_mode == nil
@@ -241,6 +243,56 @@ def doc_tasks( tasks, test_results_folder, tests_path_defined )
   }
 
   puts "Done\n"
+
+end
+
+task :doc_upload do 
+
+  if File.directory?("#{Dir.pwd}/doc/output/")
+    puts "Upload current documentation to public web dav"
+    puts "Please give your projects.forum.nokia cerendials"
+	puts "Username:"
+    username=STDIN.gets
+	puts "Password:"
+	password=STDIN.gets
+	puts "Please give the document current type: , qt_windows or qt_symbian"	
+	puts "1 qt_linux"
+	puts "2 qt_windows"
+	puts "3 qt_linux"
+    puts "4 enter the sut type"	
+    doc=STDIN.gets
+	case doc
+	when 1
+	  doc='qt_linux'
+	when 2
+	  doc='qt_windows'
+	when 3
+	  doc='qt_windows'
+	else	
+	  puts "Please give the document current type:"	
+	  doc=STDIN.gets  	
+	end
+	puts "Please give the TDriver version number of previous documentation for archiving"
+    version=STDIN.gets
+	
+	if username==nil
+	  puts "Username missing aborting..."
+	  exit(1)
+	end
+	if password==nil
+	  puts "Password missing aborting..."
+	  exit(1)
+	end
+	if doc==nil
+	  puts "Documentation missing aborting..."
+	  exit(1)
+	end
+	if version==nil
+	  puts "Previous version infromation missing aborting..."
+	  exit(1)
+	end	
+	upload_doc_to_public_dav(username,password,doc,version)
+  end    
 
 end
 
