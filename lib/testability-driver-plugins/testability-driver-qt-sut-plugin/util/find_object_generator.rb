@@ -17,8 +17,6 @@
 ## 
 ############################################################################
 
-
-
 module MobyUtil
   
   module FindObjectGenerator
@@ -58,6 +56,7 @@ module MobyUtil
 
 
 	def make_params
+	
 	  params = {}
 
 	  # get sut paramteres only once, store to local variable
@@ -69,25 +68,25 @@ module MobyUtil
 
 	  case sut_parameters[ :filter_type, 'none' ]
 		
-	  when 'dynamic'
+	    when 'dynamic'
 
-		# updates the filter with the current backtrace file list
-		MobyUtil::DynamicAttributeFilter.instance.update_filter( caller( 0 ) ) 
+		    # updates the filter with the current backtrace file list
+		    #MobyUtil::DynamicAttributeFilter.instance.update_filter( caller( 0 ) ) 
 
-		white_list = MobyUtil::DynamicAttributeFilter.instance.filter_string
-		params['attributeWhiteList'] = white_list if white_list
+		    white_list = MobyUtil::DynamicAttributeFilter.instance.filter_string
+		    params['attributeWhiteList'] = white_list if white_list
 		
-	  when 'static'
+	    when 'static'
 
-		params['attributeBlackList'] = $last_parameter if sut_parameters[ :attribute_blacklist, nil ]
-		params['attributeWhiteList'] = $last_parameter if sut_parameters[ :attribute_whitelist, nil ]
+		    params['attributeBlackList'] = $last_parameter if sut_parameters[ :attribute_blacklist, nil ]
+		    params['attributeWhiteList'] = $last_parameter if sut_parameters[ :attribute_whitelist, nil ]
 		
+	    end
+
+	    params		
+
 	  end
 
-	  params		
-
-	end
-
   end
+  
 end
-
