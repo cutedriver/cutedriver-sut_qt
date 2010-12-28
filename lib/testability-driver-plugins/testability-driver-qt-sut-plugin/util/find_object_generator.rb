@@ -22,21 +22,24 @@ module MobyUtil
   module FindObjectGenerator
 	
 	def generate_message
-	  filters = make_params if MobyUtil::Parameter[ @_sut.id ][ :filter_type, 'none' ] == 'dynamic'
+	
+	  filter_type = MobyUtil::Parameter[ @_sut.id ][ :filter_type, 'none' ]
+	
+	  filters = make_params if filter_type == 'dynamic'
 
 	  params = search_parameters
 
 	  builder = Nokogiri::XML::Builder.new do |xml|
-		xml.TasCommands( ( application_details || {} ).merge( :service => "findObject") ) {			
-		  xml.Target{			  
-			add_objects(xml, params)
-			xml.Command( :name => 'findObject' ){
-			  filters.collect{ | name, value | 
-				xml.param( :name => name, :value => value ) 
-			  }					        
-			} if MobyUtil::Parameter[ @_sut.id ][ :filter_type, 'none' ] == 'dynamic'
-		  } if params and params.size > 0
-		}
+		  xml.TasCommands( ( application_details || {} ).merge( :service => "findObject") ) {			
+		    xml.Target{			  
+			    add_objects(xml, params)
+			    xml.Command( :name => 'findObject' ){
+			      filters.collect{ | name, value | 
+				    xml.param( :name => name, :value => value ) 
+			      }					        
+			    } if filter_type == 'dynamic'
+		    } if params and params.size > 0
+		  }
 	  end
 	  builder.to_xml	  
 	end
@@ -86,6 +89,9 @@ module MobyUtil
 	    params		
 
 	  end
+
+    # enable hoo./base/test_object/factory.rb:king for performance measurement & debug logging
+    MobyUtil::Hooking.instance.hook_methods( self ) if defined?( MobyUtil::Hooking )
 
   end
   

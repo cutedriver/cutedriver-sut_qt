@@ -17,8 +17,6 @@
 ## 
 ############################################################################
 
-
-
 module MobyUtil
 
 	module MessageComposer
@@ -156,7 +154,12 @@ module MobyUtil
 
 		  make_xml_message({:service => 'closeApplication', :id => @_application_uid }, 'Close', parameters)
 	  end
-	  
+	
+    # enable hoo./base/test_object/factory.rb:king for performance measurement & debug logging
+    MobyUtil::Hooking.instance.hook_methods( self ) if defined?( MobyUtil::Hooking )
+  
 	end
+	
+	
 end
 
