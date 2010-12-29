@@ -280,6 +280,10 @@ task :doc_upload do
 	puts "Please give the TDriver version number of previous documentation for archiving"
     version=STDIN.gets
 	
+	puts "Please give the proxy"
+    proxy=STDIN.gets
+
+	
 	if username==nil
 	  puts "Username missing aborting..."
 	  exit(1)
@@ -296,7 +300,11 @@ task :doc_upload do
 	  puts "Previous version infromation missing aborting..."
 	  exit(1)
 	end	
-	upload_doc_to_public_dav(username,password,doc,version)
+	if proxy==nil
+	  puts "Proxy infromation missing aborting..."
+	  exit(1)
+	end
+	upload_doc_to_public_dav(username,password,doc,version,proxy)
   end    
 
 end

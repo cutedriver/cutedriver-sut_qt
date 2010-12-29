@@ -5,7 +5,7 @@
 ## All rights reserved.
 ## Contact: Nokia Corporation (testabilitydriver@nokia.com)
 ##
-## This file is part of MATTI.
+## This file is part of TDriver.
 ##
 ## If you have questions regarding the use of this file, please contact
 ## Nokia at testabilitydriver@nokia.com .
@@ -120,15 +120,15 @@ end
 
 module DocumentDavupload
 
-  def initialize_public_address
-    @proxy_host = 'eswebproxy00.europe.nokia.com'
+  def initialize_public_address    
     @proxy_port = 8080
     @target_host = 'projects.forum.nokia.com'
     @target_port = '443'
   end
 
-  def upload_doc_to_public_dav(username,password,doc,version)
+  def upload_doc_to_public_dav(username,password,doc,version,proxy)
      puts "Initialize connection attributes..."
+	 @proxy_host=proxy
      initialize_public_address()
     
      trgt_fldr = "/dav/Testabilitydriver/doc/api/#{doc}"
