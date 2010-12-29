@@ -22,13 +22,15 @@ require 'digest/md5'
 
 require 'net/http'
 
-#apt-get install libopenssl-ruby
-require 'net/https'
+begin
+  require 'net/https'
+  $webdav_upload_disabled = true
+rescue LoadError 
+  #apt-get install libopenssl-ruby
+  warn("Warning: Disabling WebDAV uploading due to net/https module not supported; install libopenssl-ruby libraries or similar depending of the OS")
+end
 
 require 'uri'
-
-
-
 
 class DavUpload
   attr_accessor :http
@@ -118,27 +120,27 @@ end
 
 module DocumentDavupload
 
-def initialize_public_address
-  @proxy_host = 'eswebproxy00.europe.nokia.com'
-  @proxy_port = 8080
-  @target_host = 'projects.forum.nokia.com'
-  @target_port = '443'
-end
+  def initialize_public_address
+    @proxy_host = 'eswebproxy00.europe.nokia.com'
+    @proxy_port = 8080
+    @target_host = 'projects.forum.nokia.com'
+    @target_port = '443'
+  end
 
-def upload_doc_to_public_dav(username,password,doc,version)
-   puts "Initialize connection attributes..."
-   initialize_public_address()
-  
-   trgt_fldr = "/dav/Testabilitydriver/doc/api/#{doc}"
-   puts "Initialize connection..."
-   dav = DavUpload.new(@proxy_host, @proxy_port, @target_host, @target_port)
-   dav.auth(username,password)
-   puts "Moving old documentation from #{trgt_fldr} to /dav/Testabilitydriver/release/#{version}/doc/api/#{doc}..."
-   dav.move_dir(trgt_fldr,"/dav/Testabilitydriver/release/#{version}/doc/api/#{doc}")   
-   puts "Uploading new documentation to #{trgt_fldr}"
-   dav.upload_dir("/doc/output",trgt_fldr)   
-   
-end
+  def upload_doc_to_public_dav(username,password,doc,version)
+     puts "Initialize connection attributes..."
+     initialize_public_address()
+    
+     trgt_fldr = "/dav/Testabilitydriver/doc/api/#{doc}"
+     puts "Initialize connection..."
+     dav = DavUpload.new(@proxy_host, @proxy_port, @target_host, @target_port)
+     dav.auth(username,password)
+     puts "Moving old documentation from #{trgt_fldr} to /dav/Testabilitydriver/release/#{version}/doc/api/#{doc}..."
+     dav.move_dir(trgt_fldr,"/dav/Testabilitydriver/release/#{version}/doc/api/#{doc}")   
+     puts "Uploading new documentation to #{trgt_fldr}"
+     dav.upload_dir("/doc/output",trgt_fldr)   
+     
+  end
 
 end
 

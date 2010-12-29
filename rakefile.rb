@@ -17,6 +17,8 @@
 ## 
 ############################################################################
 
+$webdav_upload_disabled == false
+
 require 'rubygems'
 require 'rake/gempackagetask'
 require 'fileutils'
@@ -25,6 +27,7 @@ require 'tmpdir'
 require File.expand_path( File.join( File.dirname( __FILE__ ), 'env' ) )
 require File.expand_path( File.join( File.dirname( __FILE__ ), 'webdav' ) )
 include DocumentDavupload
+
 
 @__release_mode = ENV['rel_mode']
 @__release_mode = 'minor' if @__release_mode == nil
@@ -247,6 +250,8 @@ def doc_tasks( tasks, test_results_folder, tests_path_defined )
 end
 
 task :doc_upload do 
+
+  abort('Error: Unable to upload document due to WebDAV feature is disabled') if $webdav_upload_disabled == true
 
   if File.directory?("#{Dir.pwd}/doc/output/")
     puts "Upload current documentation to public web dav"
