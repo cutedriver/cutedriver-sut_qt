@@ -42,9 +42,9 @@ module MobyBehaviour
     # == objects
     # *
     #
-	  module Multitouch
+	module Multitouch
 
-	    include MobyBehaviour::QT::Behaviour
+	  include MobyBehaviour::QT::Behaviour
 
       # == description
       # Performs a pinch zoom in operation. The distance of the operation is 
@@ -87,9 +87,9 @@ module MobyBehaviour
       # == info
       # See method pinch_zoom
       #
-	    def pinch_zoom_in(speed, distance, direction, differential = 10)
-  		  pinch_zoom({:type => :in, :speed => speed, :distance_1 => distance, :distance_2 => distance, :direction => direction, :differential => differential})
-	    end
+	  def pinch_zoom_in(speed, distance, direction, differential = 10)
+		pinch_zoom({:type => :in, :speed => speed, :distance_1 => distance, :distance_2 => distance, :direction => direction, :differential => differential})
+	  end
 
       # == description
       # Performs a pinch zoom out operation. The distance of the operation is 
@@ -132,9 +132,9 @@ module MobyBehaviour
       # == info
       # See method pinch_zoom
       #
-	    def pinch_zoom_out(speed, distance, direction, differential = 10)
-  		  pinch_zoom({:type => :out, :speed => speed, :distance_1 => distance, :distance_2 => distance, :direction => direction, :differential => differential})
-	    end
+	  def pinch_zoom_out(speed, distance, direction, differential = 10)
+		pinch_zoom({:type => :out, :speed => speed, :distance_1 => distance, :distance_2 => distance, :direction => direction, :differential => differential})
+	  end
 
       # == description
       # Causes a pinch zoom gesture on the object. The type of the pinch is based on the given parameters. 
@@ -181,36 +181,36 @@ module MobyBehaviour
       # ArgumentError
       #  description:  In case the given parameters are not valid.
       #    
-	    def pinch_zoom(params)
+	  def pinch_zoom(params)
 
-		    begin
-		      verify_pinch_params!(params)
+		begin
+		  verify_pinch_params!(params)
 
-		      #convert speed to millis
-		      time = params[:speed].to_f
-		      speed = time*1000
-		      params[:speed] = speed.to_i
-		      if params[:x].kind_of?(Integer) and params[:y].kind_of?(Integer)
-			    params[:useCoordinates] = 'true' 
-			    params[:x] = attribute('x_absolute').to_i + params[:x]
-			    params[:y] = attribute('y_absolute').to_i + params[:y]
-		      end
-		      command = command_params #in qt_behaviour           
-		      command.command_name('PinchZoom')
-		      command.command_params(params)
+		  #convert speed to millis
+		  time = params[:speed].to_f
+		  speed = time*1000
+		  params[:speed] = speed.to_i
+		  if params[:x].kind_of?(Integer) and params[:y].kind_of?(Integer)
+			params[:useCoordinates] = 'true' 
+			params[:x] = attribute('x_absolute').to_i + params[:x]
+			params[:y] = attribute('y_absolute').to_i + params[:y]
+		  end
+		  command = command_params #in qt_behaviour           
+		  command.command_name('PinchZoom')
+		  command.command_params(params)
 
-		      @sut.execute_command( command )
+		  @sut.execute_command( command )
 
-		      #wait untill the pinch is finished
-		      do_sleep(time)
+		  #wait untill the pinch is finished
+		  do_sleep(time)
 
-		    rescue Exception => e      
-		      MobyUtil::Logger.instance.log "behaviour","FAIL;Failed pinch_zoom with params \"#{params.to_s}\".;#{identity};pinch_zoom;"
-		      Kernel::raise e        
-		    end      
-		    MobyUtil::Logger.instance.log "behaviour","PASS;Operation pinch_zoom succeeded with params \"#{params.to_s}\".;#{identity};pinch_zoom;"
-		    nil	
-	    end
+		rescue Exception => e      
+		  MobyUtil::Logger.instance.log "behaviour","FAIL;Failed pinch_zoom with params \"#{params.to_s}\".;#{identity};pinch_zoom;"
+		  Kernel::raise e        
+		end      
+		MobyUtil::Logger.instance.log "behaviour","PASS;Operation pinch_zoom succeeded with params \"#{params.to_s}\".;#{identity};pinch_zoom;"
+		nil	
+	  end
 
       # == description
       # Causes rotation motion on the object. The rotation will be so that one point is stationary 
@@ -265,12 +265,12 @@ module MobyBehaviour
       # == info
       # See method rotate
       #
-	    def one_point_rotate(radius, start_angle, rotate_direction, distance, speed, center_point = nil)
-		    params = {:type => :one_point, :radius => radius, :rotate_direction => rotate_direction, :distance => distance, :speed => speed, :direction => start_angle}
-		    params.merge!(center_point) if center_point 
-		    rotate(params)
-	    end
-	    
+	  def one_point_rotate(radius, start_angle, rotate_direction, distance, speed, center_point = nil)
+		params = {:type => :one_point, :radius => radius, :rotate_direction => rotate_direction, :distance => distance, :speed => speed, :direction => start_angle}
+		params.merge!(center_point) if center_point 
+		rotate(params)
+	  end
+	  
       # == description
       # Causes ratation motion on the object. The rotation will be so that both ends move to create a rotation motion around a point.
       #
@@ -323,11 +323,11 @@ module MobyBehaviour
       # == info
       # See method rotate
       #
-	    def two_point_rotate(radius, start_angle, rotate_direction, distance, speed, center_point = nil)
-		    params = {:type => :two_point, :radius => radius, :rotate_direction => rotate_direction, :distance => distance, :speed => speed, :direction => start_angle}
-		    params.merge!(center_point) if center_point 
-		    rotate(params)
-	    end
+	  def two_point_rotate(radius, start_angle, rotate_direction, distance, speed, center_point = nil)
+		params = {:type => :two_point, :radius => radius, :rotate_direction => rotate_direction, :distance => distance, :speed => speed, :direction => start_angle}
+		params.merge!(center_point) if center_point 
+		rotate(params)
+	  end
 
       # == description
       # Causes a rotate motion on the screen using two fingers (e.g. like turning a knob). Similar gesture to pinch zooming except the angle changes.
@@ -375,80 +375,80 @@ module MobyBehaviour
       # ArgumentError
       #  description:  In case the given parameters are not valid.
       #    
-	    def rotate(params)
-		    begin
-		      verify_rotate_params!(params)
+	  def rotate(params)
+		begin
+		  verify_rotate_params!(params)
 
-		      time = params[:speed].to_f
-		      speed = time*1000
-		      params[:speed] = speed.to_i
+		  time = params[:speed].to_f
+		  speed = time*1000
+		  params[:speed] = speed.to_i
 
-		      if params[:x].kind_of?(Integer) and params[:y].kind_of?(Integer)
-			    params[:useCoordinates] = 'true' 
-			    params[:x] = attribute('x_absolute').to_i + params[:x]
-			    params[:y] = attribute('y_absolute').to_i + params[:y]
-		      end
+		  if params[:x].kind_of?(Integer) and params[:y].kind_of?(Integer)
+			params[:useCoordinates] = 'true' 
+			params[:x] = attribute('x_absolute').to_i + params[:x]
+			params[:y] = attribute('y_absolute').to_i + params[:y]
+		  end
 
-		      command = command_params #in qt_behaviour           
-		      command.command_name('Rotate')
-		      command.command_params(params)
-		      
-		      @sut.execute_command( command )
-		      
-		      #wait untill the operation to finish
-		      do_sleep(time)
-		    rescue Exception => e      
-		      MobyUtil::Logger.instance.log "behaviour","FAIL;Failed rotate with params \"#{params.to_s}\".;#{identity};rotate;"
-		      Kernel::raise e        
-		    end      
-		    MobyUtil::Logger.instance.log "behaviour","PASS;Operation rotate succeeded with params \"#{params.to_s}\".;#{identity};rotate;"
-		    nil
-	    end
+		  command = command_params #in qt_behaviour           
+		  command.command_name('Rotate')
+		  command.command_params(params)
+		  
+		  @sut.execute_command( command )
+		  
+		  #wait untill the operation to finish
+		  do_sleep(time)
+		rescue Exception => e      
+		  MobyUtil::Logger.instance.log "behaviour","FAIL;Failed rotate with params \"#{params.to_s}\".;#{identity};rotate;"
+		  Kernel::raise e        
+		end      
+		MobyUtil::Logger.instance.log "behaviour","PASS;Operation rotate succeeded with params \"#{params.to_s}\".;#{identity};rotate;"
+		nil
+	  end
 
-    private
+	  private
 
-	    def verify_rotate_params!(params)
-		    raise ArgumentError.new( "Invalid type allowed valued(:sector, :acrs)." ) unless params[:type] == :one_point or params[:type] == :two_point
-		    raise ArgumentError.new("Speed must be a number.") unless params[:speed].kind_of?(Numeric)
+	  def verify_rotate_params!(params)
+		raise ArgumentError.new( "Invalid type allowed valued(:sector, :acrs)." ) unless params[:type] == :one_point or params[:type] == :two_point
+		raise ArgumentError.new("Speed must be a number.") unless params[:speed].kind_of?(Numeric)
 
-		    #direction
-		    if params[:direction].kind_of?(Integer)
-		      raise ArgumentError.new("Direction must be between 0 and 360.") unless params[:direction] >= 0 and params[:direction] < 360
-		    else    
-		      raise ArgumentError.new( "Invalid direction." ) unless @@_pinch_directions.include?(params[:direction])  
-		      params[:direction] = @@_pinch_directions[params[:direction]]
-		    end
+		#direction
+		if params[:direction].kind_of?(Integer)
+		  raise ArgumentError.new("Direction must be between 0 and 360.") unless params[:direction] >= 0 and params[:direction] < 360
+		else    
+		  raise ArgumentError.new( "Invalid direction." ) unless @@_pinch_directions.include?(params[:direction])  
+		  params[:direction] = @@_pinch_directions[params[:direction]]
+		end
 
-		    raise ArgumentError.new("Distance must be an integer.") unless params[:distance].kind_of?(Integer)   
-		    raise ArgumentError.new("Distance must be between 0 and 360") unless params[:distance] > 0 and params[:distance] <= 360
+		raise ArgumentError.new("Distance must be an integer.") unless params[:distance].kind_of?(Integer)   
+		raise ArgumentError.new("Distance must be between 0 and 360") unless params[:distance] > 0 and params[:distance] <= 360
 
-		    raise ArgumentError.new("Invalid direction must be " + @@_rotate_direction.to_s) unless @@_rotate_direction.include?(params[:rotate_direction])
-		    raise ArgumentError.new("Radius must be an integer.") unless params[:radius].kind_of?(Integer)
-	    end
+		raise ArgumentError.new("Invalid direction must be " + @@_rotate_direction.to_s) unless @@_rotate_direction.include?(params[:rotate_direction])
+		raise ArgumentError.new("Radius must be an integer.") unless params[:radius].kind_of?(Integer)
+	  end
 
-	    def verify_pinch_params!(params)
-		    #type
-		    raise ArgumentError.new( "Invalid type allowed valued(:in, :out)." ) unless params[:type] == :in or params[:type] == :out
-		    #speed 
-		    raise ArgumentError.new("Speed must be a number.") unless params[:speed].kind_of?(Numeric)
-		    #distance
-		    raise ArgumentError.new("Distance 1 must be an integer.") unless params[:distance_1].kind_of?(Integer)
-		    raise ArgumentError.new("Distance 2 must be an integer.") unless params[:distance_2].kind_of?(Integer)
-		    #direction
-		    if params[:direction].kind_of?(Integer)
-		      raise ArgumentError.new( "Invalid direction." ) unless 0 <= params[:direction].to_i and params[:direction].to_i <= 180 
-		    else    
-		      raise ArgumentError.new( "Invalid direction." ) unless @@_pinch_directions.include?(params[:direction])  
-		      params[:direction] = @@_pinch_directions[params[:direction]]
-		    end
-		    #differential
-		    raise ArgumentError.new("Differential must be an integer.") unless params[:differential].kind_of?(Integer)
-	    end
+	  def verify_pinch_params!(params)
+		#type
+		raise ArgumentError.new( "Invalid type allowed valued(:in, :out)." ) unless params[:type] == :in or params[:type] == :out
+		#speed 
+		raise ArgumentError.new("Speed must be a number.") unless params[:speed].kind_of?(Numeric)
+		#distance
+		raise ArgumentError.new("Distance 1 must be an integer.") unless params[:distance_1].kind_of?(Integer)
+		raise ArgumentError.new("Distance 2 must be an integer.") unless params[:distance_2].kind_of?(Integer)
+		#direction
+		if params[:direction].kind_of?(Integer)
+		  raise ArgumentError.new( "Invalid direction." ) unless 0 <= params[:direction].to_i and params[:direction].to_i <= 180 
+		else    
+		  raise ArgumentError.new( "Invalid direction." ) unless @@_pinch_directions.include?(params[:direction])  
+		  params[:direction] = @@_pinch_directions[params[:direction]]
+		end
+		#differential
+		raise ArgumentError.new("Differential must be an integer.") unless params[:differential].kind_of?(Integer)
+	  end
 
-	    # enable hooking for performance measurement & debug logging
-	    MobyUtil::Hooking.instance.hook_methods( self ) if defined?( MobyUtil::Hooking )
+	  # enable hooking for performance measurement & debug logging
+	  MobyUtil::Hooking.instance.hook_methods( self ) if defined?( MobyUtil::Hooking )
 
-	  end # Multitouch
+	end # Multitouch
 
   end # QT
 

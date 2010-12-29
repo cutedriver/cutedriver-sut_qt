@@ -90,20 +90,6 @@ module MobyBehaviour
 	    end
 
 	    # == description
-	    # Kills the application process
-	    # 
-	    # == returns
-	    # NilClass
-	    #   description: -
-	    #   example: -
-	    #
-	    def kill
-
-		    @sut.execute_command( MobyCommand::Application.new( :Kill, self.executable_name, self.uid, self.sut, nil ) )
-
-	    end
-
-	    # == description
 	    # Start to track a popup that may appear on the screen. Tracking is done based on the class name of the 
 	    # widget implementing popup functionality. Base class name can also be used in case framework level 
 	    # popup base class is available. The idea of the detection is to track info notes that appear 
@@ -159,21 +145,6 @@ module MobyBehaviour
 		  verify(time_out) {xml_source = @sut.application.fixture('popup', 'printPopup',{:className => class_name})}  
 		  MobyBase::StateObject.new( xml_source )			  
 	    end
-	    
-	    # == description
-	    # Bring the application to foreground.\n
-	    # \n
-	    # [b]NOTE:[/b] Currently this works only for Symbian OS target!
-	    # 
-	    # == returns
-	    # NilClass
-	    #   description: -
-	    #   example: -
-	    #
-	    #
-	    def bring_to_foreground
-		    @sut.execute_command(MobyCommand::Application.new(:BringToForeground, nil, self.uid, self.sut))
-      end
 
 	    # == description
 	    # Taps the given objects at the same time (multitouch).
