@@ -231,12 +231,13 @@ module MobyBehaviour
         if param[:kill].nil?
           xml = Nokogiri::XML(xml_source)
           data = {}
-          xml.xpath("//object[@type = 'Response']/attributes/attribute").each { |attr|
-          data[attr[:name]] = attr.children[0].content
-          }
-          return data
-        else
-          # Killed processes have no relevant data.
+		  object_xml_data, unused_rule = TDriver::TestObjectAdapter.get_objects( xml, { :type => 'Response'}, true )
+		  object_xml_data.collect{ |element|
+			data.merge!(TDriver::TestObjectAdapter.test_object_attributes(element))
+		  }
+		  return data
+		else
+		  # Killed processes have no relevant data.
           data = {
           :status => "KILLED",
           :output => xml_source

@@ -17,6 +17,8 @@
 ## 
 ############################################################################
 
+$webdav_upload_disabled == false
+
 require 'rubygems'
 require 'rake/gempackagetask'
 require 'fileutils'
@@ -25,6 +27,7 @@ require 'tmpdir'
 require File.expand_path( File.join( File.dirname( __FILE__ ), 'env' ) )
 require File.expand_path( File.join( File.dirname( __FILE__ ), 'webdav' ) )
 include DocumentDavupload
+
 
 @__release_mode = ENV['rel_mode']
 @__release_mode = 'minor' if @__release_mode == nil
@@ -248,6 +251,8 @@ end
 
 task :doc_upload do 
 
+  abort('Error: Unable to upload document due to WebDAV feature is disabled') if $webdav_upload_disabled == true
+
   if File.directory?("#{Dir.pwd}/doc/output/")
     puts "Upload current documentation to public web dav"
     puts "Please give your projects.forum.nokia cerendials"
@@ -275,6 +280,10 @@ task :doc_upload do
 	puts "Please give the TDriver version number of previous documentation for archiving"
     version=STDIN.gets
 	
+	puts "Please give the proxy"
+    proxy=STDIN.gets
+
+	
 	if username==nil
 	  puts "Username missing aborting..."
 	  exit(1)
@@ -291,7 +300,11 @@ task :doc_upload do
 	  puts "Previous version infromation missing aborting..."
 	  exit(1)
 	end	
-	upload_doc_to_public_dav(username,password,doc,version)
+	if proxy==nil
+	  puts "Proxy infromation missing aborting..."
+	  exit(1)
+	end
+	upload_doc_to_public_dav(username,password,doc,version,proxy)
   end    
 
 end
@@ -336,9 +349,9 @@ task :gem_install do
   puts "#########################################################"
   tdriver_gem = "testability-driver-#{@__gem_version}.gem"
   if /win/ =~ RUBY_PLATFORM
-     cmd = "gem install pkg\\tdriver*.gem --LOCAL"
+     cmd = "gem install pkg\\testability-driver*.gem --LOCAL"
   else
-     cmd = "gem install pkg/tdriver*.gem --LOCAL"
+     cmd = "sudo gem install pkg/testability-driver*.gem --LOCAL"
   end
   failure = system(cmd)
   raise "installing  #{GEM_NAME} failed" if (failure != true) or ($? != 0)
@@ -355,7 +368,11 @@ task :gem_uninstall do
   tdriver_gem = "testability-driver-#{@__gem_version}.gem"
      
   FileUtils.rm(Dir.glob('pkg/*gem'))
-  cmd = "gem uninstall -a -x #{GEM_NAME}"
+  if /win/ =~ RUBY_PLATFORM
+    cmd = "gem uninstall -a -x #{GEM_NAME}"
+  else
+    cmd = "sudo gem uninstall -a -x #{GEM_NAME}"
+  end
   failure = system(cmd)
 #  raise "uninstalling  #{GEM_NAME} failed" if (failure != true) or ($? != 0)
   

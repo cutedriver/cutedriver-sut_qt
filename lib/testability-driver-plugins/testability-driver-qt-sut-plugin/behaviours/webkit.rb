@@ -198,14 +198,16 @@ module MobyBehaviour
           temp_id = self.id
         else
           temp_id = self.attribute('webFrame')
-
-          x_absolute = (@sut.xml_data.xpath( "//object[@id='%s']/attributes/attribute[@name ='x_absolute']/value/text()" % self.attribute('webFrame') )[0]).to_s.to_i
-          y_absolute = (@sut.xml_data.xpath( "//object[@id='%s']/attributes/attribute[@name ='y_absolute']/value/text()" % self.attribute('webFrame') )[0]).to_s.to_i
-          width      = (@sut.xml_data.xpath( "//object[@id='%s']/attributes/attribute[@name ='width']/value/text()" % self.attribute('webFrame') )[0]).to_s.to_i
-          height     = (@sut.xml_data.xpath( "//object[@id='%s']/attributes/attribute[@name ='height']/value/text()" % self.attribute('webFrame') )[0]).to_s.to_i
-          
-          horizontalScrollBarHeight = (@sut.xml_data.xpath( "//object[@id='%s']/attributes/attribute[@name ='horizontalScrollBarHeight']/value/text()" % self.attribute('webFrame') )[0]).to_s.to_i
-          verticalScrollBarWidth    = (@sut.xml_data.xpath( "//object[@id='%s']/attributes/attribute[@name ='verticalScrollBarWidth']/value/text()" % self.attribute('webFrame') )[0]).to_s.to_i
+		  
+		  elemens_xml_data, unused_rule = TDriver::TestObjectAdapter.get_objects( @sut.xml_data, { :id => self.attribute('webFrame')}, true )
+		  object_xml_data = elemens_xml_data[0]
+		  object_attributes = TDriver::TestObjectAdapter.test_object_attributes(object_xml_data)
+		  x_absolute = object_attributes['x_absolute'].to_i 
+		  y_absolute = object_attributes['y_absolute'].to_i 
+		  width = object_attributes['width'].to_i
+		  height = object_attributes['height'].to_i 
+		  horizontalScrollBarHeight =  object_attributes['horizontalScrollBarHeight'].to_i
+		  verticalScrollBarWidth = object_attributes['verticalScrollBarWidth'].to_i
 
           #calculate borders
           frame_down_border = y_absolute + height - horizontalScrollBarHeight

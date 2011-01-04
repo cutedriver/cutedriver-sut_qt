@@ -17,28 +17,29 @@
 ## 
 ############################################################################
 
-
-
 module MobyUtil
   
   module FindObjectGenerator
 	
 	def generate_message
-	  filters = make_params if MobyUtil::Parameter[ @_sut.id ][ :filter_type, 'none' ] == 'dynamic'
+	
+	  filter_type = MobyUtil::Parameter[ @_sut.id ][ :filter_type, 'none' ]
+	
+	  filters = make_params if filter_type == 'dynamic'
 
 	  params = search_parameters
 
 	  builder = Nokogiri::XML::Builder.new do |xml|
-		xml.TasCommands( ( application_details || {} ).merge( :service => "findObject") ) {			
-		  xml.Target{			  
-			add_objects(xml, params)
-			xml.Command( :name => 'findObject' ){
-			  filters.collect{ | name, value | 
-				xml.param( :name => name, :value => value ) 
-			  }					        
-			} if MobyUtil::Parameter[ @_sut.id ][ :filter_type, 'none' ] == 'dynamic'
-		  } if params and params.size > 0
-		}
+		  xml.TasCommands( ( application_details || {} ).merge( :service => "findObject") ) {			
+		    xml.Target{			  
+			    add_objects(xml, params)
+			    xml.Command( :name => 'findObject' ){
+			      filters.collect{ | name, value | 
+				    xml.param( :name => name, :value => value ) 
+			      }					        
+			    } if filter_type == 'dynamic'
+		    } if params and params.size > 0
+		  }
 	  end
 	  builder.to_xml	  
 	end
@@ -58,6 +59,7 @@ module MobyUtil
 
 
 	def make_params
+	
 	  params = {}
 
 	  # get sut paramteres only once, store to local variable
@@ -69,25 +71,28 @@ module MobyUtil
 
 	  case sut_parameters[ :filter_type, 'none' ]
 		
-	  when 'dynamic'
+	    when 'dynamic'
 
-		# updates the filter with the current backtrace file list
-		MobyUtil::DynamicAttributeFilter.instance.update_filter( caller( 0 ) ) 
+		    # updates the filter with the current backtrace file list
+		    #MobyUtil::DynamicAttributeFilter.instance.update_filter( caller( 0 ) ) 
 
-		white_list = MobyUtil::DynamicAttributeFilter.instance.filter_string
-		params['attributeWhiteList'] = white_list if white_list
+		    white_list = MobyUtil::DynamicAttributeFilter.instance.filter_string
+		    params['attributeWhiteList'] = white_list if white_list
 		
-	  when 'static'
+	    when 'static'
 
-		params['attributeBlackList'] = $last_parameter if sut_parameters[ :attribute_blacklist, nil ]
-		params['attributeWhiteList'] = $last_parameter if sut_parameters[ :attribute_whitelist, nil ]
+		    params['attributeBlackList'] = $last_parameter if sut_parameters[ :attribute_blacklist, nil ]
+		    params['attributeWhiteList'] = $last_parameter if sut_parameters[ :attribute_whitelist, nil ]
 		
+	    end
+
+	    params		
+
 	  end
 
-	  params		
-
-	end
+    # enable hoo./base/test_object/factory.rb:king for performance measurement & debug logging
+    MobyUtil::Hooking.instance.hook_methods( self ) if defined?( MobyUtil::Hooking )
 
   end
+  
 end
-

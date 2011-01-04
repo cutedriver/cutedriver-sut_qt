@@ -303,8 +303,11 @@ module MobyBehaviour
 
             params = {:gesture_type => :MouseGestureToCoordinates, :speed => speed}
             if attribute('objectType') == 'Web'
-              frame_x_absolute = (@sut.xml_data.xpath( "//object[@id='%s']/attributes/attribute[@name ='x_absolute']/value/text()" % self.attribute('webFrame') )[0]).to_s.to_i
-              frame_y_absolute = (@sut.xml_data.xpath( "//object[@id='%s']/attributes/attribute[@name ='y_absolute']/value/text()" % self.attribute('webFrame') )[0]).to_s.to_i
+			  elemens_xml_data, unused_rule = TDriver::TestObjectAdapter.get_objects( @sut.xml_data, { :id => self.attribute('webFrame')}, true )
+			  object_xml_data = elemens_xml_data[0]
+			  object_attributes = TDriver::TestObjectAdapter.test_object_attributes(object_xml_data, ['x_absolute', 'y_absolute'])
+              frame_x_absolute = object_attributes['x_absolute'].to_i
+              frame_y_absolute = object_attributes['y_absolute'].to_i
               new_params = {:x=>(frame_x_absolute + x.to_i + (attribute('width' ).to_i/2)),
                             :y=>(frame_y_absolute + y.to_i + (attribute('height').to_i/2))}
               params.merge!(new_params)
