@@ -223,7 +223,8 @@ module MobyBehaviour
           # puts "tap: " + (Time.now - tapMeasure).to_s + " s - before 2 webs"
 
           if(attribute('objectType') == 'Web')
-            if type != "QWebFrame"
+            #check that type is not QWebFrame and that QWebFrame is found for object
+            if type != "QWebFrame" && (@sut.xml_data.xpath( "//object[@id='45277941']/attributes/attribute[@name ='baseUrl']/value/text()" )[0]).to_s != ""
              # puts "tap: " + (Time.now - tapMeasure).to_s + " s - Not q webframe"
 
               x_absolute = (@sut.xml_data.xpath( "//object[@id='%s']/attributes/attribute[@name ='x_absolute']/value/text()" % self.attribute('webFrame') )[0]).to_s.to_i
