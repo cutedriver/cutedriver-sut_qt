@@ -224,25 +224,27 @@ module MobyBehaviour
 
           if(attribute('objectType') == 'Web')
             #check that type is not QWebFrame and that QWebFrame is found for object
-            if type != "QWebFrame" && (@sut.xml_data.xpath( "//object[@id='45277941']/attributes/attribute[@name ='baseUrl']/value/text()" )[0]).to_s != ""
-             # puts "tap: " + (Time.now - tapMeasure).to_s + " s - Not q webframe"
-			  elemens_xml_data, unused_rule = TDriver::TestObjectAdapter.get_objects( @sut.xml_data, { :id => self.attribute('webFrame')}, true )
-			  object_xml_data = elemens_xml_data[0]
-			  object_attributes = TDriver::TestObjectAdapter.test_object_attributes(object_xml_data)
-			  x_absolute = object_attributes['x_absolute'].to_i 
-			  y_absolute = object_attributes['y_absolute'].to_i
-			  width = object_attributes['width'].to_i 
-			  height = object_attributes['height'].to_i  
+            if type != "QWebFrame" 
+              # puts "tap: " + (Time.now - tapMeasure).to_s + " s - Not q webframe"
+              elemens_xml_data, unused_rule = TDriver::TestObjectAdapter.get_objects( @sut.xml_data, { :id => self.attribute('webFrame')}, true )
+              object_xml_data = elemens_xml_data[0]
+              object_attributes = TDriver::TestObjectAdapter.test_object_attributes(object_xml_data)
+              x_absolute = object_attributes['x_absolute'].to_i 
+              y_absolute = object_attributes['y_absolute'].to_i
+              width = object_attributes['width'].to_i 
+              height = object_attributes['height'].to_i  
               horizontalScrollBarHeight =  object_attributes['horizontalScrollBarHeight'].to_i
               verticalScrollBarWidth = object_attributes['verticalScrollBarWidth'].to_i
 
-             # puts "tap: " + (Time.now - tapMeasure).to_s + " s - x_a(#{x_absolute}), y_a(#{y_absolute}), w(#{width}), h(#{height})"
+              # puts "tap: " + (Time.now - tapMeasure).to_s + " s - x_a(#{x_absolute}), y_a(#{y_absolute}), w(#{width}), h(#{height})"
 
 
-              if((center_x.to_i < x_absolute) or
-                 (center_x.to_i > x_absolute + width - verticalScrollBarWidth) or
-                 (center_y.to_i < y_absolute) or
-                 (center_y.to_i > y_absolute + height - horizontalScrollBarHeight)
+              if(object_attributes['baseUrl'] != "" and (
+                   (center_x.to_i < x_absolute) or
+                   (center_x.to_i > x_absolute + width - verticalScrollBarWidth) or
+                   (center_y.to_i < y_absolute) or
+                   (center_y.to_i > y_absolute + height - horizontalScrollBarHeight)
+                 )
                 )
                 #puts "web element scroll"
                 self.scroll(0,0,1) # enable tap centralization
