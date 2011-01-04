@@ -231,10 +231,18 @@ module MobyBehaviour
             use_tap_screen = optional_params[:use_tap_screen].nil? ? MobyUtil::Parameter[ @sut.id][ :use_tap_screen, 'false'] :
               optional_params[:use_tap_screen].to_s
             optional_params[:useTapScreen] = use_tap_screen
+            optional_params['x_off'] = MobyUtil::Parameter[ @sut.id ][:tap_x_offset , '0' ],
+            optional_params['y_off'] = MobyUtil::Parameter[ @sut.id ][:tap_y_offset , '0' ]
+
 
 
 		    #do_gesture(direction, speed, distance, isDrag, button)
-		    params = {:gesture_type => :MouseGesture, :direction => direction, :speed => speed, :distance => distance}
+		    params = {
+		    	:gesture_type => :MouseGesture,
+		    	:direction => direction,
+		    	:speed => speed,
+		    	:distance => distance
+		    }
 		    params.merge!(optional_params)
 		    do_gesture(params)
 		    do_sleep(speed)
