@@ -224,7 +224,7 @@ module MobyBehaviour
 
           if(attribute('objectType') == 'Web')
             #check that type is not QWebFrame and that QWebFrame is found for object
-            if type != "QWebFrame" 
+            if type != "QWebFrame" and self.attributes.key?('webFrame')
               # puts "tap: " + (Time.now - tapMeasure).to_s + " s - Not q webframe"
               elemens_xml_data, unused_rule = TDriver::TestObjectAdapter.get_objects( @sut.xml_data, { :id => self.attribute('webFrame')}, true )
               object_xml_data = elemens_xml_data[0]
