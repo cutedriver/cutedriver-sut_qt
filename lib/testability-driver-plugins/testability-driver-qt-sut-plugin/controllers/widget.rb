@@ -32,33 +32,49 @@ module MobyController
 			# == raises
 			# NotImplementedError: raised if unsupported command type       
 			def execute
-			  command_params = {:eventType => get_event_type, :name => get_command_name}
-			  command_params.merge!(get_command_params) if get_command_params
+
+			  command_params = { :eventType => get_event_type, :name => get_command_name }
+
+			  command_params.merge!( @_command_params ) if get_command_params
 
 			  builder = Nokogiri::XML::Builder.new{
-				TasCommands( :id=> get_application_id, :transitions => get_transitions, :service => get_service || 'uiCommand' ) {
-				  Target( :TasId => get_object_id, :type => get_object_type ) {
-					if get_command_value.kind_of? Array
-					  get_command_value.each do | command_part |
-						Command( command_part[ :value ], command_part[ :params ] )
+
+				  TasCommands( :id => get_application_id, :transitions => @_transitions, :service => @_service || 'uiCommand' ) {
+
+				    Target( :TasId => get_object_id, :type => get_object_type ) {
+
+					  if @_command_value.kind_of?( Array )
+
+					    @_command_value.each do | command_part |
+						    Command( command_part[ :value ], command_part[ :params ] )
+					    end
+
+            elsif @_command_value
+
+  					    Command( @_command_value, command_params )
+
+					  else
+
+  					    Command( command_params )
+
 					  end
-					else
-					  Command( get_command_value || "", command_params )
-					end
+
+				    }
 				  }
-				}
 			  }						  
 
 			  if @sut_adapter.group?
-				@sut_adapter.append_command(builder.doc.root.children)
+  				@sut_adapter.append_command( builder.doc.root.children )
 			  else
-				@sut_adapter.send_service_request(Comms::MessageGenerator.generate(builder.to_xml))
+	  			@sut_adapter.send_service_request( Comms::MessageGenerator.generate( builder.to_xml ) )
 			  end
 
 			end
 
 			def set_adapter( adapter )
+
 				@sut_adapter = adapter
+
 			end
 
 			# enable hooking for performance measurement & debug logging
