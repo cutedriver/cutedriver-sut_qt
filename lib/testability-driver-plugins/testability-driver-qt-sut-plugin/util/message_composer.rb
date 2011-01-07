@@ -37,9 +37,33 @@ module MobyUtil
 
 	  end
 
+    def hash_to_attributes( hash )
+
+     ( hash || {} ).collect{ | value | "#{ value.first }=\"#{ value.last }\"" }.join(" ")
+
+    end
+
 	  def make_xml_message( service_details, command_name, params, command_value = nil )
 
-		  Nokogiri::XML::Builder.new{
+=begin
+
+      # create message as string
+      #MobyUtil::MessageComposer::hash_to_attributes                                         140      0.00405100      0.00405100    0.010%      0.00002894
+      #MobyUtil::MessageComposer::make_xml_message                                            70      0.00762200      0.00357100    0.009%      0.00010889
+
+      "<TasCommands #{ hash_to_attributes( service_details ) }>" <<
+      "<Target TasId=\"Application\">" << 
+      "<Command name=\"#{ command_name }\" #{ hash_to_attributes( params ) }#{ command_value ? ">#{ command_value }</Command>" : " />"  }" <<
+      "</Target>" <<
+      "</TasCommands>"
+
+      # vs.
+
+      # create message using builder
+      #MobyUtil::MessageComposer::make_xml_message                                            70      0.03611100      0.03611100    0.090%      0.00051587
+
+      # create message
+		  MobyUtil::XML.build{
 		    TasCommands( service_details ) {
 			  Target( :TasId => "Application" ) {
 			    Command( command_value || "", ( params || {} ).merge( :name => command_name ) )
@@ -47,9 +71,15 @@ module MobyUtil
 		    }
 		  }.to_xml		  
 
+=end
+
+      # construct xml message as string; using builder is approx. 67% slower, see statistics above
+      "<TasCommands #{ hash_to_attributes( service_details ) }><Target TasId=\"Application\"><Command name=\"#{ command_name }\" #{ hash_to_attributes( params ) }#{ command_value ? ">#{ command_value }</Command>" : " />"  }</Target></TasCommands>"
+
 	  end
 
 	  def make_fixture_message(fixture_plugin, params)
+
 		  Nokogiri::XML::Builder.new{
 		    TasCommands( :id => params[:application_id].to_s, :service => "fixture", :async => params[:async].to_s ) {
 			  Target( :TasId => params[:object_id].to_s, :type => params[:object_type].to_s ) {
