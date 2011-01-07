@@ -27,34 +27,44 @@ module MobyUtil
 	
 	  filters = make_params if filter_type == 'dynamic'
 
-	  params = search_parameters
-
 	  builder = Nokogiri::XML::Builder.new do |xml|
-		  xml.TasCommands( ( application_details || {} ).merge( :service => "findObject") ) {			
+
+		  xml.TasCommands( ( @_app_details || {} ).merge( :service => "findObject") ) {			
+
 		    xml.Target{			  
-			    add_objects(xml, params)
-			    xml.Command( :name => 'findObject' ){
-			      filters.collect{ | name, value | 
-				    xml.param( :name => name, :value => value ) 
-			      }					        
-			    } if filter_type == 'dynamic'
-		    } if params and params.size > 0
+
+			    add_objects( xml, @_params )
+
+			    xml.Command( :name => 'findObject' ){ filters.collect{ | name, value | xml.param( :name => name, :value => value ) } } if filter_type == 'dynamic'
+
+		    } if @_params and @_params.size > 0
+
 		  }
+
 	  end
-	  builder.to_xml	  
+
+	  builder.to_xml
+
 	end
 
 	private
 
-	def add_objects(builder, params)
+	def add_objects( builder, params )
+
 	  parent = builder.parent
-	  params.each{|objectParams| parent = create_object_node(builder, objectParams, parent)}			  
+
+	  params.each{| objectParams | parent = create_object_node( builder, objectParams, parent ) }
+
 	end
 	
-	def create_object_node(builder, params, parent)
-	  node = Nokogiri::XML::Node.new('object', builder.doc)
-	  params.keys.each{|key| node[key.to_s] = params[key].to_s}
-	  parent.add_child(node)
+	def create_object_node( builder, params, parent )
+
+	  node = Nokogiri::XML::Node.new( 'object', builder.doc )
+
+	  params.keys.each{ | key | node[ key.to_s ] = params[ key ].to_s }
+
+	  parent.add_child( node )
+
 	end
 
 
