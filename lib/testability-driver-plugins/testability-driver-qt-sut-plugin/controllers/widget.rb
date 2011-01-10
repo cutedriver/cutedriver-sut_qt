@@ -35,23 +35,23 @@ module MobyController
 
 			  command_params = { :eventType => get_event_type, :name => get_command_name }
 
-			  command_params.merge!( @_command_params ) if get_command_params
+			  command_params.merge!( get_command_params ) if get_command_params
 
 			  builder = Nokogiri::XML::Builder.new{
 
-				  TasCommands( :id => get_application_id, :transitions => @_transitions, :service => @_service || 'uiCommand' ) {
+				  TasCommands( :id => get_application_id, :transitions => get_transitions, :service => get_service || 'uiCommand' ) {
 
 				    Target( :TasId => get_object_id, :type => get_object_type ) {
 
-					  if @_command_value.kind_of?( Array )
+					  if get_command_value.kind_of?( Array )
 
-					    @_command_value.each do | command_part |
+					    get_command_value.each do | command_part |
 						    Command( command_part[ :value ], command_part[ :params ] )
 					    end
 
-            elsif @_command_value
+            elsif get_command_value
 
-  					    Command( @_command_value, command_params )
+  					    Command( get_command_value, command_params )
 
 					  else
 
