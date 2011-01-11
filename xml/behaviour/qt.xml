@@ -91,11 +91,7 @@
         <module name="MobyBehaviour::QT::Application" />
 
         <methods>
-            <method name="drag">
-                <description>Drag on screen (start X, start Y, end X, end Y).</description>
-                <example>drag(200, 100, 400, 200)</example>
-            </method>
-
+           
             <method name="kill">
                 <description>Kills the application process.</description>
                 <example>kill</example>
