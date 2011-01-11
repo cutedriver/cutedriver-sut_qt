@@ -17,7 +17,8 @@
 ## 
 ############################################################################
 
-include TDriverVerify
+# why include TDriverVerify here?
+#include TDriverVerify
 
 module MobyBehaviour
 
@@ -45,6 +46,7 @@ module MobyBehaviour
     # Application
     #
 	  module Application
+
       # == nodoc
 	    # == description
 	    # Drag from the start coordinates to the end coordinates.
@@ -85,7 +87,11 @@ module MobyBehaviour
 	    #	  
 	    def drag( start_x, start_y, end_x, end_y, duration = 1000 )
 
-		    @sut.execute_command( MobyCommand::Drag.new( start_x, start_y, end_x, end_y, duration ) )
+		    @sut.execute_command( 
+
+          MobyCommand::Drag.new( start_x, start_y, end_x, end_y, duration ) 
+
+        )
 
 	    end
 
@@ -141,9 +147,15 @@ module MobyBehaviour
 	    #
 	    #
 	    def verify_popup(class_name, time_out = 5)
-		  xml_source = nil
-		  verify(time_out) {xml_source = @sut.application.fixture('popup', 'printPopup',{:className => class_name})}  
-		  MobyBase::StateObject.new( xml_source )			  
+
+		    xml_source = nil
+
+		    verify(time_out){
+          xml_source = @sut.application.fixture('popup', 'printPopup',{:className => class_name})
+        }
+
+		    MobyBase::StateObject.new( xml_source )
+
 	    end
 
 	    # == description
@@ -194,7 +206,7 @@ module MobyBehaviour
       #    
 	    def tap_down_objects(objects)
 
-		    raise ArgumentError.new("Nothing to tap") unless objects.kind_of?(Array)
+		    raise ArgumentError, 'Nothing to tap' unless objects.kind_of?( Array )
 
 		    multitouch_operation{
 		      objects.each { |o| o.tap_down }
@@ -223,7 +235,7 @@ module MobyBehaviour
       #    
 	    def tap_up_objects(objects)
 
-		    raise ArgumentError.new("Nothing to tap") unless objects.kind_of?(Array)
+		    raise ArgumentError, 'Nothing to tap' unless objects.kind_of?( Array )
 
 		    multitouch_operation{
 		      objects.each { |o| o.tap_up }
