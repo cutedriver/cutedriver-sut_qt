@@ -280,7 +280,7 @@
     </behaviour>
 
 
-    <behaviour name="QtSynchronization" object_type="*" sut_type="QT" env="qt" input_type="touch" version="*">
+    <behaviour name="QtSynchronization" object_type="*;application" sut_type="QT" env="qt" input_type="touch" version="*">
 
         <module name="MobyBehaviour::QT::Synchronization" />
 
@@ -293,7 +293,7 @@
 
     </behaviour>
 
-    <behaviour name="QtFixture" object_type="sut;*" sut_type="QT" env="qt" input_type="*" version="*">
+    <behaviour name="QtFixture" object_type="sut;application;*" sut_type="QT" env="qt" input_type="*" version="*">
 
         <module name="MobyBehaviour::QT::Fixture" />
 
@@ -336,7 +336,7 @@
     </behaviour>
     
 
-    <behaviour name="QtTypeText" object_type="*" sut_type="QT" env="qt" input_type="*" version="*">
+    <behaviour name="QtTypeText" object_type="*;application" sut_type="QT" env="qt" input_type="*" version="*">
 
         <module name="MobyBehaviour::QT::TypeText" />
 
@@ -349,7 +349,7 @@
 
     </behaviour>
 
-    <behaviour name="QtKeyPress" object_type="*" sut_type="QT" env="qt" input_type="*" version="*">
+    <behaviour name="QtKeyPress" object_type="*;application" sut_type="QT" env="qt" input_type="*" version="*">
 
         <module name="MobyBehaviour::QT::KeyPress" />
 
@@ -362,7 +362,7 @@
 
     </behaviour>
 
-    <behaviour name="QtAttribute" object_type="*" sut_type="QT" env="qt" input_type="*" version="*">
+    <behaviour name="QtAttribute" object_type="*;application" sut_type="QT" env="qt" input_type="*" version="*">
 
         <module name="MobyBehaviour::QT::Attribute" />
 
@@ -375,7 +375,7 @@
 
     </behaviour>
 
-    <behaviour name="QtMethod" object_type="*" sut_type="QT" env="qt" input_type="*" version="*">
+    <behaviour name="QtMethod" object_type="*;application" sut_type="QT" env="qt" input_type="*" version="*">
 
         <module name="MobyBehaviour::QT::Method" />
 
@@ -445,7 +445,7 @@
 
     </behaviour>
 
-    <behaviour name="QtScreenCapture" object_type="*" sut_type="QT" env="qt" input_type="*" version="*">
+    <behaviour name="QtScreenCapture" object_type="*;application" sut_type="QT" env="qt" input_type="*" version="*">
 
         <module name="MobyBehaviour::QT::ScreenCapture" />
 
