@@ -47,54 +47,6 @@ module MobyBehaviour
     #
 	  module Application
 
-      # == nodoc
-	    # == description
-	    # Drag from the start coordinates to the end coordinates.
-	    # 
-      # == arguments
-	    # start_x
-	    #  Integer
-	    #   description: Starting x coordinate
-	    #   example: 10
-	    #
-      # == arguments
-	    # start_y
-	    #  Integer
-	    #   description: Starting y coordinate
-	    #   example: 10
-	    #
-      # == arguments
-	    # end_x
-	    #  Integer
-	    #   description: End x coordinate
-	    #   example: 30
-	    #
-      # == arguments
-	    # end_y
-	    #  Integer
-	    #   description: End y coordinate
-	    #   example: 100
-	    #
-	    # duration
-	    #  Integer
-	    #   description: How long will the drag take in millis
-	    #   example: 1000
-	    #
-	    # == returns
-	    # NilClass
-	    #   description: -
-	    #   example: -
-	    #	  
-	    def drag( start_x, start_y, end_x, end_y, duration = 1000 )
-
-		    @sut.execute_command( 
-
-          MobyCommand::Drag.new( start_x, start_y, end_x, end_y, duration ) 
-
-        )
-
-	    end
-
 	    # == description
 	    # Start to track a popup that may appear on the screen. Tracking is done based on the class name of the 
 	    # widget implementing popup functionality. Base class name can also be used in case framework level 
