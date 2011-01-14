@@ -543,15 +543,19 @@ module MobyBehaviour
           interval_millis = interval*1000 # to millis
 
           # make one refresh before execution then freeze
+		  find_object_state = self.parameter[ :use_find_object, false ]
+		  self.parameter[ :use_find_object] = false 
+
           app.force_refresh({:id => get_application_id})
           self.freeze
 
           #disable sleep to avoid unnecessary sleeping
-          MobyUtil::Parameter[ id ][ :sleep_disabled] = 'true'
+		  self.parameter[ :sleep_disabled ] = true
 
           ret = execute_command( MobyCommand::Group.new(interval_millis.to_i, app, block ) )
 
-          MobyUtil::Parameter[ id ][ :sleep_disabled] = 'false'
+		  self.parameter[ :sleep_disabled ] = false
+		  self.parameter[ :use_find_object] = find_object_state
 
           self.unfreeze
 
