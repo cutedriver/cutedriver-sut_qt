@@ -1,4 +1,4 @@
-libtestability-driver-ruby-sut-qt (1.0.0-1) unstable; urgency=low
+libtestability-driver-ruby-sut-qt (1.0.0-2) unstable; urgency=low
 
   * Fixes: NB#219192 - kill method missing from application
 
