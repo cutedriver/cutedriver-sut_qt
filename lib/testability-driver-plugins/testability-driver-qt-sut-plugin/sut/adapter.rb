@@ -17,8 +17,6 @@
 ## 
 ############################################################################
 
-require 'timeout'
-
 module MobyController
 
   module QT
@@ -26,16 +24,18 @@ module MobyController
     # Sut adapter that used TCP/IP connections to send and receive data from QT side. 
     class SutAdapter < MobyController::SutAdapter
       
-      attr_reader :sut_id
+      attr_reader(
+        :sut_id,
+        :socket_received_bytes,
+        :socket_sent_bytes,
+        :socket_received_packets,
+        :socket_sent_packets
+      )
 
       attr_accessor(
-
-            :socket_read_timeout,
-            :socket_write_timeout,
-            :socket_received_bytes,
-            :socket_sent_bytes
-
-            )
+        :socket_read_timeout,
+        :socket_write_timeout
+      )
       
       # TODO: better way to set the host and port parameters   
       # Initialize the tcp adapter for communicating with the device.
@@ -49,14 +49,19 @@ module MobyController
 
         @socket = nil
         @connected = false
-        @socket_received_bytes=0
-        @socket_sent_bytes=0
+
+        @socket_received_bytes = 0
+        @socket_sent_bytes = 0
+
+        @socket_received_packets = 0
+        @socket_sent_packets = 0
 
         @sut_id = sut_id
 
         # set timeouts
         @socket_read_timeout = receive_timeout
         @socket_write_timeout = send_timeout
+
 
         @counter = rand( 1000 )
 
@@ -97,18 +102,25 @@ module MobyController
 
       # TODO: document me
       def group?
+
         @_group
+
       end
 
       # Set the document builder for the grouped behaviour message.
       def set_message_builder(builder)
+
         @_group = true
+
         @_builder = builder
+
       end
 
       # TODO: document me
       def append_command(node_list)
+
         node_list.each {|ch| @_builder.doc.root.add_child(ch)}          
+
       end
 
       # Sends a grouped command message to the server. Sets group to false and nils the builder
@@ -116,11 +128,17 @@ module MobyController
       # == returns    
       # the amout of commands grouped (and send)
       def send_grouped_request
+
         @_group = false
+
         size = @_builder.doc.root.children.size
+
         send_service_request(Comms::MessageGenerator.generate(@_builder.to_xml))
+
         @_builder = nil
+
         size
+
       end
 
       # Send the message to the qt server         
@@ -137,7 +155,7 @@ module MobyController
         message.message_id = ( @counter += 1 )
 
         # write request message to socket
-        write_socket( message.make_binary_message(@counter) )
+        write_socket( message.make_binary_message( @counter ) )
 
         # read response to determine was the message handled properly and parse the header
         # header[ 0 ] = command_flag
@@ -167,14 +185,14 @@ module MobyController
 
           if read_message_id < @counter
 
-            $logger.log "warning" , "Response to request did not match: \"#{ header[ 4 ].to_s }\"<\"#{ @counter.to_s }\""
+            $logger.log "warning", "Response to request did not match: \"#{ header[ 4 ].to_s }\"<\"#{ @counter.to_s }\""
 
           elsif read_message_id > @counter
 
-            $logger.log "fatal" , "Response to request did not match: \"#{ header[ 4 ].to_s }\">\"#{ @counter.to_s }\""
+            $logger.log "fatal", "Response to request did not match: \"#{ header[ 4 ].to_s }\">\"#{ @counter.to_s }\""
 
             # save to file?
-            $logger.log "fatal" , body
+            $logger.log "fatal", body
 
             Kernel::raise RuntimeError.new( "Response to request did not match: \"#{ header[ 4 ].to_s }\"!=\"#{ @counter.to_s }\"" )
 
@@ -197,19 +215,19 @@ module MobyController
         #   0 -> ERROR_MSG
         #   1 -> VALID_MSG
         #   2 -> OK_MESSAGE
-		    if header[ 0 ] == 0
+        if header[ 0 ] == 0
 
-		      if body =~ /The application with Id \d+ is no longer available/
+          if body =~ /The application with Id \d+ is no longer available/
 
-  			    Kernel::raise MobyBase::ApplicationNotAvailableError.new( body ) 
+            Kernel::raise MobyBase::ApplicationNotAvailableError, body
 
-		      else
+          else
 
-  			    Kernel::raise RuntimeError.new( body ) 
+            Kernel::raise RuntimeError, body
 
-		      end
+          end
 
-		    end
+        end
 
         # return the body ( and crc if required )
         return_crc ? [ body, header[ 2 ] ] : body
@@ -239,65 +257,109 @@ module MobyController
 
         @socket_received_bytes += read_buffer.size
 
-        read_buffer
+        @socket_received_packets += 1
 
+        read_buffer
+        
 =begin
         begin
 
-          Timeout::timeout( @socket_read_timeout ){ 
+          read_buffer = @socket.read_nonblock( bytes_count )
 
-            # raise exception if no data available 
-            #raise Timeout::Error if TCPSocket::select( [ @socket ], nil, nil, @socket_read_timeout ).nil?
+        rescue Errno::EWOULDBLOCK
 
-            @socket.read( bytes_count )
+          if TCPSocket.select( [ @socket ], nil, nil, @socket_read_timeout )
+
+            read_buffer = @socket.read_nonblock( bytes_count )
+
+          else
+
+            Kernel::raise IOError.new( "Socket reading timeout (%i) exceeded for %i bytes" % [ @socket_read_timeout, bytes_count ] )
+
+          end
+
+        end
+
+        read_buffer
+=end
+
+=begin
+        #Kernel::raise ThreadError, "Timeout within critical session" if Thread.critical
+
+        begin
+
+          # store current thread
+          main_thread = Thread.current
+
+          # create timeout thread
+          timeout_thread = Thread.new( @socket_read_timeout ){ | timeout, bytes_count |
+
+            # sleep the timeout
+            sleep time
+
+            # raise exception if timeout exceeds
+            main_thread.raise IOError.new( "Socket reading timeout (%i) exceeded for %i bytes" % [ timeout, bytes_count ] ) if main_thread.alive?
 
           }
+          
+          # read data from socket          
+          @socket.read( bytes_count )
 
-        rescue Timeout::Error
+        ensure
 
-          Kernel::raise IOError.new( "Socket reading timeout (%i) exceeded for %i bytes" % [ @socket_read_timeout, bytes_count ] )
-
-        ensure 
+          # ensure that timeout thread is terminated
+          timeout_thread.kill if timeout_thread && timeout_thread.alive?
 
           @socket_received_bytes += bytes_count 
 
         end
-
 =end
 
       end
 
       # TODO: document me
       def write_socket( data )
- 
-=begin
-        begin
 
-          Timeout::timeout( @socket_write_timeout ){ 
-
-            @socket.write( data )
-
-            #raise Timeout::Error if TCPSocket::select( nil, [ @socket ], nil, @socket_write_timeout ).nil?
-
-          }
-
-        rescue Timeout::Error
-
-          Kernel::raise IOError.new( "Socket reading timeout (%i) exceeded for %i bytes" % [ @socket_write_timeout, data.size ] )
-
-        ensure 
-
-          @socket_sent_bytes += data.size
-
-        end
-=end
-     
         @socket_sent_bytes += data.size
+
+        @socket_sent_packets += 1
 
         @socket.write( data )
 
         # verify that there is no data in writing buffer 
         Kernel::raise IOError.new( "Socket writing timeout (%i) exceeded for %i bytes" % [ @socket_write_timeout, data.length ] ) if TCPSocket::select( nil, [ @socket ], nil, @socket_write_timeout ).nil?
+ 
+=begin
+
+        begin
+          
+          # store current thread
+          main_thread = Thread.current
+
+          # create timeout thread
+          timeout_thread = Thread.new( @socket_write_timeout ){ | timeout, data.size |
+
+            # sleep the timeout
+            sleep time
+
+            # raise exception if timeout exceeds
+            main_thread.raise IOError.new( "Socket writing timeout (%i) exceeded for %i bytes" % [ timeout, bytes_count ] ) if main_thread.alive?
+
+          }
+
+          # read data from socket          
+          @socket.write( data )
+
+        ensure
+
+          # ensure that timeout thread is terminated
+          timeout_thread.kill if timeout_thread and timeout_thread.alive?
+
+          @socket_sent_bytes += data.size
+
+        end
+
+=end
 
       end
 

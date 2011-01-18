@@ -47,9 +47,20 @@ module MobyController
 
 			end
 
+      def received_packets
+
+				@sut_adapter.socket_received_packets
+
+			end
+
+      def sent_packets
+
+				@sut_adapter.socket_sent_packets
+
+			end
+
 			# enable hooking for performance measurement & debug logging
 			TDriver::Hooking.hook_methods( self ) if defined?( TDriver::Hooking )
-
 
 		end # SutController
 
