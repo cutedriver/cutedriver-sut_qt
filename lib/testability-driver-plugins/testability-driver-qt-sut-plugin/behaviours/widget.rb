@@ -70,10 +70,10 @@ module MobyBehaviour
           # Hide all future params in a hash
           use_tap_screen = false
           if move_params.kind_of? Hash
-            use_tap_screen = move_params[:use_tap_screen].nil? ? MobyUtil::Parameter[ @sut.id][ :use_tap_screen, 'false'] :
+            use_tap_screen = move_params[:use_tap_screen].nil? ? $parameters[ @sut.id][ :use_tap_screen, 'false'] :
               move_params[:use_tap_screen].to_s
           else
-            use_tap_screen = MobyUtil::Parameter[ @sut.id][ :use_tap_screen, 'false']
+            use_tap_screen = $parameters[ @sut.id][ :use_tap_screen, 'false']
           end
           command = command_params #in qt_behaviour
           command.command_name('MouseMove')
@@ -84,8 +84,8 @@ module MobyBehaviour
               'y' => center_y, 
               'useCoordinates' => 'true',
               'useTapScreen' => use_tap_screen,
-              'x_off' => MobyUtil::Parameter[ @sut.id ][:tap_x_offset , '0' ],
-              'y_off' => MobyUtil::Parameter[ @sut.id ][:tap_y_offset , '0' ]
+              'x_off' => $parameters[ @sut.id ][:tap_x_offset , '0' ],
+              'y_off' => $parameters[ @sut.id ][:tap_y_offset , '0' ]
             }
           else
             params = {'useTapScreen' => use_tap_screen.to_s}
@@ -96,11 +96,11 @@ module MobyBehaviour
 
         rescue Exception => e
 
-          MobyUtil::Logger.instance.log "behaviour" , "FAIL;Failed to mouse_move"
+          $logger.log "behaviour" , "FAIL;Failed to mouse_move"
           Kernel::raise e
         end
 
-        MobyUtil::Logger.instance.log "behaviour" , "PASS;Operation mouse_move executed successfully"
+        $logger.log "behaviour" , "PASS;Operation mouse_move executed successfully"
 
         nil
 
@@ -180,12 +180,12 @@ module MobyBehaviour
             end
 
             tap_count = tap_params[:tap_count].nil? ? 1 : tap_params[:tap_count]
-            use_tap_screen = tap_params[:use_tap_screen].nil? ? MobyUtil::Parameter[ @sut.id][ :use_tap_screen, 'false'] :
+            use_tap_screen = tap_params[:use_tap_screen].nil? ? $parameters[ @sut.id][ :use_tap_screen, 'false'] :
               tap_params[:use_tap_screen].to_s
           else
             tap_count = tap_params
 
-            use_tap_screen = MobyUtil::Parameter[@sut.id][ :use_tap_screen, 'false']
+            use_tap_screen = $parameters[@sut.id][ :use_tap_screen, 'false']
           end
 
           raise ArgumentError.new( "Invalid button." ) unless @@_valid_buttons.include?(button)
@@ -199,10 +199,10 @@ module MobyBehaviour
           params = {
             'count' => tap_count.to_s,
             'button' => @@_buttons_map[button],
-            'mouseMove' => MobyUtil::Parameter[ @sut.id ][ :in_tap_move_pointer, 'false' ],
+            'mouseMove' => $parameters[ @sut.id ][ :in_tap_move_pointer, 'false' ],
             'useTapScreen' => use_tap_screen,
-            'x_off' => MobyUtil::Parameter[ @sut.id ][:tap_x_offset , '0' ],
-            'y_off' => MobyUtil::Parameter[ @sut.id ][:tap_y_offset , '0' ]
+            'x_off' => $parameters[ @sut.id ][:tap_x_offset , '0' ],
+            'y_off' => $parameters[ @sut.id ][:tap_y_offset , '0' ]
           }
 
 
@@ -268,12 +268,12 @@ module MobyBehaviour
 
         rescue Exception => e
 
-          MobyUtil::Logger.instance.log "behaviour" , "FAIL;Failed tap with tap_count \"#{tap_count}\", button \"#{button.to_s}\".;#{identity};tap;"
+          $logger.log "behaviour" , "FAIL;Failed tap with tap_count \"#{tap_count}\", button \"#{button.to_s}\".;#{identity};tap;"
           Kernel::raise e
 
         end
 
-        MobyUtil::Logger.instance.log "behaviour" , "PASS;Operation tap executed successfully with tap_count \"#{tap_count}\", button \"#{button.to_s}\".;#{identity};tap;"
+        $logger.log "behaviour" , "PASS;Operation tap executed successfully with tap_count \"#{tap_count}\", button \"#{button.to_s}\".;#{identity};tap;"
 
         # puts "tap: " + (Time.now - tapMeasure).to_s + " s - tapping ending"
 
@@ -334,10 +334,10 @@ module MobyBehaviour
             command_name = tap_params[:command].nil? ? 'Tap' : tap_params[:command]
             behavior_name = tap_params[:behavior_name].nil? ? 'tap_object' : tap_params[:behavior_name]
 
-            use_tap_screen = tap_params[:use_tap_screen].nil? ? MobyUtil::Parameter[ @sut.id][ :use_tap_screen, 'false'] :
+            use_tap_screen = tap_params[:use_tap_screen].nil? ? $parameters[ @sut.id][ :use_tap_screen, 'false'] :
               tap_params[:use_tap_screen].to_s
           else
-            use_tap_screen = MobyUtil::Parameter[ @sut.id][ :use_tap_screen, 'false']
+            use_tap_screen = $parameters[ @sut.id][ :use_tap_screen, 'false']
             command_name = 'Tap'
             behavior_name = 'tap_object'
           end
@@ -355,11 +355,11 @@ module MobyBehaviour
                                  'y' => ( attribute('y_absolute').to_i + y.to_i ).to_s,
                                  'count' => tap_count.to_s,
                                  'button' => @@_buttons_map[ button ],
-                                 'mouseMove' => MobyUtil::Parameter[ @sut.id ][ :in_tap_move_pointer, 'false' ],
+                                 'mouseMove' => $parameters[ @sut.id ][ :in_tap_move_pointer, 'false' ],
                                  'useCoordinates' => 'true',
                                  'useTapScreen' => use_tap_screen,
-                                 'x_off' => MobyUtil::Parameter[ @sut.id ][:tap_x_offset , '0' ],
-                                 'y_off' => MobyUtil::Parameter[ @sut.id ][:tap_y_offset , '0' ]
+                                 'x_off' => $parameters[ @sut.id ][:tap_x_offset , '0' ],
+                                 'y_off' => $parameters[ @sut.id ][:tap_y_offset , '0' ]
                                  
                                  )
 
@@ -367,12 +367,12 @@ module MobyBehaviour
 
         rescue Exception => e
 
-          MobyUtil::Logger.instance.log "behaviour" , "FAIL;Failed #{behavior_name} with x \"#{x}\", y \"#{y}\", button \"#{button.to_s}\".;#{identity};#{behavior_name};"
+          $logger.log "behaviour" , "FAIL;Failed #{behavior_name} with x \"#{x}\", y \"#{y}\", button \"#{button.to_s}\".;#{identity};#{behavior_name};"
           Kernel::raise e
 
         end
 
-        MobyUtil::Logger.instance.log "behaviour" , "PASS;Operation #{behavior_name} executed successfully with x \"#{x}\", y \"#{y}\", button \"#{button.to_s}\".;#{identity};#{behavior_name};"
+        $logger.log "behaviour" , "PASS;Operation #{behavior_name} executed successfully with x \"#{x}\", y \"#{y}\", button \"#{button.to_s}\".;#{identity};#{behavior_name};"
 
         nil
 
@@ -482,8 +482,8 @@ module MobyBehaviour
       #      
       def long_tap( time = 1, button = :Left, tap_params = {} )
 
-        logging_enabled = MobyUtil::Logger.instance.enabled
-        MobyUtil::Logger.instance.enabled = false
+        logging_enabled = $logger.enabled
+        $logger.enabled = false
 
 
         raise ArgumentError.new("First parameter should be time between taps or Hash") unless tap_params.kind_of? Hash or tap_params.kind_of? Fixnum
@@ -494,13 +494,13 @@ module MobyBehaviour
           sleep time
           tap_up(button, false, tap_params)
         rescue Exception => e
-          MobyUtil::Logger.instance.enabled = logging_enabled
-          MobyUtil::Logger.instance.log "behaviour" , "FAIL;Failed long_tap with time \"#{time.to_s}\", button \"#{button.to_s}\".;#{identity};long_tap;"
+          $logger.enabled = logging_enabled
+          $logger.log "behaviour" , "FAIL;Failed long_tap with time \"#{time.to_s}\", button \"#{button.to_s}\".;#{identity};long_tap;"
           Kernel::raise e
 
         end
-        MobyUtil::Logger.instance.enabled = logging_enabled
-        MobyUtil::Logger.instance.log "behaviour" , "PASS;Operation long_tap executed successfully with time \"#{time.to_s}\", button \"#{button.to_s}\".;#{identity};long_tap;"
+        $logger.enabled = logging_enabled
+        $logger.log "behaviour" , "PASS;Operation long_tap executed successfully with time \"#{time.to_s}\", button \"#{button.to_s}\".;#{identity};long_tap;"
 
         nil
 
@@ -552,12 +552,12 @@ module MobyBehaviour
           tap_up_object(x, y, button, tap_params)
         rescue Exception => e
 
-          MobyUtil::Logger.instance.log "behaviour" , "FAIL;Failed long_tap_object with time \"#{time.to_s}\", button \"#{button.to_s}\".;#{identity};long_tap_object;"
+          $logger.log "behaviour" , "FAIL;Failed long_tap_object with time \"#{time.to_s}\", button \"#{button.to_s}\".;#{identity};long_tap_object;"
           Kernel::raise e
 
         end
 
-        MobyUtil::Logger.instance.log "behaviour" , "PASS;Operation long_tap_object executed successfully with time \"#{time.to_s}\", button \"#{button.to_s}\".;#{identity};long_tap_object;"
+        $logger.log "behaviour" , "PASS;Operation long_tap_object executed successfully with time \"#{time.to_s}\", button \"#{button.to_s}\".;#{identity};long_tap_object;"
 
         nil
 
@@ -594,7 +594,7 @@ module MobyBehaviour
       def tap_down( button = :Left, refresh = false, tap_params = {} )
 
         begin
-          use_tap_screen = tap_params[:use_tap_screen].nil? ? MobyUtil::Parameter[ @sut.id][ :use_tap_screen, 'false'] :
+          use_tap_screen = tap_params[:use_tap_screen].nil? ? $parameters[ @sut.id][ :use_tap_screen, 'false'] :
             tap_params[:use_tap_screen].to_s
           tap_params[:useTapScreen] = use_tap_screen
 
@@ -604,10 +604,10 @@ module MobyBehaviour
 
           params = {
             'button' => @@_buttons_map[button],
-            'mouseMove' => MobyUtil::Parameter[ @sut.id ][ :in_tap_move_pointer, 'false' ],
+            'mouseMove' => $parameters[ @sut.id ][ :in_tap_move_pointer, 'false' ],
             'useTapScreen' => use_tap_screen,
-            'x_off' => MobyUtil::Parameter[ @sut.id ][:tap_x_offset , '0' ],
-            'y_off' => MobyUtil::Parameter[ @sut.id ][:tap_y_offset , '0' ]
+            'x_off' => $parameters[ @sut.id ][:tap_x_offset , '0' ],
+            'y_off' => $parameters[ @sut.id ][:tap_y_offset , '0' ]
           }
 
           if attribute('objectType') == 'Web' or attribute('objectType') == 'Embedded'
@@ -624,12 +624,12 @@ module MobyBehaviour
 
         rescue Exception => e
 
-          MobyUtil::Logger.instance.log "behaviour" , "FAIL;Failed tap_down with button \"#{button.to_s}\", refresh \"#{refresh.to_s}\".;#{identity};tap_down;"
+          $logger.log "behaviour" , "FAIL;Failed tap_down with button \"#{button.to_s}\", refresh \"#{refresh.to_s}\".;#{identity};tap_down;"
           Kernel::raise e
 
         end
 
-        MobyUtil::Logger.instance.log "behaviour" , "PASS;Operation tap_down executed successfully with with button \"#{button.to_s}\", refresh \"#{refresh.to_s}\".;#{identity};tap_down;"
+        $logger.log "behaviour" , "PASS;Operation tap_down executed successfully with with button \"#{button.to_s}\", refresh \"#{refresh.to_s}\".;#{identity};tap_down;"
 
         nil
 
@@ -667,7 +667,7 @@ module MobyBehaviour
       def tap_up( button = :Left, refresh = true, tap_params = {} )
 
         begin
-          use_tap_screen = tap_params[:use_tap_screen].nil? ? MobyUtil::Parameter[ @sut.id][ :use_tap_screen, 'false'] :
+          use_tap_screen = tap_params[:use_tap_screen].nil? ? $parameters[ @sut.id][ :use_tap_screen, 'false'] :
             tap_params[:use_tap_screen].to_s
           tap_params[:useTapScreen] = use_tap_screen
 
@@ -680,8 +680,8 @@ module MobyBehaviour
             params['x'] = center_x
             params['y'] = center_y
             params['useCoordinates'] = 'true'
-            params['x_off'] = MobyUtil::Parameter[ @sut.id ][:tap_x_offset , '0' ]
-            params['y_off'] = MobyUtil::Parameter[ @sut.id ][:tap_y_offset , '0' ]
+            params['x_off'] = $parameters[ @sut.id ][:tap_x_offset , '0' ]
+            params['y_off'] = $parameters[ @sut.id ][:tap_y_offset , '0' ]
 
           end
           params.merge!(tap_params)
@@ -694,12 +694,12 @@ module MobyBehaviour
 
         rescue Exception => e
 
-          MobyUtil::Logger.instance.log "behaviour" , "FAIL;Failed tap_up with button \"#{button.to_s}\", refresh \"#{refresh.to_s}\".;#{identity};tap_up;"
+          $logger.log "behaviour" , "FAIL;Failed tap_up with button \"#{button.to_s}\", refresh \"#{refresh.to_s}\".;#{identity};tap_up;"
           Kernel::raise e
 
         end
 
-        MobyUtil::Logger.instance.log "behaviour" , "PASS;Operation tap_up executed successfully with with button \"#{button.to_s}\", refresh \"#{refresh.to_s}\".;#{identity};tap_up;"
+        $logger.log "behaviour" , "PASS;Operation tap_up executed successfully with with button \"#{button.to_s}\", refresh \"#{refresh.to_s}\".;#{identity};tap_up;"
 
         nil
 
@@ -729,20 +729,20 @@ module MobyBehaviour
                                  'count' => tap_count.to_s,
                                  'button' => @@_buttons_map[button],
                                  'mouseMove'=>'true',
-                                 'x_off' => MobyUtil::Parameter[ @sut.id ][:tap_x_offset , '0' ],
-                                 'y_off' => MobyUtil::Parameter[ @sut.id ][:tap_y_offset , '0' ]
+                                 'x_off' => $parameters[ @sut.id ][:tap_x_offset , '0' ],
+                                 'y_off' => $parameters[ @sut.id ][:tap_y_offset , '0' ]
                                  )
 
           @sut.execute_command(command)
 
         rescue Exception => e
 
-          MobyUtil::Logger.instance.log "behaviour" , "FAIL;Failed press with tap_count \"#{tap_count}\", button \"#{button.to_s}\".;#{identity};press;"
+          $logger.log "behaviour" , "FAIL;Failed press with tap_count \"#{tap_count}\", button \"#{button.to_s}\".;#{identity};press;"
           Kernel::raise e
 
         end
 
-        MobyUtil::Logger.instance.log "behaviour" , "PASS;Operation press executed successfully with tap_count \"#{tap_count}\", button \"#{button.to_s}\".;#{identity};press;"
+        $logger.log "behaviour" , "PASS;Operation press executed successfully with tap_count \"#{tap_count}\", button \"#{button.to_s}\".;#{identity};press;"
 
         nil
 
@@ -760,11 +760,11 @@ module MobyBehaviour
         begin
           long_tap(time, button)
         rescue Exception => e
-          MobyUtil::Logger.instance.log "behaviour" , "FAIL;Failed long_press with time \"#{time.to_s}\", button \"#{button.to_s}\".;#{identity};long_press;"
+          $logger.log "behaviour" , "FAIL;Failed long_press with time \"#{time.to_s}\", button \"#{button.to_s}\".;#{identity};long_press;"
           Kernel::raise e
         end
 
-        MobyUtil::Logger.instance.log "behaviour" , "PASS;Operation long_press executed successfully with time \"#{time.to_s}\", button \"#{button.to_s}\".;#{identity};long_press;"
+        $logger.log "behaviour" , "PASS;Operation long_press executed successfully with time \"#{time.to_s}\", button \"#{button.to_s}\".;#{identity};long_press;"
 
         nil
 
@@ -785,12 +785,12 @@ module MobyBehaviour
 
         rescue Exception => e
 
-          MobyUtil::Logger.instance.log "behaviour" , "FAIL;Failed hold with button \"#{button.to_s}\", refresh \"#{refresh.to_s}\".;#{identity};hold;"
+          $logger.log "behaviour" , "FAIL;Failed hold with button \"#{button.to_s}\", refresh \"#{refresh.to_s}\".;#{identity};hold;"
           Kernel::raise e
 
         end
 
-        MobyUtil::Logger.instance.log "behaviour" , "PASS;Operation hold executed successfully with with button \"#{button.to_s}\", refresh \"#{refresh.to_s}\".;#{identity};hold;"
+        $logger.log "behaviour" , "PASS;Operation hold executed successfully with with button \"#{button.to_s}\", refresh \"#{refresh.to_s}\".;#{identity};hold;"
 
         nil
 
@@ -811,12 +811,12 @@ module MobyBehaviour
 
         rescue Exception => e
 
-          MobyUtil::Logger.instance.log "behaviour" , "FAIL;Failed release with button \"#{button.to_s}\", refresh \"#{refresh.to_s}\".;#{identity};release;"
+          $logger.log "behaviour" , "FAIL;Failed release with button \"#{button.to_s}\", refresh \"#{refresh.to_s}\".;#{identity};release;"
           Kernel::raise e
 
         end
 
-        MobyUtil::Logger.instance.log "behaviour" , "PASS;Operation release executed successfully with with button \"#{button.to_s}\", refresh \"#{refresh.to_s}\".;#{identity};release;"
+        $logger.log "behaviour" , "PASS;Operation release executed successfully with with button \"#{button.to_s}\", refresh \"#{refresh.to_s}\".;#{identity};release;"
 
         nil
 

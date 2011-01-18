@@ -83,11 +83,11 @@ module MobyBehaviour
         begin
           # execute the application control service request
           apps = execute_command( MobyCommand::Application.new( :ListApps ) )
-          MobyUtil::Logger.instance.log "behaviour", "PASS;Successfully listed applications.;#{ id };sut;{};list_apps;"
+          $logger.log "behaviour", "PASS;Successfully listed applications.;#{ id };sut;{};list_apps;"
 
         rescue Exception => e
 
-          MobyUtil::Logger.instance.log "behaviour", "FAIL;Failed to list applications.;#{ id };sut;{};list_apps;"
+          $logger.log "behaviour", "FAIL;Failed to list applications.;#{ id };sut;{};list_apps;"
           Kernel::raise RuntimeError.new( "Unable to list applications: Exception: #{ e.message } (#{ e.class })" )
 
         end
@@ -109,9 +109,9 @@ module MobyBehaviour
         begin
           # execute the application control service request
           apps = execute_command( MobyCommand::Application.new( :ListCrashedApps ) )
-          MobyUtil::Logger.instance.log "behaviour", "PASS;Successfully listed crashed applications.;#{ id };sut;{};list_crashed_apps;"
+          $logger.log "behaviour", "PASS;Successfully listed crashed applications.;#{ id };sut;{};list_crashed_apps;"
         rescue Exception => e
-          MobyUtil::Logger.instance.log "behaviour", "FAIL;Failed to list crashed applications.;#{ id };sut;{};list_crashed_apps;"
+          $logger.log "behaviour", "FAIL;Failed to list crashed applications.;#{ id };sut;{};list_crashed_apps;"
           Kernel::raise RuntimeError.new( "Unable to list crashed applications: Exception: #{ e.message } (#{ e.class })" )
         end
 
@@ -343,7 +343,7 @@ module MobyBehaviour
           nil
         rescue Exception => e      
           
-          MobyUtil::Logger.instance.log "behaviour" , "FAIL;Failed tap_screen on coords \"#{x}:#{y}\";"
+          $logger.log "behaviour" , "FAIL;Failed tap_screen on coords \"#{x}:#{y}\";"
           Kernel::raise e        
           
         end      
@@ -364,9 +364,9 @@ module MobyBehaviour
         begin
           # execute the application control service request
           execute_command( MobyCommand::Application.new( :CloseQttas ) )
-          MobyUtil::Logger.instance.log "behaviour", "PASS;Successfully closed qttas.;#{ id };sut;{};close_qttas;"
+          $logger.log "behaviour", "PASS;Successfully closed qttas.;#{ id };sut;{};close_qttas;"
         rescue Exception => e
-          MobyUtil::Logger.instance.log "behaviour", "FAIL;Failed to close qttas.;#{ id };sut;{};close_qttas;"
+          $logger.log "behaviour", "FAIL;Failed to close qttas.;#{ id };sut;{};close_qttas;"
           Kernel::raise RuntimeError.new( "Unable to close qttas: Exception: #{ e.message } (#{ e.class })" )
         end
         nil
@@ -417,9 +417,9 @@ module MobyBehaviour
                                     thread_name,
                                     nil, nil, nil, nil, nil, nil,
                                     {:file_name => file_name, :timestamp => timestamp_type, :interval_s => interval_s} ) )
-          MobyUtil::Logger.instance.log "behaviour", "PASS;Successfully started process memory logging.;#{ id };sut;{};log_process_mem_start;"
+          $logger.log "behaviour", "PASS;Successfully started process memory logging.;#{ id };sut;{};log_process_mem_start;"
         rescue Exception => e
-          MobyUtil::Logger.instance.log "behaviour", "FAIL;Failed to start process memory logging.;#{ id };sut;{};log_process_mem_start;"
+          $logger.log "behaviour", "FAIL;Failed to start process memory logging.;#{ id };sut;{};log_process_mem_start;"
           Kernel::raise RuntimeError.new( "Unable to start process memory logging: Exception: #{ e.message } (#{ e.class })" )
         end
         status
@@ -457,9 +457,9 @@ module MobyBehaviour
                                    thread_name,
                                    nil, nil, nil, nil, nil, nil,
                                    {:return_data => return_data} ) )
-          MobyUtil::Logger.instance.log "behaviour", "PASS;Successfully stopped process memory logging.;#{ id };sut;{};log_process_mem_stop;"
+          $logger.log "behaviour", "PASS;Successfully stopped process memory logging.;#{ id };sut;{};log_process_mem_stop;"
         rescue Exception => e
-          MobyUtil::Logger.instance.log "behaviour", "FAIL;Failed to stop process memory logging.;#{ id };sut;{};log_process_mem_stop;"
+          $logger.log "behaviour", "FAIL;Failed to stop process memory logging.;#{ id };sut;{};log_process_mem_stop;"
           Kernel::raise RuntimeError.new( "Unable to stop process memory logging: Exception: #{ e.message } (#{ e.class })" )
         end
         log
@@ -489,9 +489,9 @@ module MobyBehaviour
                                  :CpuLoadStart,
                                  nil, nil, nil, nil, nil, nil, nil,
                                  {:cpu_load => load} ) )
-          MobyUtil::Logger.instance.log "behaviour", "PASS;Successfully started generating CPU load.;#{ id };sut;{};cpu_load_start;"
+          $logger.log "behaviour", "PASS;Successfully started generating CPU load.;#{ id };sut;{};cpu_load_start;"
         rescue Exception => e
-          MobyUtil::Logger.instance.log "behaviour", "FAIL;Failed to start generating CPU load.;#{ id };sut;{};cpu_load_start;"
+          $logger.log "behaviour", "FAIL;Failed to start generating CPU load.;#{ id };sut;{};cpu_load_start;"
           Kernel::raise RuntimeError.new( "Unable to start generating CPU load: Exception: #{ e.message } (#{ e.class })" )
         end
       end
@@ -509,9 +509,9 @@ module MobyBehaviour
       def cpu_load_stop
         begin
           status = execute_command(MobyCommand::Application.new(:CpuLoadStop) )
-          MobyUtil::Logger.instance.log "behaviour", "PASS;Successfully started generating CPU load.;#{ id };sut;{};cpu_load_start;"
+          $logger.log "behaviour", "PASS;Successfully started generating CPU load.;#{ id };sut;{};cpu_load_start;"
         rescue Exception => e
-          MobyUtil::Logger.instance.log "behaviour", "FAIL;Failed to start generating CPU load.;#{ id };sut;{};cpu_load_start;"
+          $logger.log "behaviour", "FAIL;Failed to start generating CPU load.;#{ id };sut;{};cpu_load_start;"
           Kernel::raise RuntimeError.new( "Unable to start generating CPU load: Exception: #{ e.message } (#{ e.class })" )
         end
       end
@@ -564,9 +564,9 @@ module MobyBehaviour
           # commands have been executed
           sleep (ret*interval)
 
-          MobyUtil::Logger.instance.log "behaviour", "PASS;Successfully executed grouped behaviours.;#{ id };sut;{};group_behaviours;"
+          $logger.log "behaviour", "PASS;Successfully executed grouped behaviours.;#{ id };sut;{};group_behaviours;"
         rescue Exception => e
-          MobyUtil::Logger.instance.log "behaviour", "FAIL;Failed to execute grouped behaviours.;#{ id };sut;{};group_behaviours;"
+          $logger.log "behaviour", "FAIL;Failed to execute grouped behaviours.;#{ id };sut;{};group_behaviours;"
           Kernel::raise RuntimeError.new( "Unable to execute grouped behaviours: Exception: #{ e.message } (#{ e.class })" )
         end
         nil
@@ -594,7 +594,7 @@ module MobyBehaviour
       #
       def set_event_type(new_type)
          raise ArgumentError.new("Invalid event type. Accepted values :" << @@_event_type_map.keys.join(", :") ) unless @@_event_type_map.include?(new_type)
-        MobyUtil::Parameter[ self.id ][ :event_type] = @@_event_type_map[new_type]
+        $parameters[ self.id ][ :event_type] = @@_event_type_map[new_type]
         nil
       end
 

@@ -97,8 +97,8 @@ module MobyPlugin
 			def self.make_sut( sut_id )
 
 				# tcp/ip read/write timeouts, default: 15 (seconds)
-				socket_read_timeout  = MobyUtil::Parameter[ sut_id ][ :socket_read_timeout,  "15" ].to_i
-				socket_write_timeout = MobyUtil::Parameter[ sut_id ][ :socket_write_timeout, "15" ].to_i
+				socket_read_timeout  = $parameters[ sut_id ][ :socket_read_timeout,  "15" ].to_i
+				socket_write_timeout = $parameters[ sut_id ][ :socket_write_timeout, "15" ].to_i
 
 				MobyBase::SUT.new(
 					MobyBase::SutController.new( "QT", MobyController::QT::SutAdapter.new( sut_id, socket_read_timeout, socket_write_timeout ) ), 

@@ -68,8 +68,8 @@ module MobyController
 		  #check that response matches the request
 		  if @message_id != msg_id 
 			
-			MobyUtil::Logger.instance.log "fatal" , "Response to request did not match: \"#{@message_id}\"!=\"#{msg_id.to_s}\""
-			MobyUtil::Logger.instance.log "fatal" , @msg_body 
+			$logger.log "fatal" , "Response to request did not match: \"#{@message_id}\"!=\"#{msg_id.to_s}\""
+			$logger.log "fatal" , @msg_body 
 			
 			Kernel::raise RuntimeError.new("Response to request did not match: \"#{@message_id}\"!=\"#{msg_id.to_s}\"") 
 			

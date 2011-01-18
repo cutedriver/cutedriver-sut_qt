@@ -227,12 +227,12 @@ module MobyBehaviour
 
 		    rescue Exception => e
 		      
-		      MobyUtil::Logger.instance.log "behaviour" , "FAIL;Failed to enable event logging. With event_list \"#{event_list};log_events"
+		      $logger.log "behaviour" , "FAIL;Failed to enable event logging. With event_list \"#{event_list};log_events"
 		      Kernel::raise e        
 
 		    end      
 
-		    MobyUtil::Logger.instance.log "behaviour" , "PASS;Event logging enabled. With event_list \"#{event_list};log_events"
+		    $logger.log "behaviour" , "PASS;Event logging enabled. With event_list \"#{event_list};log_events"
 
 	    end
 
@@ -252,12 +252,12 @@ module MobyBehaviour
 
 		    rescue Exception => e
 		      
-		      MobyUtil::Logger.instance.log "behaviour" , "FAIL;Failed to stop event logging.;stop_event_logging"
+		      $logger.log "behaviour" , "FAIL;Failed to stop event logging.;stop_event_logging"
 		      Kernel::raise e        
 
 		    end      
 
-		    MobyUtil::Logger.instance.log "behaviour" , "PASS;Event logging stopped.;stop_event_logging"
+		    $logger.log "behaviour" , "PASS;Event logging stopped.;stop_event_logging"
 
 	    end
 
@@ -287,12 +287,12 @@ module MobyBehaviour
 		      
 		    rescue Exception => e
 		      
-		      MobyUtil::Logger.instance.log "behaviour" , "FAIL;Failed to configure logger. With params \"#{params_hash.to_s};configure_logger"
+		      $logger.log "behaviour" , "FAIL;Failed to configure logger. With params \"#{params_hash.to_s};configure_logger"
 		      Kernel::raise e        
 
 		    end      
 
-		    MobyUtil::Logger.instance.log "behaviour" , "PASS;Succesfully configured logger. With params \"#{params_hash.to_s};configure_logger"
+		    $logger.log "behaviour" , "PASS;Succesfully configured logger. With params \"#{params_hash.to_s};configure_logger"
 
 	    end
 

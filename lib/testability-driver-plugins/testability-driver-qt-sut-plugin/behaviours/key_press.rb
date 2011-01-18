@@ -89,12 +89,12 @@ module MobyBehaviour
 
 					  "Symbol #{ key.inspect } cannot be used due to no keymap defined for #{ @sut.id } in TDriver configuration file."
 
-					) if key.kind_of?( Symbol ) && !MobyUtil::Parameter[ @sut.id ].has_key?( :keymap )
+					) if key.kind_of?( Symbol ) && !$parameters[ @sut.id ].has_key?( :keymap )
 
 					@key_sequence = nil
 					if key.kind_of?( Symbol )
 
-					  scancode = MobyUtil::Parameter[ @sut.id ][ :keymap ][ key, nil ]
+					  scancode = $parameters[ @sut.id ][ :keymap ][ key, nil ]
 					  scancode = scancode.hex if scancode.kind_of?( String )
 					  # raise exception if value is other than fixnum
 					  Kernel::raise ArgumentError.new( "Scan code for :%s not defined in keymap" % key ) unless scancode.kind_of?( Fixnum )
@@ -107,7 +107,7 @@ module MobyBehaviour
 					  @key_sequence = []
 					  key.get_sequence.each do | key_event |
 					      
-					  tempcode = MobyUtil::Parameter[ @sut.id ][ :keymap ][ key_event[ :value ], nil ]
+					  tempcode = $parameters[ @sut.id ][ :keymap ][ key_event[ :value ], nil ]
 					  tempcode = tempcode.hex if tempcode.kind_of?( String )
 						
 					  press_type = { :KeyDown => 'KeyPress', :KeyUp => 'KeyRelease' }.fetch( key_event[ :type ] ){ "KeyClick" }
@@ -132,12 +132,12 @@ module MobyBehaviour
 
 				rescue Exception => exception
 
-					MobyUtil::Logger.instance.log "behaviour" , "FAIL;Failed press_key with key \"#{ key }\".;#{ identity };press_key;"
+					$logger.log "behaviour" , "FAIL;Failed press_key with key \"#{ key }\".;#{ identity };press_key;"
 					Kernel::raise exception
 
 				end
 
-				MobyUtil::Logger.instance.log "behaviour" , "PASS;Operation press_key executed successfully with key \"#{ key }\".;#{ identity };press_key;"
+				$logger.log "behaviour" , "PASS;Operation press_key executed successfully with key \"#{ key }\".;#{ identity };press_key;"
 		
 				nil
 			

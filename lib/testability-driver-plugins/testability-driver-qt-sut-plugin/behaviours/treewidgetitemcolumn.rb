@@ -85,22 +85,22 @@ module MobyBehaviour
 		      command.application_id(get_application_id)    
 		      command.object_type(:Standard)                          
 		      command.command_name('CheckState')    
-		      command.set_event_type(MobyUtil::Parameter[ @sut.id ][ :event_type, "0" ])
+		      command.set_event_type($parameters[ @sut.id ][ :event_type, "0" ])
 		      params = {:state => new_state, :column => self.attribute('column'), :item => self.attribute('parentItem')}      
 
-              command.set_event_type(MobyUtil::Parameter[ @sut.id ][ :event_type, "0" ])
+              command.set_event_type($parameters[ @sut.id ][ :event_type, "0" ])
 
 		      command.command_params(params)
 		      @sut.execute_command(command)
 
 		    rescue Exception => e      
 
-		      MobyUtil::Logger.instance.log "behaviour" , "FAIL;Failed select"#{identity};drag;"
+		      $logger.log "behaviour" , "FAIL;Failed select"#{identity};drag;"
 		      Kernel::raise e        
 
 		    end      
 
-		    MobyUtil::Logger.instance.log "behaviour" , "PASS;Operation select executed successfully"#{identity};drag;"
+		    $logger.log "behaviour" , "PASS;Operation select executed successfully"#{identity};drag;"
 		    ret
 
 	    end

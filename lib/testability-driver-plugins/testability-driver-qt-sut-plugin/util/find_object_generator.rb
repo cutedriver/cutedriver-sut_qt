@@ -23,7 +23,7 @@ module MobyUtil
 	
 	def generate_message
 	
-	  filter_type = MobyUtil::Parameter[ @_sut.id ][ :filter_type, 'none' ]
+	  filter_type = $parameters[ @_sut.id ][ :filter_type, 'none' ]
 	
 	  filters = make_params if filter_type == 'dynamic'
 
@@ -73,7 +73,7 @@ module MobyUtil
 	  params = {}
 
 	  # get sut paramteres only once, store to local variable
-	  sut_parameters = MobyUtil::Parameter[ @_sut.id ]
+	  sut_parameters = $parameters[ @_sut.id ]
 
 	  params[ 'filterProperties' ] = $last_parameter if sut_parameters[ :filter_properties, nil ]
 	  params[ 'pluginBlackList'  ] = $last_parameter if sut_parameters[ :plugin_blacklist,  nil ]

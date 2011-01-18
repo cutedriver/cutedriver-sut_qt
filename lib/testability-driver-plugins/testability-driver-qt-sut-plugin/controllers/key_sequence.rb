@@ -64,10 +64,10 @@ module MobyController
 									Kernel::raise ArgumentError.new( "Wrong argument type %s for key (Expected: %s)" % [ key.class, "Symbol/Fixnum" ] ) unless [ Fixnum, Symbol ].include?( key.class ) 
 
 									# verify that keymap is defined for sut if symbol used. 
-									Kernel::raise ArgumentError.new("Symbol #{ key.inspect } cannot be used due to no keymap defined for #{ sut.id } in TDriver configuration file.") if key.kind_of?( Symbol ) && MobyUtil::Parameter[ sut.id ][ :keymap ].nil?
+									Kernel::raise ArgumentError.new("Symbol #{ key.inspect } cannot be used due to no keymap defined for #{ sut.id } in TDriver configuration file.") if key.kind_of?( Symbol ) && $parameters[ sut.id ][ :keymap ].nil?
 
 									# retrieve corresponding scan code (type of string, convert to fixnum) for symbol from keymap if available 
-									key = MobyUtil::Parameter[ sut.id ][ :keymap ][ key ].hex unless MobyUtil::Parameter[ sut.id ][ :keymap ][ key ].nil?
+									key = $parameters[ sut.id ][ :keymap ][ key ].hex unless $parameters[ sut.id ][ :keymap ][ key ].nil?
 
 									# raise exception if value is other than fixnum
 									Kernel::raise ArgumentError.new( "Scan code for :%s not defined in keymap" % key ) unless key.kind_of?( Fixnum )

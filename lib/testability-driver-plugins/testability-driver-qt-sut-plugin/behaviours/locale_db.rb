@@ -86,18 +86,18 @@ module MobyBehaviour
       #
       def create_locale_db(path = "/", file = "*.qm", database_file = nil, column_names_map = {} )
 
-		    db_type =  MobyUtil::Parameter[ :localisation_db_type ]
-		    host =  MobyUtil::Parameter[ :localisation_server_ip ]
-		    database_file = MobyUtil::Parameter[ :localisation_server_database_name ] if database_file.nil?
-		    username = MobyUtil::Parameter[ :localisation_server_username ]
-		    password = MobyUtil::Parameter[ :localisation_server_password ]
+		    db_type =  $parameters[ :localisation_db_type ]
+		    host =  $parameters[ :localisation_server_ip ]
+		    database_file = $parameters[ :localisation_server_database_name ] if database_file.nil?
+		    username = $parameters[ :localisation_server_username ]
+		    password = $parameters[ :localisation_server_password ]
 		
 		    db_connection = MobyUtil::DBConnection.new(  db_type, host, database_file, username, password )
-		    table_name = MobyUtil::Parameter[ :sut_qt ][ :localisation_server_database_tablename, "" ]
+		    table_name = $parameters[ :sut_qt ][ :localisation_server_database_tablename, "" ]
                     
 		    begin
-			    tmp_path = MobyUtil::Parameter[:tmp_folder] + "/locale_db_tmp"
-		    rescue MobyUtil::ParameterNotFoundError
+			    tmp_path = $parameters[:tmp_folder] + "/locale_db_tmp"
+		    rescue $parametersNotFoundError
 			    tmp_path = Dir.tmpdir + "/locale_db_tmp"
 		    end
 		

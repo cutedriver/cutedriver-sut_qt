@@ -77,12 +77,12 @@ module MobyBehaviour
 
 				rescue Exception => e
 
-					MobyUtil::Logger.instance.log "behaviour" , "FAIL;Failed type_text with text \"#{text}\".;#{identity};type_text;"
+					$logger.log "behaviour" , "FAIL;Failed type_text with text \"#{text}\".;#{identity};type_text;"
 					Kernel::raise e
 
 				end      
 
-				MobyUtil::Logger.instance.log "behaviour" , "PASS;Operation type_text executed successfully with text \"#{text}\".;#{identity};type_text;"
+				$logger.log "behaviour" , "PASS;Operation type_text executed successfully with text \"#{text}\".;#{identity};type_text;"
 
 				ret
 

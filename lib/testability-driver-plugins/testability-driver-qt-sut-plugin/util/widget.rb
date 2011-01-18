@@ -31,10 +31,10 @@ module MobyUtil
            y = tap_params[:y].nil? ? -1 : tap_params[:y]
            button = tap_params[:button].nil? ? (:Left) : tap_params[:button]
            use_tap_screen = tap_params[:use_tap_screen] == true ? 'true' : 
-             MobyUtil::Parameter[ @sut.id][ :use_tap_screen, 'false']
+             $parameters[ @sut.id][ :use_tap_screen, 'false']
          else
            x = tap_params
-           use_tap_screen = MobyUtil::Parameter[ @sut.id][ :use_tap_screen, 'false']
+           use_tap_screen = $parameters[ @sut.id ][ :use_tap_screen, 'false' ]
          end
 
 
@@ -62,12 +62,12 @@ module MobyUtil
 
        rescue Exception => e
 
-         MobyUtil::Logger.instance.log "behaviour" , "FAIL;Failed #{behavior_name} with x \"#{x}\", y \"#{y}\", button \"#{button.to_s}\".;#{identity};#{behavior_name};"
+         $logger.log "behaviour" , "FAIL;Failed #{behavior_name} with x \"#{x}\", y \"#{y}\", button \"#{button.to_s}\".;#{identity};#{behavior_name};"
          Kernel::raise e
 
        end
 
-       MobyUtil::Logger.instance.log "behaviour" , "PASS;Operation #{behavior_name} executed successfully with x \"#{x}\", y \"#{y}\", button \"#{button.to_s}\".;#{identity};#{behavior_name};"
+       $logger.log "behaviour" , "PASS;Operation #{behavior_name} executed successfully with x \"#{x}\", y \"#{y}\", button \"#{button.to_s}\".;#{identity};#{behavior_name};"
 
        nil
 

@@ -17,6 +17,8 @@
 ## 
 ############################################################################
 
+require 'timeout'
+
 module MobyController
 
   module QT
@@ -63,6 +65,7 @@ module MobyController
 
       end
 
+      # TODO: document me
       def disconnect
 
         @socket.close if @connected
@@ -71,18 +74,19 @@ module MobyController
 
       end
 
+      # TODO: document me
       def connect( id = nil )
 
         id ||= @sut_id
 
         begin
 
-          @socket = TCPSocket.open( MobyUtil::Parameter[ id ][ :qttas_server_ip ], MobyUtil::Parameter[ id ][ :qttas_server_port ].to_i )
+          @socket = TCPSocket.open( $parameters[ id ][ :qttas_server_ip ], $parameters[ id ][ :qttas_server_port ].to_i )
 
         rescue => ex
 
-          ip = "no ip" if ( ip = MobyUtil::Parameter[ id ][ :qttas_server_ip, "" ] ).empty?
-          port = "no port" if ( port = MobyUtil::Parameter[ id ][ :qttas_server_port, "" ] ).empty?
+          ip = "no ip" if ( ip = $parameters[ id ][ :qttas_server_ip, "" ] ).empty?
+          port = "no port" if ( port = $parameters[ id ][ :qttas_server_port, "" ] ).empty?
 
           Kernel::raise IOError.new("Unable to connect QTTAS server, verify that it is running properly (#{ ip }:#{ port }): .\nException: #{ ex.message }")
         end
@@ -91,6 +95,7 @@ module MobyController
 
       end
 
+      # TODO: document me
       def group?
         @_group
       end
@@ -101,6 +106,7 @@ module MobyController
         @_builder = builder
       end
 
+      # TODO: document me
       def append_command(node_list)
         node_list.each {|ch| @_builder.doc.root.add_child(ch)}          
       end
@@ -141,6 +147,7 @@ module MobyController
         # header[ 4 ] = message_id
 
         header = nil
+
         body = nil
 
         read_message_id = 0
@@ -149,8 +156,10 @@ module MobyController
         
           header = read_socket( 12 ).unpack( 'CISCI' )
 
+          body = read_socket( header[ 1 ] )
+
           # read the message body and compare crc checksum
-          Kernel::raise IOError.new( "CRC do not match. Maybe the message is corrupted!" ) if CRC::Crc16.crc16_ibm( body = read_socket( header[ 1 ] ) , 0xffff ) != header[ 2 ]
+          Kernel::raise IOError, "CRC do not match, response message body may be corrupted!" if CRC::Crc16.crc16_ibm( body, 0xffff ) != header[ 2 ]
           
           # validate response message; check that response message id matches the request
           # if smaller than expected try to read the next message but if bigger raise error
@@ -158,14 +167,15 @@ module MobyController
 
           if read_message_id < @counter
 
-            MobyUtil::Logger.instance.log "warning" , "Response to request did not match: \"#{ header[ 4 ].to_s }\"<\"#{ @counter.to_s }\""
+            $logger.log "warning" , "Response to request did not match: \"#{ header[ 4 ].to_s }\"<\"#{ @counter.to_s }\""
 
           elsif read_message_id > @counter
 
-            MobyUtil::Logger.instance.log "fatal" , "Response to request did not match: \"#{ header[ 4 ].to_s }\">\"#{ @counter.to_s }\""
+            $logger.log "fatal" , "Response to request did not match: \"#{ header[ 4 ].to_s }\">\"#{ @counter.to_s }\""
 
             # save to file?
-            MobyUtil::Logger.instance.log "fatal" , body
+            $logger.log "fatal" , body
+
             Kernel::raise RuntimeError.new( "Response to request did not match: \"#{ header[ 4 ].to_s }\"!=\"#{ @counter.to_s }\"" )
 
           end
@@ -174,8 +184,11 @@ module MobyController
       
         # inflate the message body if compressed
         if ( header[ 3 ] == 2 )
-      
-          body = Zlib::Inflate.inflate( body ) unless ( body = body[ 4..-1 ] ).empty?
+
+          # remove leading 4 bytes
+          body = body[ 4 .. -1 ]
+
+          body = Zlib::Inflate.inflate( body ) unless body.empty?
 
         end
 
@@ -184,13 +197,19 @@ module MobyController
         #   0 -> ERROR_MSG
         #   1 -> VALID_MSG
         #   2 -> OK_MESSAGE
-		if header[ 0 ] == 0
-		  if body =~ /The application with Id \d+ is no longer available/
-			Kernel::raise MobyBase::ApplicationNotAvailableError.new( body ) 
-		  else
-			Kernel::raise RuntimeError.new( body ) 
-		  end
-		end
+		    if header[ 0 ] == 0
+
+		      if body =~ /The application with Id \d+ is no longer available/
+
+  			    Kernel::raise MobyBase::ApplicationNotAvailableError.new( body ) 
+
+		      else
+
+  			    Kernel::raise RuntimeError.new( body ) 
+
+		      end
+
+		    end
 
         # return the body ( and crc if required )
         return_crc ? [ body, header[ 2 ] ] : body
@@ -199,6 +218,7 @@ module MobyController
 
     private
 
+      # TODO: document me
       def read_socket( bytes_count )
 
         # store time before start receving data
@@ -214,15 +234,64 @@ module MobyController
 
         }
 
+        # useless?
         Kernel::raise IOError.new( "Socket reading error for %i bytes - No data retrieved" % [ bytes_count ] ) if read_buffer.nil?
 
         @socket_received_bytes += read_buffer.size
+
         read_buffer
+
+=begin
+        begin
+
+          Timeout::timeout( @socket_read_timeout ){ 
+
+            # raise exception if no data available 
+            #raise Timeout::Error if TCPSocket::select( [ @socket ], nil, nil, @socket_read_timeout ).nil?
+
+            @socket.read( bytes_count )
+
+          }
+
+        rescue Timeout::Error
+
+          Kernel::raise IOError.new( "Socket reading timeout (%i) exceeded for %i bytes" % [ @socket_read_timeout, bytes_count ] )
+
+        ensure 
+
+          @socket_received_bytes += bytes_count 
+
+        end
+
+=end
 
       end
 
+      # TODO: document me
       def write_socket( data )
-      
+ 
+=begin
+        begin
+
+          Timeout::timeout( @socket_write_timeout ){ 
+
+            @socket.write( data )
+
+            #raise Timeout::Error if TCPSocket::select( nil, [ @socket ], nil, @socket_write_timeout ).nil?
+
+          }
+
+        rescue Timeout::Error
+
+          Kernel::raise IOError.new( "Socket reading timeout (%i) exceeded for %i bytes" % [ @socket_write_timeout, data.size ] )
+
+        ensure 
+
+          @socket_sent_bytes += data.size
+
+        end
+=end
+     
         @socket_sent_bytes += data.size
 
         @socket.write( data )

@@ -568,10 +568,10 @@ module MobyBehaviour
           end
 
         rescue Exception => e
-          MobyUtil::Logger.instance.log "behaviour","FAIL;Failed infologger \"#{params.to_s}\".;#{service};"
+          $logger.log "behaviour","FAIL;Failed infologger \"#{params.to_s}\".;#{service};"
           Kernel::raise e
         end
-        MobyUtil::Logger.instance.log "behaviour","PASS;Operation infologger succeeded with params \"#{params.to_s}\".;#{service};"
+        $logger.log "behaviour","PASS;Operation infologger succeeded with params \"#{params.to_s}\".;#{service};"
         ret
       end
 

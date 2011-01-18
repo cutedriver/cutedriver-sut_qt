@@ -205,10 +205,10 @@ module MobyBehaviour
 		  do_sleep(time)
 
 		rescue Exception => e      
-		  MobyUtil::Logger.instance.log "behaviour","FAIL;Failed pinch_zoom with params \"#{params.to_s}\".;#{identity};pinch_zoom;"
+		  $logger.log "behaviour","FAIL;Failed pinch_zoom with params \"#{params.to_s}\".;#{identity};pinch_zoom;"
 		  Kernel::raise e        
 		end      
-		MobyUtil::Logger.instance.log "behaviour","PASS;Operation pinch_zoom succeeded with params \"#{params.to_s}\".;#{identity};pinch_zoom;"
+		$logger.log "behaviour","PASS;Operation pinch_zoom succeeded with params \"#{params.to_s}\".;#{identity};pinch_zoom;"
 		nil	
 	  end
 
@@ -398,10 +398,10 @@ module MobyBehaviour
 		  #wait untill the operation to finish
 		  do_sleep(time)
 		rescue Exception => e      
-		  MobyUtil::Logger.instance.log "behaviour","FAIL;Failed rotate with params \"#{params.to_s}\".;#{identity};rotate;"
+		  $logger.log "behaviour","FAIL;Failed rotate with params \"#{params.to_s}\".;#{identity};rotate;"
 		  Kernel::raise e        
 		end      
-		MobyUtil::Logger.instance.log "behaviour","PASS;Operation rotate succeeded with params \"#{params.to_s}\".;#{identity};rotate;"
+		$logger.log "behaviour","PASS;Operation rotate succeeded with params \"#{params.to_s}\".;#{identity};rotate;"
 		nil
 	  end
 

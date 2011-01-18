@@ -97,13 +97,13 @@ module MobyBehaviour
 		  end				  
 		rescue Exception => e
 
-		  MobyUtil::Logger.instance.log "behaviour", 
+		  $logger.log "behaviour", 
 			"FAIL;Failed when calling fixture with name #{fixture_name} method #{fixture_method} parameters #{parameters_hash.inspect}.;#{id.to_s};sut;{};fixture;"
 
 		  Kernel::raise MobyBase::BehaviourError.new("Fixture", "Failed to execute fixture name #{fixture_name} method #{fixture_method}")
 		end
 
-		MobyUtil::Logger.instance.log "behaviour", 
+		$logger.log "behaviour", 
 		  "PASS;The fixture command was executed successfully with name #{fixture_name} method #{fixture_method} parameters #{parameters_hash.inspect}.;#{id.to_s};sut;{};fixture;"
 
 		ret
@@ -162,13 +162,13 @@ module MobyBehaviour
 		  end
 		rescue Exception => e
 
-		  MobyUtil::Logger.instance.log "behaviour" , 
+		  $logger.log "behaviour" , 
 			"FAIL;Failed when calling async_fixture with name #{fixture_name} method #{fixture_method} parameters #{parameters_hash.inspect}.;#{id.to_s};sut;{};fixture;"
 
 		  Kernel::raise MobyBase::BehaviourError.new("Fixture", "Failed to execute async_fixture name #{fixture_name} method #{fixture_method}")
 		end
 
-		MobyUtil::Logger.instance.log "behaviour", 
+		$logger.log "behaviour", 
 		  "PASS;The fixture command was executed successfully with name #{fixture_name} method #{fixture_method} parameters #{parameters_hash.inspect}.;#{id.to_s};sut;{};fixture;"
 
 		ret

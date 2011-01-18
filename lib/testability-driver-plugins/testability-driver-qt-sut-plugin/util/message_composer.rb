@@ -108,7 +108,7 @@ module MobyUtil
 		  params = {}
 
 		  # get sut paramteres only once, store to local variable
-		  sut_parameters = MobyUtil::Parameter[ @_sut.id ]
+		  sut_parameters = $parameters[ @_sut.id ]
 
 		  params[ 'filterProperties' ] = $last_parameter if sut_parameters[ :filter_properties, nil ]
 		  params[ 'pluginBlackList'  ] = $last_parameter if sut_parameters[ :plugin_blacklist,  nil ]
@@ -139,7 +139,7 @@ module MobyUtil
 		  app_details = { :service => 'uiState', :name => @_application_name, :id => @_application_uid }
 		  app_details[ :applicationUid ] = @_refresh_args[ :applicationUid ] if @_refresh_args.include?( :applicationUid )
 		
-		  case MobyUtil::Parameter[ @_sut.id ][ :filter_type, 'none' ]
+		  case $parameters[ @_sut.id ][ :filter_type, 'none' ]
 		  when 'none' 
 		    command_xml = make_xml_message( app_details, 'UiState', @_flags || {} )
 		  when 'dynamic'
@@ -154,7 +154,7 @@ module MobyUtil
 
 	  def run_message
 		  #clone to not make changes permanent
-		  arguments = MobyUtil::Parameter[ @_sut.id ][ :application_start_arguments, "" ].clone 
+		  arguments = $parameters[ @_sut.id ][ :application_start_arguments, "" ].clone 
 		  if @_arguments
 		    arguments << "," unless arguments.empty?
 		    arguments << @_arguments
@@ -174,7 +174,7 @@ module MobyUtil
 
 	  def close_message
 	  
-	    sut_parameters = MobyUtil::Parameter[ @_sut.id ]
+	    sut_parameters = $parameters[ @_sut.id ]
 	  
 		  parameters = {
 		    'uid' => @_application_uid, 

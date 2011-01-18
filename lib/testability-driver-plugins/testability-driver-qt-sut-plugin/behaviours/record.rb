@@ -62,12 +62,12 @@ module MobyBehaviour
 
 				rescue Exception => e
 
-					MobyUtil::Logger.instance.log "behaviour" , "FAIL;Failed start_recording.;#{ identity };start_recording;"
+					$logger.log "behaviour" , "FAIL;Failed start_recording.;#{ identity };start_recording;"
 					Kernel::raise e
 
 				end
 
-				MobyUtil::Logger.instance.log "behaviour" , "PASS;Operation start_recording executed successfully.;#{ identity };start_recording;"
+				$logger.log "behaviour" , "PASS;Operation start_recording executed successfully.;#{ identity };start_recording;"
 
 				nil
 			end
@@ -88,12 +88,12 @@ module MobyBehaviour
 
 				rescue Exception => e
 
-					MobyUtil::Logger.instance.log "behaviour" , "FAIL;Failed stop_recording.;#{ identity };stop_recording;"
+					$logger.log "behaviour" , "FAIL;Failed stop_recording.;#{ identity };stop_recording;"
 					Kernel::raise e
 
 				end
 
-				MobyUtil::Logger.instance.log "behaviour" , "PASS;Operation stop_recording executed successfully.;#{ identity };stop_recording;"
+				$logger.log "behaviour" , "PASS;Operation stop_recording executed successfully.;#{ identity };stop_recording;"
 
 				nil
 
@@ -113,12 +113,12 @@ module MobyBehaviour
 
 				rescue Exception => e
 
-					MobyUtil::Logger.instance.log "behaviour" , "FAIL;Failed print_recordings.;#{ identity };print_recordings;"
+					$logger.log "behaviour" , "FAIL;Failed print_recordings.;#{ identity };print_recordings;"
 					Kernel::raise e
 
 				end
 
-				MobyUtil::Logger.instance.log "behaviour" , "PASS;Operation print_recordings executed successfully.;#{ identity };print_recordings;"
+				$logger.log "behaviour" , "PASS;Operation print_recordings executed successfully.;#{ identity };print_recordings;"
 
 				return ret
 

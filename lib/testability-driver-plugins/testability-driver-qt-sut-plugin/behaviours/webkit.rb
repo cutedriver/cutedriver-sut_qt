@@ -96,12 +96,12 @@ module MobyBehaviour
           
                 rescue Exception => e      
 
-                    MobyUtil::Logger.instance.log "behaviour" , "FAIL;Failed send javascript with execute_javascript \"#{java_script}\""
+                    $logger.log "behaviour" , "FAIL;Failed send javascript with execute_javascript \"#{java_script}\""
                     Kernel::raise e        
 
                 end      
 
-                MobyUtil::Logger.instance.log "behaviour" , "PASS;Operation send javascript executed successfully with execute_javascript \"#{java_script}\""
+                $logger.log "behaviour" , "PASS;Operation send javascript executed successfully with execute_javascript \"#{java_script}\""
 
               returnValue
 
