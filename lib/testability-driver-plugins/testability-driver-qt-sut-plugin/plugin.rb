@@ -22,6 +22,9 @@ Kernel::raise RuntimeError.new( "This SUT plugin requires Testability Driver and
 
 include TDriverVerify
 
+require 'socket'
+require 'zlib'
+
 module MobyPlugin
 
 	module QT
