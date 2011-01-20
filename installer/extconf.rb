@@ -23,7 +23,7 @@ require 'rubygems'
 
 begin
 
-	require 'tdriver/util/common'
+	require 'tdriver/util/loader'
 
 rescue LoadError => exception
 
