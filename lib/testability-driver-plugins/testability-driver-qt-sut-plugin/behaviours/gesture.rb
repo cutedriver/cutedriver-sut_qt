@@ -303,9 +303,9 @@ module MobyBehaviour
 
             params = {:gesture_type => :MouseGestureToCoordinates, :speed => speed}
             if attribute('objectType') == 'Web'
-			  elemens_xml_data, unused_rule = TDriver::TestObjectAdapter.get_objects( @sut.xml_data, { :id => self.attribute('webFrame')}, true )
-			  object_xml_data = elemens_xml_data[0]
-			  object_attributes = TDriver::TestObjectAdapter.test_object_attributes(object_xml_data, ['x_absolute', 'y_absolute'])
+              elemens_xml_data, unused_rule = TDriver::TestObjectAdapter.get_objects( @sut.xml_data, { :id => self.attribute('webFrame')}, true )
+              object_xml_data = elemens_xml_data[0]
+              object_attributes = TDriver::TestObjectAdapter.test_object_attributes(object_xml_data, ['x_absolute', 'y_absolute'])
               frame_x_absolute = object_attributes['x_absolute'].to_i
               frame_y_absolute = object_attributes['y_absolute'].to_i
               new_params = {:x=>(frame_x_absolute + x.to_i + (attribute('width' ).to_i/2)),
@@ -432,8 +432,16 @@ module MobyBehaviour
       #  description: One of the arguments is not valid  
 	    def gesture_to_object(target_object, duration, optional_params = {:button => :Left, :isDrag => false})    
             if attribute('objectType') == 'Web'
-              gesture_to(target_object.attribute('x').to_i + (target_object.attribute('width' ).to_i/2) - (attribute('width' ).to_i/2),
-                         target_object.attribute('y').to_i + (target_object.attribute('height').to_i/2) - (attribute('height').to_i/2),
+              elemens_xml_data, unused_rule = TDriver::TestObjectAdapter.get_objects( @sut.xml_data, { :id => self.attribute('webFrame')}, true )
+              object_xml_data = elemens_xml_data[0]
+              object_attributes = TDriver::TestObjectAdapter.test_object_attributes(object_xml_data, ['x', 'y'])
+              frame_x = object_attributes['x'].to_i
+              frame_y = object_attributes['y'].to_i
+							puts "x "  + frame_x.to_s + " y " + frame_y.to_s
+
+
+              gesture_to(target_object.attribute('x').to_i + (target_object.attribute('width' ).to_i/2) - (attribute('width' ).to_i/2 ) - frame_x,
+                         target_object.attribute('y').to_i + (target_object.attribute('height').to_i/2) - (attribute('height').to_i/2 ) - frame_y,
                          duration, optional_params)
               nil
               return 
