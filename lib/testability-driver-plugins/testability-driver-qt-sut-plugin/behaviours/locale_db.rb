@@ -97,7 +97,7 @@ module MobyBehaviour
                     
 		    begin
 			    tmp_path = $parameters[:tmp_folder] + "/locale_db_tmp"
-		    rescue $parametersNotFoundError
+		    rescue MobyUtil::ParameterNotFoundError
 			    tmp_path = Dir.tmpdir + "/locale_db_tmp"
 		    end
 		
