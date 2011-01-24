@@ -95,6 +95,39 @@ module MobyBehaviour
         apps     
 
       end
+
+      # == description
+      # Returns XML list of applications and start times for applications started by qttasserver
+      # \n
+      # == arguments
+      #
+      # == returns
+      # String
+      #   description: tasMessage XML
+      #   example: <tasMessage dateTime="2010.10.26 17:01:53.930" version="0.9.1" ><tasInfo id="1" name="Qt4.7.0" type="qt" ><object id="" name="QApplications" type="applications" ></object></tasInfo></tasMessage>
+      #
+      # == exceptions
+      # RuntimeError
+      #   description: if getting applications list throws any exception it's converted to RuntimeError with descriptive message
+      def list_started_apps
+
+        apps = nil
+
+        begin
+          # execute the application control service request
+          apps = execute_command( MobyCommand::Application.new( :ListStartedApps ) )
+          MobyUtil::Logger.instance.log "behaviour", "PASS;Successfully listed applications.;#{ id };sut;{};list_started_apps;"
+
+        rescue Exception => e
+
+          MobyUtil::Logger.instance.log "behaviour", "FAIL;Failed to list applications.;#{ id };sut;{};list_started_apps;"
+          Kernel::raise RuntimeError.new( "Unable to list started applications: Exception: #{ e.message } (#{ e.class })" )
+
+        end
+
+        apps     
+
+      end
       
       # == description
       # Returns list of crashed applications running on SUT known to qttasserver
