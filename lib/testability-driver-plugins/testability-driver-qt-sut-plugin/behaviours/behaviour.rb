@@ -98,8 +98,8 @@ module MobyBehaviour
 
       def do_sleep(time)
 
-        time = time.to_f
-        time = time * 1.3
+        time = time.to_f * 1.3
+
         #for flicks the duration of the gesture is short but animation (scroll etc..) may not
         #so wait at least one second
         time = 1 if time < 1  
