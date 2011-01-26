@@ -245,6 +245,53 @@ module MobyBehaviour
         end
       end
 
+
+  # == description
+  # launches application in symbian device based on UID and return launched application if succesfull.
+  #
+  # == arguments
+  # hash_application
+  #  Hash
+  #   description: Hash defining required expected attributes of the application
+  #   example: { :UID => '' }
+  #
+  # == returns
+  # MobyBase::Application
+  #  description: launched application that matched the uid
+  #  example: -
+  #
+  # == exceptions
+  # TypeError
+  #  description: Wrong argument type %s for attributes (expected Hash)
+  #
+  def launch_with_uid( hash_uid = {} )
+
+    begin
+
+      raise TypeError.new( "Input parameter not of Type: Hash.\nIt is: #{ hash_uid.class }" ) unless hash_uid.kind_of?( Hash )
+      the_uid =  "failed with uid:" + hash_uid[:UID].to_s
+      fullname = @sut.fixture("launch","launch_with_uid",hash_uid)
+      
+      if(fullname == the_uid)
+        raise fullname
+      end
+      full_shortname = fullname.rpartition('\\')[-1]
+      shortname = full_shortname.rpartition('.')[0]
+      app_child = @sut.application(:name=>shortname)
+
+    rescue Exception => e
+
+      MobyUtil::Logger.instance.log "behaviour" , "FAIL;Failed to find application.;#{id.to_s};sut;{};application;" << (hash_uid.kind_of?(Hash) ? hash_uid.inspect : hash_uid.class.to_s)
+      Kernel::raise e
+
+    end
+
+    MobyUtil::Logger.instance.log "behaviour" , "PASS;Application found.;#{id.to_s};sut;{};application;" << hash_uid.inspect
+
+    app_child
+
+  end
+
       # == description
       # Returns details about the tested target. The data is platform/device specific which will make your scripts platform dependant. For devices with mobility apis the data available from them is returned and could be somewhat similar across platforms. Memory details are returned in a fixed format so they can be used and still maintain compatibility cross platforms. However it should be noted that platforms which do not support memory details will return -1 (scripts will not break but data will not be usable).
       # == arguments
