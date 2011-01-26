@@ -43,7 +43,7 @@ module MobyCommand
 		# ArgumentError:: When the supplied command_type is invalid.
 		def initialize(command_type = nil, btn_id = nil)
 
-			@@_valid_commands = [nil, :Press, :Hold, :Release,:Gesture, :Scroll, :Apicommand, :Tap, :Move]
+			@@_valid_commands = [nil, :Press, :Hold, :Release,:Gesture, :Scroll, :Apicommand, :Tap, :Move, :ListStartedApps]
 			@@_valid_directions = [nil, :Up, :Down, :Left,:Right]
 			@@_valid_orientations = [nil,:Vertical, :Horizontal]
 
