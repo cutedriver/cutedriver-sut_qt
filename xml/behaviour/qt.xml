@@ -15,6 +15,10 @@
                 <description>Lists all applications known to server running on SUT.</description>
                 <example>list_apps</example>
             </method>
+            <method name="list_started_apps">
+                <description>Lists applications and their start time started by qttasserver.</description>
+                <example>list_started_apps</example>
+            </method>
             <method name="list_crashed_apps">
                 <description>Returns list of crashed applications running on SUT known to qttasserver.</description>
                 <example>list_crashed_apps</example>
