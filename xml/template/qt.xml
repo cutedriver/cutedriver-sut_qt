@@ -83,6 +83,7 @@
           		<fixture name="popup" plugin="popupfixture" env="qt"/>	
           		<fixture name="tap_object" plugin="tapfixture" env="qt"/>
           		<fixture name="mobilitysysinfo" plugin="mobilitysysinfofixture" env="qt"/>
+                <fixture name="launch" plugin="launchfixture" env="qt"/>
         	</fixtures>
 	</template>
 
