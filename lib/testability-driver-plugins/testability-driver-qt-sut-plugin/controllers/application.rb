@@ -120,12 +120,12 @@ module MobyController
 		  parameters = {'thread_name' => @_application_name,
 			'return_data' => @_flags[ :return_data ]}
 
-		  command_xml = make_xml_message({ :service =>'resourceLogging'}, 'ProcessMemLoggingStop',paremeters)
+		  command_xml = make_xml_message({ :service =>'resourceLogging'}, 'ProcessMemLoggingStop',parameters)
 
 		  # start CPU load generating
 		elsif @_command == :CpuLoadStart
 		  parameters =  {'cpu_load' => @_flags[ :cpu_load ]}
-		  command_xml = make_xml_message({:service => 'resourceLogging'},'CpuLoadStart',paremeters)
+		  command_xml = make_xml_message({:service => 'resourceLogging'},'CpuLoadStart',parameters)
 
 		  # stop CPU load generating
 		elsif @_command == :CpuLoadStop

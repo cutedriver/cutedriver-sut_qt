@@ -104,7 +104,7 @@ module MobyBehaviour
 
 		  $logger.log "behaviour" , "PASS;Operation flick executed successfully with direction \"#{direction}\", button \"#{button.to_s}\".;#{identity};flick;"
 
-		  nil
+		  self
 	    end
 
 	    # == description
@@ -165,7 +165,7 @@ module MobyBehaviour
 
 		  $logger.log "behaviour" , "PASS;Operation flick_to executed successfully with x \"#{x}\", y \"#{y}\", button \"#{button.to_s}\".;#{identity};drag;"
 
-		  nil
+		  self
 
 	    end
 
@@ -257,7 +257,7 @@ module MobyBehaviour
 		  $logger.log "behaviour", 
 		    "PASS;Operation gesture executed successfully with direction \"#{direction}\", speed \"#{speed.to_s}\", distance \"#{distance.to_s}\".;#{identity};gesture;"
 
-		  nil
+		  self
 	    end
 
 	    # == description
@@ -328,7 +328,7 @@ module MobyBehaviour
           end
 
           $logger.log "behaviour" , "PASS;Operation gesture_to executed successfully with x \"#{x}\", y \"#{y}\", speed \"#{speed.to_s}\".;#{identity};gesture;"
-          nil
+          self
         end
 
     	# == description
@@ -399,7 +399,7 @@ module MobyBehaviour
 		    Kernel::raise e        
 		  end
 		  $logger.log "behaviour" , "PASS;Operation gesture_from executed successfully with x \"#{x}\", y \"#{y}\", speed \"#{speed.to_s}\", distance \"#{distance.to_s}\".;#{identity};gesture;"
-		  nil
+		  self
 	    end
 
 	    # == description
@@ -471,7 +471,7 @@ module MobyBehaviour
 
 		  $logger.log "behaviour" , "PASS;Operation gesture_to_object executed successfully with button.;#{identity};drag;"
 
-		  nil
+		  self
 
 	    end
 
@@ -559,7 +559,7 @@ module MobyBehaviour
 		    $logger.log "behaviour", 
 		      "PASS;Operation drag_to_object executed successfully with points \"#{points.to_s}\", duration \"#{duration.to_s}\", mouse_details \"#{mouse_details.to_s}\".;#{identity};gesture_points;"
 
-		    nil
+		    self
 	    end
 
 	    # == description
@@ -623,7 +623,7 @@ module MobyBehaviour
 
 		  $logger.log "behaviour" , "PASS;Operation drag executed successfully with direction \"#{direction}\", distance \"#{distance}\", button \"#{button.to_s}\".;#{identity};drag;"
 
-		  nil
+		  self
 	    end
       
       # == description
@@ -676,7 +676,7 @@ module MobyBehaviour
 
         $logger.log "behaviour" , "PASS;Operation drag_to executed successfully with x \"#{x}\", y \"#{y}\", button \"#{button.to_s}\".;#{identity};drag;"
 
-        nil
+        self
 
       end
 
@@ -739,7 +739,7 @@ module MobyBehaviour
 
 		    $logger.log "behaviour" , "PASS;Operation drag_to_object executed successfully with button \"#{button.to_s}\".;#{identity};drag;"
 
-		    nil
+		    self
 
 	    end
       
@@ -804,7 +804,8 @@ module MobyBehaviour
 
 		    $logger.log "behaviour" , "PASS;Operation move executed successfully with direction \"#{direction}\", distance \"#{distance}\",.;#{identity};move;"
 
-		    nil
+		    self
+
 	    end
        
 
@@ -820,10 +821,7 @@ module MobyBehaviour
   		  center_y
 	    end  
 
-	    
-
-
-	    private
+    private
 
 	    # Performs the actual gesture operation. 
 	    # Verifies that the parameters are correct and send the command
@@ -884,19 +882,23 @@ module MobyBehaviour
 
 	    end
 
-
 	    def do_sleep(time)
 
-		    if $parameters[ @sut.id ][ :sleep_disabled, nil ] != 'true'
-		      time = time.to_f
-		      time = time * 1.3
+		    if $parameters[ @sut.id ][ :sleep_disabled, nil ] != true
+
+		      time = time.to_f * 1.3
+
 		      #for flicks the duration of the gesture is short but animation (scroll etc..) may not
 		      #so wait at least one second
-		      time = 1 if time < 1	
+		      time = 1 if time < 1
+
 		      sleep time
+
 		    else
-		      #store the biggest value which will then be used in multitouch situations to sleep
-		      $parameters[ @sut.id ][ :skipped_sleep_time ] = time if time > $parameters[ @sut.id ][ :skipped_sleep_time, 0]
+
+		      # store the biggest value which will then be used in multitouch situations to sleep
+		      $parameters[ @sut.id ][ :skipped_sleep_time ] = time if time > $parameters[ @sut.id ][ :skipped_sleep_time, 0 ]
+
 		    end
 
 	    end
