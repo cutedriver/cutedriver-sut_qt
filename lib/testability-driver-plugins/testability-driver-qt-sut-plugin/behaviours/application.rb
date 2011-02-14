@@ -218,6 +218,24 @@ module MobyBehaviour
 
 	  end
 
+	  # == description
+	  # Resizes the application window so that width becomes height and vice versa.
+	  # 
+      # == arguments
+	  # Symbol
+	  #  direction
+	  #   description: For future support
+	  #
+	  # == returns
+	  # NilClass
+	  #   description: -
+	  #   example: -
+	  #
+	  #
+	  def change_orientation(direction = nil)		
+		self.fixture('qt','change_orientation')
+	  end
+
 	  private
 	  
 	  def multitouch_operation(&block)
