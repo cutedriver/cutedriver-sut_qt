@@ -655,6 +655,27 @@
     </behaviour>
 -->
 
+    <behaviour name="Fps" object_type="*" sut_type="QT" env="qt" input_type="*" version="*">
+
+		<module name="MobyBehaviour::QT::Fps" />
+
+        <methods>
+            <method name="start_fps_measurement">
+                <description>Start measurement of fps</description>
+                <example>start_fps_measurement</example>
+            </method>
+            <method name="stop_fps_measurement">
+                <description>Stop measurement of fps and return the data.</description>
+                <example>start_fps_measurement</example>
+            </method>
+            <method name="collect_fps_data">
+                <description>Returns the collected fps data.</description>
+                <example>collect_fps_data</example>
+            </method>
+        </methods>
+
+    </behaviour>
+
     <behaviour name="QtInfoLoggerBehaviour" object_type="sut;application" sut_type="QT" env="qt" input_type="*" version="*">
 
         <module name="MobyBehaviour::QT::InfoLoggerBehaviour" />
