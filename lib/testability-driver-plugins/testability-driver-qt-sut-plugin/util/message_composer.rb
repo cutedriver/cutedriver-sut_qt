@@ -169,6 +169,10 @@ module MobyUtil
 		    'start_command' => @_start_command 
 		  }
 
+		  #set search 
+		  search_path = $parameters[ @_sut.id ][ :app_path, nil ]
+    	  parameters[:app_path] = search_path if search_path 
+
 		  make_xml_message({:service => 'startApplication'}, 'Run', parameters)				
 	  end
 
