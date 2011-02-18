@@ -75,70 +75,84 @@ module MobyBehaviour
 			#  description: Error occured during keypress (Response: %s)
 			def press_key( key )
 
+				key_sequence = nil
+
 				begin
 
 					command = command_params
+
 					command.command_name('KeyPress')
+
 					command.set_require_response( true )
 
+					#Kernel::raise ArgumentError.new( "Wrong argument type %s for key (Expected: %s)" % [ key.class, "Symbol/Fixnum/KeySequence" ] ) unless [ Fixnum, Symbol, MobyCommand::KeySequence ].include?( key.class )  
+
 					# raise exception if value type other than Fixnum or Symbol
-					Kernel::raise ArgumentError.new( "Wrong argument type %s for key (Expected: %s)" % [ key.class, "Symbol/Fixnum/KeySequence" ] ) unless [ Fixnum, Symbol, MobyCommand::KeySequence ].include?( key.class )  
+          key.check_type [ Fixnum, Symbol, MobyCommand::KeySequence ], 'wrong argument type $1 for key (expected $2)'
 
 					# verify that keymap is defined for sut if symbol used. 
-					Kernel::raise ArgumentError.new(
+					raise ArgumentError, "Symbol #{ key.inspect } cannot be used due to no keymap defined for #{ @sut.id } in TDriver configuration file." if key.kind_of?( Symbol ) && $parameters[ @sut.id ].has_key?( :keymap ) == false
 
-					  "Symbol #{ key.inspect } cannot be used due to no keymap defined for #{ @sut.id } in TDriver configuration file."
-
-					) if key.kind_of?( Symbol ) && !$parameters[ @sut.id ].has_key?( :keymap )
-
-					@key_sequence = nil
 					if key.kind_of?( Symbol )
 
-					  scancode = $parameters[ @sut.id ][ :keymap ][ key, nil ]
+					  scancode = TDriver::KeymapUtilities.fetch_keycode( key, $parameters[ @sut.id ][ :keymap ] )
+
+            # convert hexadecimal (string) to fixnum
 					  scancode = scancode.hex if scancode.kind_of?( String )
+
 					  # raise exception if value is other than fixnum
-					  Kernel::raise ArgumentError.new( "Scan code for :%s not defined in keymap" % key ) unless scancode.kind_of?( Fixnum )
+					  raise ArgumentError, "Scan code for :#{ key } not defined in keymap" unless scancode.kind_of?( Fixnum )
 
 					  # add scancode for keypress event
 					  command.command_value( scancode.to_s )
 
 					elsif key.kind_of?( MobyCommand::KeySequence )
 					
-					  @key_sequence = []
+					  key_sequence = []
+
 					  key.get_sequence.each do | key_event |
-					      
-					  tempcode = $parameters[ @sut.id ][ :keymap ][ key_event[ :value ], nil ]
-					  tempcode = tempcode.hex if tempcode.kind_of?( String )
+					        
+					    #tempcode = $parameters[ @sut.id ][ :keymap ][ key_event[ :value ], nil ]
+
+  					  tempcode = TDriver::KeymapUtilities.fetch_keycode( key_event[ :value ], $parameters[ @sut.id ][ :keymap ] )
+
+					    tempcode = tempcode.hex if tempcode.kind_of?( String )
 						
-					  press_type = { :KeyDown => 'KeyPress', :KeyUp => 'KeyRelease' }.fetch( key_event[ :type ] ){ "KeyClick" }
-					  @key_sequence << { :value => tempcode, :params => { :name => press_type, :modifiers => "0", :delay => "0" } }
+					    press_type = { :KeyDown => 'KeyPress', :KeyUp => 'KeyRelease' }.fetch( key_event[ :type ] ){ "KeyClick" }
+
+					    key_sequence << { :value => tempcode, :params => { :name => press_type, :modifiers => "0", :delay => "0" } }
 												
 					  end					  
-					  command.command_value( @key_sequence )
+
+					  command.command_value( key_sequence )
+
 					else
 
-				      scancode = key.to_i
+            scancode = key.to_i
 					
 					  # raise exception if value is other than fixnum
 					  Kernel::raise ArgumentError.new( "Scan code for :%s not defined in keymap" % key ) unless scancode.kind_of?( Fixnum )
 
 					  # add scancode for keypress event
 					  command.command_value( scancode.to_s )
+
 					end	
 
 					# execute command & verify that execution passed ("OK" expected as response) 
 					@sut.execute_command(command)
+
 					#Kernel::raise RuntimeError.new("Error occured during keypress (Response: %s)" % @response ) unless ( @response = @sut.execute_command(command) ) == "OK" 
 
-				rescue Exception => exception
+				rescue Exception
 
-					$logger.log "behaviour" , "FAIL;Failed press_key with key \"#{ key }\".;#{ identity };press_key;"
-					Kernel::raise exception
+					$logger.behaviour "FAIL;Failed press_key with key \"#{ key }\".;#{ identity };press_key;"
+
+					raise $!
 
 				end
 
-				$logger.log "behaviour" , "PASS;Operation press_key executed successfully with key \"#{ key }\".;#{ identity };press_key;"
-		
+				$logger.behaviour "PASS;Operation press_key executed successfully with key \"#{ key }\".;#{ identity };press_key;"
+
 				nil
 			
 			end

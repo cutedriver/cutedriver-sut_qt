@@ -51,10 +51,8 @@
 		<!-- tap which are longer than this will be set as long taps (tap down, wait, tap up)-->
 		<parameter name="record_tap_time_treshold" value="1" />
 	
-
-
 	    <!-- possible values none, static, dynamic -->
-        <parameter name="filter_type" value="dynamic"/>
+      <parameter name="filter_type" value="dynamic"/>
 
 	    <!-- 
 			Filtering settings, use them to make the xml smaller. Do not use whitelists and blacklists combined as it may cause

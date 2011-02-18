@@ -21,10 +21,12 @@ module MobyController
 
 	module QT
 
-		module KeySequence      
+		module KeySequence
 
 			def set_adapter( adapter )
+
 				@sut_adapter = adapter
+
 			end
 
 			# Execute the command(s). Iterated trough the @message_array and sends all
@@ -34,8 +36,13 @@ module MobyController
 			# == raises
 			# RuntimeError: No service request to be sent due to key sequence is empty
 			def execute
-				message = Comms::MessageGenerator.generate(make_message)
-				@sut_adapter.send_service_request( message )
+
+				@sut_adapter.send_service_request( 
+
+          Comms::MessageGenerator.generate( make_message ) 
+
+        )
+
 			end
 
 			private
@@ -48,6 +55,7 @@ module MobyController
 				press_types = { :KeyDown => 'KeyPress', :KeyUp => 'KeyRelease' }
 
 				sut = @_sut
+
 				sequence = @sequence
 
 				message = Nokogiri::XML::Builder.new{
@@ -66,14 +74,17 @@ module MobyController
 									# verify that keymap is defined for sut if symbol used. 
 									Kernel::raise ArgumentError.new("Symbol #{ key.inspect } cannot be used due to no keymap defined for #{ sut.id } in TDriver configuration file.") if key.kind_of?( Symbol ) && $parameters[ sut.id ][ :keymap ].nil?
 
+                  # fetch keycode from keymap
+      					  key = TDriver::KeymapUtilities.fetch_keycode( key, $parameters[ sut.id ][ :keymap ] )
+
 									# retrieve corresponding scan code (type of string, convert to fixnum) for symbol from keymap if available 
-									key = $parameters[ sut.id ][ :keymap ][ key ].hex unless $parameters[ sut.id ][ :keymap ][ key ].nil?
+									key = key.hex if key.kind_of?( String )
 
 									# raise exception if value is other than fixnum
 									Kernel::raise ArgumentError.new( "Scan code for :%s not defined in keymap" % key ) unless key.kind_of?( Fixnum )
 		
 									# determine keypress type
-									press_type = { :KeyDown => 'KeyPress', :KeyUp => 'KeyRelease' }.fetch( key_press[ :type ] ){ "KeyClick" }
+									press_type = press_types.fetch( key_press[ :type ], 'KeyClick' )
 
 									Command( key.to_s, "name" => press_type.to_s, "modifiers" => "0", "delay" => "0")
 
@@ -92,8 +103,8 @@ module MobyController
 			# enable hooking for performance measurement & debug logging
 			TDriver::Hooking.hook_methods( self ) if defined?( TDriver::Hooking )
 
-		end #class
+		end # KeySequence
 
-	end #module QT
+	end # QT
 
-end #module MobyController
+end # MobyController
