@@ -91,6 +91,8 @@
 		<!-- Assume that QtTAS server is running at localhost:55535 -->
 		<parameter name="qttas_server_ip" value="127.0.0.1" />
 		<parameter name="qttas_server_port" value="55535" />
+  		<!-- Timeout between plugin and qttasserver -->
+	    <parameter name="qttas_plugin_timeout" value="10000" />
 
 		<!-- QT Server port -->	
 		<parameter name="qt_tcp_server_port" value="1514" /> <!-- JKo: what is this?? is it actually used anywhere? -->

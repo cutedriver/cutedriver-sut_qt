@@ -21,7 +21,8 @@ module MobyUtil
 
 	module MessageComposer
 	 
-	  def make_parametrized_message( service_details, command_name, params, command_params = {} )
+	  def make_parametrized_message( service_details, command_name, params, command_params = {} )		
+		service_details[:plugin_timeout] = $parameters[ @_sut.id ][ :qttas_plugin_timeout, 10000 ] if @_sut
 
 		  Nokogiri::XML::Builder.new{
 		    TasCommands( service_details ) {
@@ -44,6 +45,7 @@ module MobyUtil
     end
 
 	  def make_xml_message( service_details, command_name, params, command_value = nil )
+		service_details[:plugin_timeout] = $parameters[ @_sut.id ][ :qttas_plugin_timeout, 10000 ]  if @_sut
 
 =begin
 
@@ -79,6 +81,7 @@ module MobyUtil
 	  end
 
 	  def make_fixture_message(fixture_plugin, params)
+		  service_details[:plugin_timeout] = $parameters[ @_sut.id ][ :qttas_plugin_timeout, 10000 ] if @_sut
 
 		  Nokogiri::XML::Builder.new{
 		    TasCommands( :id => params[:application_id].to_s, :service => "fixture", :async => params[:async].to_s ) {
