@@ -452,6 +452,7 @@ module MobyBehaviour
         nil
       end
 
+      # == nodoc
       # == description
       # Starts process memory logging. Information about the given application's
       # heap memory usage will be stored in a file. In addition to application,
@@ -505,6 +506,7 @@ module MobyBehaviour
         status
       end
 
+      # == nodoc
       # == description
       # Stops process memory logging. Logging of the given application's heap memory usage is stopped. Either the full log file name or the log file
       # contents will be returned.\n
