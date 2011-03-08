@@ -83,6 +83,7 @@
           		<fixture name="mobilitysysinfo" plugin="mobilitysysinfofixture" env="qt"/>
           		<fixture name="contact" plugin="contactfixture" env="qt"/>
                 <fixture name="launch" plugin="launchfixture" env="qt"/>
+                <fixture name="setting" plugin="settingfixture" env="qt"/>
         	</fixtures>
 	</template>
 
