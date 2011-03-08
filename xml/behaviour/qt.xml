@@ -676,6 +676,32 @@
 
     </behaviour>
 
+
+    <behaviour name="Settings" object_type="sut" sut_type="QT" env="qt" input_type="*" version="*">
+
+		<module name="MobyBehaviour::QT::Settings" />
+
+        <methods>
+            <method name="set_settings">
+                <description>Set settintgs</description>
+                <example>set_settins</example>
+            </method>
+            <method name="remove_settings">
+                <description>Remove settings.</description>
+                <example>remove_settings</example>
+            </method>
+            <method name="read_settings">
+                <description>Read settings</description>
+                <example>read_settings</example>
+            </method>
+            <method name="read_all_settings">
+                <description>Read all settings</description>
+                <example>read_all_settings</example>
+            </method>
+        </methods>
+
+    </behaviour>
+
     <behaviour name="QtInfoLoggerBehaviour" object_type="sut;application" sut_type="QT" env="qt" input_type="*" version="*">
 
         <module name="MobyBehaviour::QT::InfoLoggerBehaviour" />
