@@ -167,6 +167,7 @@ module MobyUtil
 		    'application_path' => @_application_name, 
 		    'arguments' => arguments, 
 		    'environment' => @_environment, 
+		    'directory' => @_working_directory,
 		    'events_to_listen' => @_events_to_listen, 
 		    'signals_to_listen' => @_signals_to_listen, 
 		    'start_command' => @_start_command 
