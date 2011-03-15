@@ -17,7 +17,7 @@
 		<parameter name="input_type" value="touch" /> <!-- overwrites default value -->
 
 		<!-- keymap definitions -->
-		<keymap xml_file="keymaps/qt.xml" />
+		<keymap xml_file="keymaps/qt.xml" env="qt" />
 
 		<!-- gesture defaults -->
 		<parameter name="gesture_flick_distance" value="150" />
