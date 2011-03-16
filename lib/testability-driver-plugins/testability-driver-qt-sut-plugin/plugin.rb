@@ -34,9 +34,10 @@ module MobyPlugin
 			## plugin configuration, constructor and deconstructor methods
 			def self.plugin_name
 
+				#File.basename( __FILE__, '.rb' ).downcase # => "tdriver-qt-sut-plugin" 
+
 				# return plugin name as string
 				"testability-driver-qt-sut-plugin"
-				#File.basename( __FILE__, '.rb' ).downcase # => "tdriver-qt-sut-plugin" 
 
 			end
 
@@ -52,19 +53,19 @@ module MobyPlugin
 				# load plugin specific implementation or other initialization etc.
 				MobyUtil::FileHelper.load_modules( 
 
-					# load utility module(s)
+					# load utility modules
 					'util/*.rb', 
 
-					# sut adapter
+					# sut communication class
 					'sut/communication.rb', 
 
-					# sut adapter
+					# sut adapter class
 					'sut/adapter.rb', 
 
 					# sut controller
 					'sut/controller.rb', 
 
-					# qt behaviour abstract
+					# qt behaviour abstraction class
 					'behaviours/behaviour.rb', 
 
 					# load behaviour(s)
@@ -99,13 +100,34 @@ module MobyPlugin
 			# returns SUT object - this method will be called from MobyBase::SUTFactory
 			def self.make_sut( sut_id )
 
-				# tcp/ip read/write timeouts, default: 15 (seconds)
-				socket_read_timeout  = $parameters[ sut_id ][ :socket_read_timeout,  "15" ].to_i
-				socket_write_timeout = $parameters[ sut_id ][ :socket_write_timeout, "15" ].to_i
-
+        # create sut object
 				MobyBase::SUT.new(
-					MobyBase::SutController.new( "QT", MobyController::QT::SutAdapter.new( sut_id, socket_read_timeout, socket_write_timeout ) ), 
-					MobyBase::TestObjectFactory.instance, 
+
+          # create controller for sut
+					MobyBase::SutController.new( 
+
+            # controller id
+            "QT", 
+
+            # create sut adapter
+            MobyController::QT::SutAdapter.new( 
+
+              # sut id
+              sut_id,
+
+      				# tcp/ip read timeouts, default: 15 (seconds) 
+              $parameters[ sut_id ][ :socket_read_timeout,  "15" ].to_i,
+
+      				# tcp/ip write timeouts, default: 15 (seconds)
+              $parameters[ sut_id ][ :socket_write_timeout, "15" ].to_i
+            )
+
+          ), 
+
+          # pass test object factory class
+					MobyBase::TestObjectFactory.instance,
+
+          # pass sut id
 					sut_id 
 				)
 
@@ -115,7 +137,7 @@ module MobyPlugin
 			TDriver::Hooking.hook_methods( self ) if defined?( TDriver::Hooking )
 
 			# register plugin
-			MobyUtil::PluginService.instance.register_plugin( self ) # Note: self is MobyPlugin::QT::SUT
+			TDriver::PluginService.register_plugin( self )
 
 		end # SUT
 
