@@ -317,5 +317,5 @@
 	<parameter name="kPlay" value="0x01020005"/>
 	<parameter name="kSleep" value="0x01020004"/>
 	<parameter name="kZoom" value="0x01020006"/>
-	<parameter name="kCancel" valu="0x01020001"/>
+	<parameter name="kCancel" value="0x01020001"/>
 </keymap>
