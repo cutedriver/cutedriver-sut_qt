@@ -117,11 +117,11 @@ module MobyBehaviour
         begin
           # execute the application control service request
           apps = execute_command( MobyCommand::Application.new( :ListStartedApps ) )
-          MobyUtil::Logger.instance.log "behaviour", "PASS;Successfully listed applications.;#{ id };sut;{};list_started_apps;"
+          $logger.log "behaviour", "PASS;Successfully listed applications.;#{ id };sut;{};list_started_apps;"
 
         rescue Exception => e
 
-          MobyUtil::Logger.instance.log "behaviour", "FAIL;Failed to list applications.;#{ id };sut;{};list_started_apps;"
+          $logger.log "behaviour", "FAIL;Failed to list applications.;#{ id };sut;{};list_started_apps;"
           Kernel::raise RuntimeError.new( "Unable to list started applications: Exception: #{ e.message } (#{ e.class })" )
 
         end
@@ -190,6 +190,7 @@ module MobyBehaviour
       # RuntimeError
       #  description: Timeout of %s seconds reached. %s
       def execute_shell_command(command, param = { :detached => "false"} )      
+
         Kernel::raise ArgumentError.new("The command argument must be a non empty String.") unless ( command.kind_of?( String ) and !command.empty? )
         Kernel::raise ArgumentError.new("The parameters argumet must be a Hash.") unless ( param.kind_of?(Hash) )
 
@@ -202,29 +203,36 @@ module MobyBehaviour
         # Launch the program execution into the background, wait for it to finish.
         if param[:wait].to_s == "true"
           param[:threaded] = "true"
-          pid = execute_command( MobyCommand::Application.new( :Shell, command, nil, nil, nil, nil, nil, nil, param ) ).to_i
+
+          #pid = execute_command( MobyCommand::Application.new( :Shell, command, nil, nil, nil, nil, nil, nil, param ) ).to_i
+
+          pid = execute_command( MobyCommand::Application.new( :Shell, { :application_name => command, :flags => param } ) ).to_i
+
           data = "" 
           if pid != 0
-          time = Time.new + timeout
-          while true
-            obj = shell_command(pid)
-            sleep 1
-            data += obj['output']
-            if Time.new > time
-            command_params = {:kill => 'true'}
-            command_output = shell_command(pid, command_params)['output']
-            Kernel::raise RuntimeError.new( "Timeout of #{timeout.to_s} seconds reached. #{command_output}")
-            elsif obj['status'] == "RUNNING"
-            next
-            else 
-            break
+            time = Time.new + timeout
+            while true
+              obj = shell_command(pid)
+              sleep 1
+              data += obj['output']
+              if Time.new > time
+              command_params = {:kill => 'true'}
+              command_output = shell_command(pid, command_params)['output']
+              Kernel::raise RuntimeError.new( "Timeout of #{timeout.to_s} seconds reached. #{command_output}")
+              elsif obj['status'] == "RUNNING"
+              next
+              else 
+              break
+              end
             end
-          end
           end
           return data
         end
 
-        return execute_command( MobyCommand::Application.new( :Shell, command, nil, nil, nil, nil, nil, nil, nil, param ) ).to_s
+        #return execute_command( MobyCommand::Application.new( :Shell, command, nil, nil, nil, nil, nil, nil, nil, param ) ).to_s
+
+        return execute_command( MobyCommand::Application.new( :Shell, { :application_name => command, :flags => param } ) ).to_s
+
       end
 
       # == description
@@ -261,7 +269,11 @@ module MobyBehaviour
       def shell_command(pid, param = {} )
         Kernel::raise ArgumentError.new("pid argument should be positive integer.") unless pid.to_i > 0
         param[ :status ] = 'true'
-        xml_source = execute_command( MobyCommand::Application.new( :Shell, pid.to_s, nil, nil, nil, nil, nil, nil, nil, param ) ).to_s
+
+        #xml_source = execute_command( MobyCommand::Application.new( :Shell, pid.to_s, nil, nil, nil, nil, nil, nil, nil, param ) ).to_s
+        
+        xml_source = execute_command( MobyCommand::Application.new( :Shell, { :application_name => pid.to_s, :flags => param } ) ).to_s
+
         if param[:kill].nil?
           xml = Nokogiri::XML(xml_source)
           data = {}
@@ -315,12 +327,12 @@ module MobyBehaviour
 
     rescue Exception => e
 
-      MobyUtil::Logger.instance.log "behaviour" , "FAIL;Failed to find application.;#{id.to_s};sut;{};application;" << (hash_uid.kind_of?(Hash) ? hash_uid.inspect : hash_uid.class.to_s)
+      $logger.log "behaviour" , "FAIL;Failed to find application.;#{id.to_s};sut;{};application;" << (hash_uid.kind_of?(Hash) ? hash_uid.inspect : hash_uid.class.to_s)
       Kernel::raise e
 
     end
 
-    MobyUtil::Logger.instance.log "behaviour" , "PASS;Application found.;#{id.to_s};sut;{};application;" << hash_uid.inspect
+    $logger.log "behaviour" , "PASS;Application found.;#{id.to_s};sut;{};application;" << hash_uid.inspect
 
     app_child
 
@@ -335,8 +347,13 @@ module MobyBehaviour
       #   example: -
       # == exceptions
       def system_information
-        xml_source = execute_command( MobyCommand::Application.new( :SystemInfo, nil) )
+
+        # xml_source = execute_command( MobyCommand::Application.new( :SystemInfo, nil) )
+
+        xml_source = execute_command( MobyCommand::Application.new( :SystemInfo ) )
+
         MobyBase::StateObject.new( xml_source )            
+
       end
 
       # == description
@@ -493,18 +510,34 @@ module MobyBehaviour
       def log_process_mem_start(thread_name, file_name = nil, timestamp_type = nil, interval_s = nil)
         status = nil
         begin
+
+=begin
           status = execute_command(
                        MobyCommand::Application.new(
                                     :ProcessMemLoggingStart,
                                     thread_name,
                                     nil, nil, nil, nil, nil, nil,
                                     {:file_name => file_name, :timestamp => timestamp_type, :interval_s => interval_s} ) )
+=end
+
+          status = execute_command(
+            MobyCommand::Application.new(
+              :ProcessMemLoggingStart,
+              { :application_name => thread_name, :flags => { :file_name => file_name, :timestamp => timestamp_type, :interval_s => interval_s } }
+            ) 
+          )
+
           $logger.log "behaviour", "PASS;Successfully started process memory logging.;#{ id };sut;{};log_process_mem_start;"
+
         rescue Exception => e
+
           $logger.log "behaviour", "FAIL;Failed to start process memory logging.;#{ id };sut;{};log_process_mem_start;"
           Kernel::raise RuntimeError.new( "Unable to start process memory logging: Exception: #{ e.message } (#{ e.class })" )
+
         end
+
         status
+
       end
 
       # == nodoc
@@ -534,12 +567,23 @@ module MobyBehaviour
       def log_process_mem_stop(thread_name, return_data = nil)
         log = nil
         begin
+
+=begin
           log = execute_command(
                     MobyCommand::Application.new(
                                    :ProcessMemLoggingStop,
                                    thread_name,
                                    nil, nil, nil, nil, nil, nil,
                                    {:return_data => return_data} ) )
+=end
+
+          log = execute_command(
+            MobyCommand::Application.new(
+              :ProcessMemLoggingStop,
+              { :application_name => thread_name, :flags => { :return_data => return_data } } 
+            ) 
+          )
+
           $logger.log "behaviour", "PASS;Successfully stopped process memory logging.;#{ id };sut;{};log_process_mem_stop;"
         rescue Exception => e
           $logger.log "behaviour", "FAIL;Failed to stop process memory logging.;#{ id };sut;{};log_process_mem_stop;"
@@ -565,18 +609,34 @@ module MobyBehaviour
       #   description: -
       #   example: -
       #
-      def cpu_load_start(load)
+      def cpu_load_start( cpu_load )
         begin
+
+=begin
           status = execute_command(
                       MobyCommand::Application.new(
                                  :CpuLoadStart,
                                  nil, nil, nil, nil, nil, nil, nil,
-                                 {:cpu_load => load} ) )
+                                 {:cpu_load => cpu_load} ) )
+=end
+
+          status = execute_command(
+            MobyCommand::Application.new(
+              :CpuLoadStart,
+              { :flags => { :cpu_load => cpu_load } } 
+            ) 
+          )
+
           $logger.log "behaviour", "PASS;Successfully started generating CPU load.;#{ id };sut;{};cpu_load_start;"
+
         rescue Exception => e
+
           $logger.log "behaviour", "FAIL;Failed to start generating CPU load.;#{ id };sut;{};cpu_load_start;"
+
           Kernel::raise RuntimeError.new( "Unable to start generating CPU load: Exception: #{ e.message } (#{ e.class })" )
+
         end
+
       end
 
       # == description
@@ -645,7 +705,7 @@ module MobyBehaviour
           # the behaviour returns the amout of behaviours
           # sleep to avoid sending messages to the app untill the 
           # commands have been executed
-          sleep (ret*interval)
+          sleep ( ret * interval )
 
           $logger.log "behaviour", "PASS;Successfully executed grouped behaviours.;#{ id };sut;{};group_behaviours;"
         rescue Exception => e
@@ -689,7 +749,6 @@ module MobyBehaviour
 
       # enable hooking for performance measurement & debug logging
       TDriver::Hooking.hook_methods( self ) if defined?( TDriver::Hooking )
-
     end 
 
   end
