@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ############################################################################
 ## 
 ## Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies). 
@@ -223,7 +224,7 @@ module MobyBehaviour
           return data
         end
 
-        return execute_command( MobyCommand::Application.new( :Shell, command, nil, nil, nil, nil, nil, nil, param ) ).to_s
+        return execute_command( MobyCommand::Application.new( :Shell, command, nil, nil, nil, nil, nil, nil, nil, param ) ).to_s
       end
 
       # == description
@@ -260,7 +261,7 @@ module MobyBehaviour
       def shell_command(pid, param = {} )
         Kernel::raise ArgumentError.new("pid argument should be positive integer.") unless pid.to_i > 0
         param[ :status ] = 'true'
-        xml_source = execute_command( MobyCommand::Application.new( :Shell, pid.to_s, nil, nil, nil, nil, nil, nil, param ) ).to_s
+        xml_source = execute_command( MobyCommand::Application.new( :Shell, pid.to_s, nil, nil, nil, nil, nil, nil, nil, param ) ).to_s
         if param[:kill].nil?
           xml = Nokogiri::XML(xml_source)
           data = {}
