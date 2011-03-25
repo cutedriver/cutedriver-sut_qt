@@ -52,8 +52,12 @@ module MobyBehaviour
       # == arguments
       # attribute
       #  String
-      #   description: Name of the attribute to be set
+      #   description: Name of the attribute to be set as string
       #   example: "text"
+      #
+      #  Symbol
+      #   description: Name of the attribute to be set as symbol
+      #   example: :text
       #
       # value
       #  String
@@ -64,10 +68,26 @@ module MobyBehaviour
       #   description: New value of the attribute.
       #   example: 200
       #
-      #  Boolean
+      #  TrueClass
       #   description: New value of the attribute.
       #   example: true
       #
+      #  FalseClass
+      #   description: New value of the attribute.
+      #   example: false
+      #
+      #  Date
+      #   description: New value of the attribute.
+      #   example: Date.today
+      #
+      #  Time
+      #   description: New value of the attribute.
+      #   example: Time.now
+      #
+      #  DateTime
+      #   description: New value of the attribute.
+      #   example: DateTime.now
+      #  
       # type
       #  String
       #   description: Type of the value. If this argument is not given, the type will be detected based on the class of the value argument. 
@@ -94,13 +114,27 @@ module MobyBehaviour
       #  description: One of the arguments is not valid   
       # RuntimeError
       #  description: Setting of the attribute failed
-			def set_attribute(attribute, value, type = nil)
+			def set_attribute( attribute, value, type = nil )
 
-				Kernel::raise ArgumentError.new( "Attribute-name was empty" ) if attribute.empty?
-				Kernel::raise ArgumentError.new( "Argument type must be nil or a non empty String." ) unless type.nil? || ( type.kind_of?( String ) && !type.empty? )
+        # verify attribute argument variable type
+        attribute.check_type [ Symbol, String ], 'wrong argument type $1 for attribute name (expected $2)'
 
-				command = command_params #in qt_behaviour 
+        # verify type argument variable type 
+        type.check_type [ NilClass, String ], 'wrong argument type $1 for attribute type (expected $2)'
+
+        # convert symbol to string
+        attribute = attribute.to_s if attribute.kind_of?( Symbol )
+
+        # raise exception if attribute name was not given
+        attribute.not_empty 'attribute name cannot be be empty string'
+
+        type.not_empty 'argument type must be either nil or non empty string' if type.kind_of?( String )
+
+        # in qt_behaviour 
+				command = command_params 
+
 				command.transitions_off 
+
 				command.command_name( 'SetAttribute' )
 
 				case type
