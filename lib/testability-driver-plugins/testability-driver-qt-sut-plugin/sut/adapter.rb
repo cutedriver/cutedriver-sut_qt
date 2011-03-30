@@ -203,10 +203,14 @@ module MobyController
         # inflate the message body if compressed
         if ( header[ 3 ] == 2 )
 
-          # remove leading 4 bytes
-          body = body[ 4 .. -1 ]
-
-          body = Zlib::Inflate.inflate( body ) unless body.empty?
+		  if $parameters[ @sut_id ][ :win_native, false ] == "true"
+			zstream = Zlib::Inflate.new(-Zlib::MAX_WBITS)			
+			body = zstream.inflate(body) unless body.empty?
+		  else
+			# remove leading 4 bytes		  
+			body = body[ 4 .. -1 ] 
+			body = Zlib::Inflate.inflate( body ) unless body.empty?
+		  end
 
         end
 
