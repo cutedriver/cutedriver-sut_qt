@@ -121,9 +121,6 @@ module MobyUtil
 		    
 		  when 'dynamic'
 
-		    # updates the filter with the current backtrace file list
-		    #MobyUtil::DynamicAttributeFilter.instance.update_filter( caller( 0 ) ) 
-
 		    white_list = MobyUtil::DynamicAttributeFilter.instance.filter_string
 		    params['attributeWhiteList'] = white_list if white_list
 		    
