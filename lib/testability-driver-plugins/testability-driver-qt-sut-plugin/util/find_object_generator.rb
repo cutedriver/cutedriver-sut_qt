@@ -64,8 +64,27 @@ module MobyUtil
         # TasCommands close    
         xml << '><Target>'
         
-        @_params.each{ | object_parameters | xml << "<object #{ object_parameters.to_attributes } />" }
+        # temp. objects xml fragment
+        objects = ""
+
+        # collect objects with attributes
+        @_params.reverse.each_with_index{ | parameters, index |
         
+          if index == 0
+          
+            objects = "<object #{ parameters.to_attributes } />"          
+            
+          else
+          
+            objects = "<object #{ parameters.to_attributes }>#{ objects }</object>"
+            
+          end
+        
+        }
+
+        # add objects to xml
+        xml << objects
+
         xml << '<Command name="findObject">'
 
         filters.each{ | name, value | xml << "<param name=\"#{ name }\" value=\"#{ value }\" />" }
@@ -83,8 +102,9 @@ module MobyUtil
 
     end
 
+
 =begin	
-	  #def generate_message
+	  def generate_message
 	
 	    filter_type = $parameters[ @_sut.id ][ :filter_type, 'none' ]
 	
