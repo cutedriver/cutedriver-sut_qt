@@ -18,7 +18,8 @@
 ## 
 ############################################################################
 
-require 'nokogiri'
+# use tdrivers own xml api instead of nokogiri
+#require 'nokogiri'
 
 module MobyBehaviour
 
@@ -266,29 +267,51 @@ module MobyBehaviour
       # ArgumentError
       #  description: The command argument was not a non empty String
       #
-      def shell_command(pid, param = {} )
+      def shell_command( pid, param = {} )
+
         Kernel::raise ArgumentError.new("pid argument should be positive integer.") unless pid.to_i > 0
+
         param[ :status ] = 'true'
 
-        #xml_source = execute_command( MobyCommand::Application.new( :Shell, pid.to_s, nil, nil, nil, nil, nil, nil, nil, param ) ).to_s
-        
-        xml_source = execute_command( MobyCommand::Application.new( :Shell, { :application_name => pid.to_s, :flags => param } ) ).to_s
+        xml_source = execute_command( 
+          MobyCommand::Application.new( 
+            :Shell, 
+            { 
+              :application_name => pid.to_s, 
+              :flags => param 
+            }
+           )
+        ).to_s
 
-        if param[:kill].nil?
-          xml = Nokogiri::XML(xml_source)
+        if param[ :kill ].nil?
+
+          #xml = Nokogiri::XML( xml_source )
+          xml = MobyUtil::XML.parse_string( xml_source )
+
           data = {}
-		  object_xml_data, unused_rule = TDriver::TestObjectAdapter.get_objects( xml, { :type => 'Response'}, true )
-		  object_xml_data.collect{ |element|
-			data.merge!(TDriver::TestObjectAdapter.test_object_attributes(element))
-		  }
-		  return data
-		else
-		  # Killed processes have no relevant data.
+
+		      object_xml_data, unused_rule = @test_object_adapter.get_objects( xml, { :type => 'Response' }, true )
+
+		      object_xml_data.collect{ | element |
+		      
+  			    data.merge!(
+  			      @test_object_adapter.test_object_attributes( element ) 
+		        )
+
+		      }
+
+		      return data
+
+		    else
+
+		      # Killed processes have no relevant data.
           data = {
-          :status => "KILLED",
-          :output => xml_source
+            :status => "KILLED",
+            :output => xml_source
           }
+
         end
+
       end
 
 

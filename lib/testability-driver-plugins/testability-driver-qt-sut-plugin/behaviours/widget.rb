@@ -17,8 +17,6 @@
 ##
 ############################################################################
 
-
-
 # TODO: document
 module MobyBehaviour
 
@@ -226,9 +224,9 @@ module MobyBehaviour
             #check that type is not QWebFrame and that QWebFrame is found for object
             if type != "QWebFrame" and self.attributes.key?('webFrame')
               # puts "tap: " + (Time.now - tapMeasure).to_s + " s - Not q webframe"
-              elemens_xml_data, unused_rule = TDriver::TestObjectAdapter.get_objects( @sut.xml_data, { :id => self.attribute('webFrame')}, true )
+              elemens_xml_data, unused_rule = @test_object_adapter.get_objects( @sut.xml_data, { :id => self.attribute('webFrame')}, true )
               object_xml_data = elemens_xml_data[0]
-              object_attributes = TDriver::TestObjectAdapter.test_object_attributes(object_xml_data)
+              object_attributes = @test_object_adapter.test_object_attributes(object_xml_data)
               x_absolute = object_attributes['x_absolute'].to_i 
               y_absolute = object_attributes['y_absolute'].to_i
               width = object_attributes['width'].to_i 

@@ -42,11 +42,11 @@ module MobyBehaviour
     # == objects
     # *
     #
-	  module Gesture
+    module Gesture
 
-	    include MobyBehaviour::QT::Behaviour
+      include MobyBehaviour::QT::Behaviour
 
-	    # == description
+      # == description
       # Flick the screen at the location of the object (touch the object and do a flick gesture).
       # Speed and distance of the flick are defined in the tdriver_parameters under the sut used.
       # By default a flick is a fast gesture.
@@ -81,33 +81,33 @@ module MobyBehaviour
       # == exceptions
       # ArgumentError
       #   description: One of the arguments is not valid  
-	    def flick( direction, button = :Left, optional_params = {} )
+      def flick( direction, button = :Left, optional_params = {} )
 
-		  begin
+      begin
             use_tap_screen = optional_params[:use_tap_screen].nil? ? $parameters[ @sut.id][ :use_tap_screen, 'false'] :
               optional_params[:use_tap_screen].to_s
             optional_params[:useTapScreen] = use_tap_screen
             
-		    speed = calculate_speed(@sut.parameter[:gesture_flick_distance], @sut.parameter[:gesture_flick_speed])
-		    distance = @sut.parameter[:gesture_flick_distance].to_i
+        speed = calculate_speed(@sut.parameter[:gesture_flick_distance], @sut.parameter[:gesture_flick_speed])
+        distance = @sut.parameter[:gesture_flick_distance].to_i
             params = {:gesture_type => :MouseGesture, :direction => direction, :speed => speed, :distance => distance, :isDrag => false, :button => button, :useTapScreen => use_tap_screen}
             params.merge!(optional_params)
 
-		    do_gesture(params)		
-		    do_sleep(speed)
-		    
-		  rescue Exception => e
+        do_gesture(params)    
+        do_sleep(speed)
+        
+      rescue Exception => e
 
-		    $logger.log "behaviour" , "FAIL;Failed flick with direction \"#{direction}\", button \"#{button.to_s}\".;#{identity};flick;"
-		    Kernel::raise e        
-		  end      
+        $logger.log "behaviour" , "FAIL;Failed flick with direction \"#{direction}\", button \"#{button.to_s}\".;#{identity};flick;"
+        Kernel::raise e        
+      end      
 
-		  $logger.log "behaviour" , "PASS;Operation flick executed successfully with direction \"#{direction}\", button \"#{button.to_s}\".;#{identity};flick;"
+      $logger.log "behaviour" , "PASS;Operation flick executed successfully with direction \"#{direction}\", button \"#{button.to_s}\".;#{identity};flick;"
 
-		  self
-	    end
+      self
+      end
 
-	    # == description
+      # == description
       # Flick the screen at the location of the object (touch the object and do a flick gesture), ending the flick at the specified coordinates.
       # Speed and distance of the flick are defined in the tdriver_parameters under the sut used.
       # By default a flick is a fast gesture.
@@ -143,34 +143,34 @@ module MobyBehaviour
       #
       # == exceptions
       # ArgumentError
-      #  description: One of the arguments is not valid  	
-	    def flick_to( x, y, button = :Left, optional_params = {})
+      #  description: One of the arguments is not valid    
+      def flick_to( x, y, button = :Left, optional_params = {})
 
-		  begin
+      begin
             use_tap_screen = optional_params[:use_tap_screen].nil? ? $parameters[ @sut.id][ :use_tap_screen, 'false'] :
               optional_params[:use_tap_screen].to_s
             optional_params[:useTapScreen] = use_tap_screen
 
-		    
+        
 
-		    speed = calculate_speed( @sut.parameter[ :gesture_flick_distance ], @sut.parameter[ :gesture_flick_speed ] )
-		    do_gesture({:gesture_type => :MouseGestureToCoordinates, :x => x, :y => y, :speed => speed, :isDrag => false, :button => button, :useTapScreen => use_tap_screen})		
-		    do_sleep(speed)
+        speed = calculate_speed( @sut.parameter[ :gesture_flick_distance ], @sut.parameter[ :gesture_flick_speed ] )
+        do_gesture({:gesture_type => :MouseGestureToCoordinates, :x => x, :y => y, :speed => speed, :isDrag => false, :button => button, :useTapScreen => use_tap_screen})    
+        do_sleep(speed)
 
-		  rescue Exception => e
+      rescue Exception => e
 
-		    $logger.log "behaviour" , "FAIL;Failed flick_to with x \"#{x}\", y \"#{y}\", button \"#{button.to_s}\".;#{identity};drag;"
-		    Kernel::raise e        
-		  end      
+        $logger.log "behaviour" , "FAIL;Failed flick_to with x \"#{x}\", y \"#{y}\", button \"#{button.to_s}\".;#{identity};drag;"
+        Kernel::raise e        
+      end      
 
-		  $logger.log "behaviour" , "PASS;Operation flick_to executed successfully with x \"#{x}\", y \"#{y}\", button \"#{button.to_s}\".;#{identity};drag;"
+      $logger.log "behaviour" , "PASS;Operation flick_to executed successfully with x \"#{x}\", y \"#{y}\", button \"#{button.to_s}\".;#{identity};drag;"
 
-		  self
+      self
 
-	    end
+      end
 
 
-	    # == description
+      # == description
       # Perform a gesture with the object
       #
       # == arguments
@@ -200,8 +200,8 @@ module MobyBehaviour
       #   default: { :use_tap_screen => 'false', :isDrag => false, :button => :Left }  
       #
       # == tables
-	    # directions_table
-	    #  title: Direction symbols table
+      # directions_table
+      #  title: Direction symbols table
       #  |Symbol|
       #  |:Left|
       #  |:Right|
@@ -209,7 +209,7 @@ module MobyBehaviour
       #  |:Down|
       #
       # buttons_table
-	    #  title: Mouse button symbols table
+      #  title: Mouse button symbols table
       #  |Symbol|Description|
       #  |:Left|Simulate left mouse button|
       #  |:Middle|Simulate middle mouse button|
@@ -224,9 +224,9 @@ module MobyBehaviour
       # == exceptions
       # ArgumentError
       #  description: One of the arguments is not valid    
-	    def gesture( direction, speed, distance, optional_params = {:button => :Left, :isDrag => false}) 
+      def gesture( direction, speed, distance, optional_params = {:button => :Left, :isDrag => false}) 
 
-		  begin
+      begin
             # change the format for api consitency
             use_tap_screen = optional_params[:use_tap_screen].nil? ? $parameters[ @sut.id][ :use_tap_screen, 'false'] :
               optional_params[:use_tap_screen].to_s
@@ -236,31 +236,31 @@ module MobyBehaviour
 
 
 
-		    #do_gesture(direction, speed, distance, isDrag, button)
-		    params = {
-		    	:gesture_type => :MouseGesture,
-		    	:direction => direction,
-		    	:speed => speed,
-		    	:distance => distance
-		    }
-		    params.merge!(optional_params)
-		    do_gesture(params)
-		    do_sleep(speed)
+        #do_gesture(direction, speed, distance, isDrag, button)
+        params = {
+          :gesture_type => :MouseGesture,
+          :direction => direction,
+          :speed => speed,
+          :distance => distance
+        }
+        params.merge!(optional_params)
+        do_gesture(params)
+        do_sleep(speed)
 
-		  rescue Exception => e
+      rescue Exception => e
 
-		    $logger.log "behaviour", 
-			  "FAIL;Failed gesture with direction \"#{direction}\", speed \"#{speed.to_s}\", distance \"#{distance.to_s}\".;#{identity};gesture;"
-		    Kernel::raise e        
-		  end      
+        $logger.log "behaviour", 
+        "FAIL;Failed gesture with direction \"#{direction}\", speed \"#{speed.to_s}\", distance \"#{distance.to_s}\".;#{identity};gesture;"
+        Kernel::raise e        
+      end      
 
-		  $logger.log "behaviour", 
-		    "PASS;Operation gesture executed successfully with direction \"#{direction}\", speed \"#{speed.to_s}\", distance \"#{distance.to_s}\".;#{identity};gesture;"
+      $logger.log "behaviour", 
+        "PASS;Operation gesture executed successfully with direction \"#{direction}\", speed \"#{speed.to_s}\", distance \"#{distance.to_s}\".;#{identity};gesture;"
 
-		  self
-	    end
+      self
+      end
 
-	    # == description
+      # == description
       # Perform a gesture with the object, ending the gesture at the specified point.
       #
       # == arguments
@@ -293,45 +293,45 @@ module MobyBehaviour
       # == exceptions
       # ArgumentError
       #  description: One of the arguments is not valid   
-        def gesture_to(x, y, speed, optional_params = {:button => :Left, :isDrag => false})
+      def gesture_to(x, y, speed, optional_params = {:button => :Left, :isDrag => false})
 
-          begin      
-            # change the format for api consitency
-            use_tap_screen = optional_params[:use_tap_screen].nil? ? $parameters[ @sut.id][ :use_tap_screen, 'false'] :
-              optional_params[:use_tap_screen].to_s
-            optional_params[:useTapScreen] = use_tap_screen
+        begin      
+          # change the format for api consitency
+          use_tap_screen = optional_params[:use_tap_screen].nil? ? $parameters[ @sut.id][ :use_tap_screen, 'false'] :
+            optional_params[:use_tap_screen].to_s
+          optional_params[:useTapScreen] = use_tap_screen
 
-            params = {:gesture_type => :MouseGestureToCoordinates, :speed => speed}
-            if attribute('objectType') == 'Web'
-              elemens_xml_data, unused_rule = TDriver::TestObjectAdapter.get_objects( @sut.xml_data, { :id => self.attribute('webFrame')}, true )
-              object_xml_data = elemens_xml_data[0]
-              object_attributes = TDriver::TestObjectAdapter.test_object_attributes(object_xml_data, ['x_absolute', 'y_absolute'])
-              frame_x_absolute = object_attributes['x_absolute'].to_i
-              frame_y_absolute = object_attributes['y_absolute'].to_i
-              new_params = {:x=>(frame_x_absolute + x.to_i + (attribute('width' ).to_i/2)),
-                            :y=>(frame_y_absolute + y.to_i + (attribute('height').to_i/2))}
-              params.merge!(new_params)
-            else
-              new_params = {:x=>x, :y=>y}
-              params.merge!(new_params)
-            end
-            
-            
-            params.merge!(optional_params)
-            do_gesture(params)
-            do_sleep(speed) 
-
-          rescue Exception => e
-
-            $logger.log "behaviour" , "FAIL;Failed gesture_to with x \"#{x}\", y \"#{y}\", speed \"#{speed.to_s}\", button \".;#{identity};gesture;"
-            Kernel::raise e        
+          params = {:gesture_type => :MouseGestureToCoordinates, :speed => speed}
+          if attribute('objectType') == 'Web'
+            elemens_xml_data, unused_rule = @test_object_adapter.get_objects( @sut.xml_data, { :id => self.attribute('webFrame')}, true )
+            object_xml_data = elemens_xml_data[0]
+            object_attributes = @test_object_adapter.test_object_attributes(object_xml_data, ['x_absolute', 'y_absolute'])
+            frame_x_absolute = object_attributes['x_absolute'].to_i
+            frame_y_absolute = object_attributes['y_absolute'].to_i
+            new_params = {:x=>(frame_x_absolute + x.to_i + (attribute('width' ).to_i/2)),
+                          :y=>(frame_y_absolute + y.to_i + (attribute('height').to_i/2))}
+            params.merge!(new_params)
+          else
+            new_params = {:x=>x, :y=>y}
+            params.merge!(new_params)
           end
+          
+          
+          params.merge!(optional_params)
+          do_gesture(params)
+          do_sleep(speed) 
 
-          $logger.log "behaviour" , "PASS;Operation gesture_to executed successfully with x \"#{x}\", y \"#{y}\", speed \"#{speed.to_s}\".;#{identity};gesture;"
-          self
+        rescue Exception => e
+
+          $logger.log "behaviour" , "FAIL;Failed gesture_to with x \"#{x}\", y \"#{y}\", speed \"#{speed.to_s}\", button \".;#{identity};gesture;"
+          Kernel::raise e        
         end
 
-    	# == description
+        $logger.log "behaviour" , "PASS;Operation gesture_to executed successfully with x \"#{x}\", y \"#{y}\", speed \"#{speed.to_s}\".;#{identity};gesture;"
+        self
+      end
+
+      # == description
       # Perform a gesture with the object, starting the gesture at the specified point inside it.
       #
       # == arguments
@@ -379,30 +379,30 @@ module MobyBehaviour
       # ArgumentError
       #  description: One of the arguments is not valid, or the initial point is outside the target object.
       #
-	    def gesture_from(x, y, speed, distance, direction, optional_params = {:button => :Left, :isDrag => false})
-		  begin
-		    raise ArgumentError.new( "Coordinate x:#{x} x_abs:#{x} outside object." ) unless ( x <= attribute( 'width' ).to_i and x >= 0 )
-		    raise ArgumentError.new( "Coordinate y:#{y} y_abs:#{y} outside object." ) unless ( y <= attribute( 'height' ).to_i and y >= 0 )
-		    
-		    x_absolute = attribute('x_absolute').to_i + x.to_i 
-		    y_absolute = attribute('y_absolute').to_i + y.to_i 
+      def gesture_from(x, y, speed, distance, direction, optional_params = {:button => :Left, :isDrag => false})
+        begin
+          raise ArgumentError.new( "Coordinate x:#{x} x_abs:#{x} outside object." ) unless ( x <= attribute( 'width' ).to_i and x >= 0 )
+          raise ArgumentError.new( "Coordinate y:#{y} y_abs:#{y} outside object." ) unless ( y <= attribute( 'height' ).to_i and y >= 0 )
+          
+          x_absolute = attribute('x_absolute').to_i + x.to_i 
+          y_absolute = attribute('y_absolute').to_i + y.to_i 
 
-            params = {:gesture_type => :MouseGestureFromCoordinates, :x => x_absolute, :y => y_absolute, :speed => speed, :distance => distance, :direction => direction}
+              params = {:gesture_type => :MouseGestureFromCoordinates, :x => x_absolute, :y => y_absolute, :speed => speed, :distance => distance, :direction => direction}
 
-            params.merge!(optional_params)
-		    do_gesture(params)
-		    do_sleep(speed) 
+              params.merge!(optional_params)
+          do_gesture(params)
+          do_sleep(speed) 
 
 
-		  rescue Exception => e      
-		    $logger.log "behaviour" , "FAIL;Failed gesture_from with x \"#{x}\", y \"#{y}\", speed \"#{speed.to_s}\", distance \"#{distance.to_s}\", button \".;#{identity};gesture;"
-		    Kernel::raise e        
-		  end
-		  $logger.log "behaviour" , "PASS;Operation gesture_from executed successfully with x \"#{x}\", y \"#{y}\", speed \"#{speed.to_s}\", distance \"#{distance.to_s}\".;#{identity};gesture;"
-		  self
-	    end
+        rescue Exception => e      
+          $logger.log "behaviour" , "FAIL;Failed gesture_from with x \"#{x}\", y \"#{y}\", speed \"#{speed.to_s}\", distance \"#{distance.to_s}\", button \".;#{identity};gesture;"
+          Kernel::raise e        
+        end
+        $logger.log "behaviour" , "PASS;Operation gesture_from executed successfully with x \"#{x}\", y \"#{y}\", speed \"#{speed.to_s}\", distance \"#{distance.to_s}\".;#{identity};gesture;"
+        self
+      end
 
-	    # == description
+      # == description
       # Perform a gesture with the object, ending the gesture at the center of another object.
       #
       # == arguments
@@ -430,50 +430,52 @@ module MobyBehaviour
       # == exceptions
       # ArgumentError
       #  description: One of the arguments is not valid  
-	    def gesture_to_object(target_object, duration, optional_params = {:button => :Left, :isDrag => false})    
-            if attribute('objectType') == 'Web'
-              elemens_xml_data, unused_rule = TDriver::TestObjectAdapter.get_objects( @sut.xml_data, { :id => self.attribute('webFrame')}, true )
-              object_xml_data = elemens_xml_data[0]
-              object_attributes = TDriver::TestObjectAdapter.test_object_attributes(object_xml_data, ['x', 'y'])
-              frame_x = object_attributes['x'].to_i
-              frame_y = object_attributes['y'].to_i
-							puts "x "  + frame_x.to_s + " y " + frame_y.to_s
+      def gesture_to_object(target_object, duration, optional_params = {:button => :Left, :isDrag => false})    
+
+      if attribute('objectType') == 'Web'
+        elemens_xml_data, unused_rule = @test_object_adapter.get_objects( @sut.xml_data, { :id => self.attribute('webFrame')}, true )
+        object_xml_data = elemens_xml_data[0]
+        object_attributes = @test_object_adapter.test_object_attributes(object_xml_data, ['x', 'y'])
+        frame_x = object_attributes['x'].to_i
+        frame_y = object_attributes['y'].to_i
+        puts "x "  + frame_x.to_s + " y " + frame_y.to_s
 
 
-              gesture_to(target_object.attribute('x').to_i + (target_object.attribute('width' ).to_i/2) - (attribute('width' ).to_i/2 ) - frame_x,
-                         target_object.attribute('y').to_i + (target_object.attribute('height').to_i/2) - (attribute('height').to_i/2 ) - frame_y,
-                         duration, optional_params)
-              nil
-              return 
-            end
+        gesture_to(target_object.attribute('x').to_i + (target_object.attribute('width' ).to_i/2) - (attribute('width' ).to_i/2 ) - frame_x,
+                   target_object.attribute('y').to_i + (target_object.attribute('height').to_i/2) - (attribute('height').to_i/2 ) - frame_y,
+                   duration, optional_params)
+        nil
+        return 
+      end
 
-		  begin
-            # change the format for api consitency
-            use_tap_screen = optional_params[:use_tap_screen].nil? ? $parameters[ @sut.id][ :use_tap_screen, 'false'] :
-              optional_params[:use_tap_screen].to_s
-            optional_params[:useTapScreen] = use_tap_screen
+      begin
+
+        # change the format for api consitency
+        use_tap_screen = optional_params[:use_tap_screen].nil? ? $parameters[ @sut.id][ :use_tap_screen, 'false'] :
+          optional_params[:use_tap_screen].to_s
+        optional_params[:useTapScreen] = use_tap_screen
 
 
 
-            params = {:gesture_type => :MouseGestureTo, :speed => duration}
-            params[:targetId] = target_object.id
-            params[:targetType] = target_object.attribute('objectType')
-            params.merge!(optional_params)
-            do_gesture(params)
-            do_sleep(duration)
+        params = {:gesture_type => :MouseGestureTo, :speed => duration}
+        params[:targetId] = target_object.id
+        params[:targetType] = target_object.attribute('objectType')
+        params.merge!(optional_params)
+        do_gesture(params)
+        do_sleep(duration)
 
-		  rescue Exception => e      
+      rescue Exception => e      
 
-		    $logger.log "behaviour" , "FAIL;Failed gesture_to_object with button.;#{identity};drag;"
-		    Kernel::raise e        
+        $logger.log "behaviour" , "FAIL;Failed gesture_to_object with button.;#{identity};drag;"
+        Kernel::raise e        
 
-		  end      
+      end      
 
-		  $logger.log "behaviour" , "PASS;Operation gesture_to_object executed successfully with button.;#{identity};drag;"
+      $logger.log "behaviour" , "PASS;Operation gesture_to_object executed successfully with button.;#{identity};drag;"
 
-		  self
+      self
 
-	    end
+      end
 
       # == description
       # Perform a gesture following a track of points.
@@ -509,60 +511,60 @@ module MobyBehaviour
       # == exceptions
       # ArgumentError
       #  description: One of the arguments is not valid
-	    def gesture_points( points, duration, mouse_details = { :press => true, :release => true, :button => :Left, :isDrag => true}, optional_params = {} )
+      def gesture_points( points, duration, mouse_details = { :press => true, :release => true, :button => :Left, :isDrag => true}, optional_params = {} )
 
-		    begin
+        begin
 
           use_tap_screen = optional_params[:use_tap_screen].nil? ? $parameters[ @sut.id][ :use_tap_screen, 'false'] :
           optional_params[:use_tap_screen].to_s
           optional_params[:useTapScreen] = use_tap_screen
 
-		      mouse_details[:press] = true  unless mouse_details.has_value?(:press)
-		      mouse_details[:release] = true  unless mouse_details.has_value?(:release)
-		      mouse_details[:button] = :Left  unless mouse_details.has_value?(:button)
-		      mouse_details[:isDrag] = true  unless mouse_details.has_value?(:isDrag)
+          mouse_details[:press] = true  unless mouse_details.has_value?(:press)
+          mouse_details[:release] = true  unless mouse_details.has_value?(:release)
+          mouse_details[:button] = :Left  unless mouse_details.has_value?(:button)
+          mouse_details[:isDrag] = true  unless mouse_details.has_value?(:isDrag)
 
-		      raise ArgumentError.new( "Invalid button." ) unless @@_valid_buttons.include?(mouse_details[:button])
+          raise ArgumentError.new( "Invalid button." ) unless @@_valid_buttons.include?(mouse_details[:button])
 
-		      command = command_params #in qt_behaviour           
-		      command.command_name('MouseGesturePoints')
-		      params = {'mouseMove'=>'true'}
+          command = command_params #in qt_behaviour           
+          command.command_name('MouseGesturePoints')
+          params = {'mouseMove'=>'true'}
 
-		      params['button'] = @@_buttons_map[mouse_details[:button]]
-		      params['press'] = 'false' unless mouse_details[:press]
-		      params['release'] = 'false' unless mouse_details[:release]
-              params['isDrag'] = 'true' if mouse_details[:isDrag]
-              params.merge!(optional_params)
+          params['button'] = @@_buttons_map[mouse_details[:button]]
+          params['press'] = 'false' unless mouse_details[:press]
+          params['release'] = 'false' unless mouse_details[:release]
+          params['isDrag'] = 'true' if mouse_details[:isDrag]
+          params.merge!(optional_params)
               
 
-		      millis = duration.to_f
-		      millis = millis*1000
-		      speed = millis.to_i
-		      params['speed'] = speed.to_s
-		      command.command_params(params)
-		      point_string = ""
-		      points.each { |point| point_string << point["x"].to_s << "," << point["y"].to_s << "," << (point["interval"]*1000).to_i.to_s << ";"}
-		      command.command_value(point_string)
+          millis = duration.to_f
+          millis = millis*1000
+          speed = millis.to_i
+          params['speed'] = speed.to_s
+          command.command_params(params)
+          point_string = ""
+          points.each { |point| point_string << point["x"].to_s << "," << point["y"].to_s << "," << (point["interval"]*1000).to_i.to_s << ";"}
+          command.command_value(point_string)
 
-		      @sut.execute_command(command)
+          @sut.execute_command(command)
 
-		      do_sleep(duration)
+          do_sleep(duration)
 
-		    rescue Exception => e
+        rescue Exception => e
 
-		      $logger.log "behaviour", 
-			    "FAIL;Failed drag_to_object with points \"#{points.to_s}\", duration \"#{duration.to_s}\", mouse_details \"#{mouse_details.to_s}\".;#{identity};gesture_points;"
-		      Kernel::raise e        
+          $logger.log "behaviour", 
+          "FAIL;Failed drag_to_object with points \"#{points.to_s}\", duration \"#{duration.to_s}\", mouse_details \"#{mouse_details.to_s}\".;#{identity};gesture_points;"
+          Kernel::raise e        
 
-		    end      
+        end      
 
-		    $logger.log "behaviour", 
-		      "PASS;Operation drag_to_object executed successfully with points \"#{points.to_s}\", duration \"#{duration.to_s}\", mouse_details \"#{mouse_details.to_s}\".;#{identity};gesture_points;"
+        $logger.log "behaviour", 
+          "PASS;Operation drag_to_object executed successfully with points \"#{points.to_s}\", duration \"#{duration.to_s}\", mouse_details \"#{mouse_details.to_s}\".;#{identity};gesture_points;"
 
-		    self
-	    end
+        self
+      end
 
-	    # == description
+      # == description
       # Drag the object for the given distance.      
       # By default a drag is a slow gesture.
       #
@@ -601,30 +603,30 @@ module MobyBehaviour
       # == exceptions
       # ArgumentError
       #  description: One of the arguments is not valid  
-	    def drag(direction, distance, button = :Left, optional_params = {})
+      def drag(direction, distance, button = :Left, optional_params = {})
 
-		  begin
+      begin
             use_tap_screen = optional_params[:use_tap_screen].nil? ? $parameters[ @sut.id][ :use_tap_screen, 'false'] :
               optional_params[:use_tap_screen].to_s
             optional_params[:useTapScreen] = use_tap_screen
 
-		    speed = calculate_speed( distance, @sut.parameter[ :gesture_drag_speed ] )
+        speed = calculate_speed( distance, @sut.parameter[ :gesture_drag_speed ] )
             params = {:gesture_type => :MouseGesture, :direction => direction, :speed => speed, :distance => distance, :isDrag => true, :button => button}
             params.merge!(optional_params)
-            do_gesture(params)		
-		    do_sleep( speed )
+            do_gesture(params)    
+        do_sleep( speed )
 
-		  rescue Exception => e      
-		    
-		    $logger.log "behaviour" , "FAIL;Failed drag with direction \"#{direction}\", distance \"#{distance}\", button \"#{button.to_s}\".;#{identity};drag;"
-		    Kernel::raise e        
+      rescue Exception => e      
+        
+        $logger.log "behaviour" , "FAIL;Failed drag with direction \"#{direction}\", distance \"#{distance}\", button \"#{button.to_s}\".;#{identity};drag;"
+        Kernel::raise e        
 
-		  end      
+      end      
 
-		  $logger.log "behaviour" , "PASS;Operation drag executed successfully with direction \"#{direction}\", distance \"#{distance}\", button \"#{button.to_s}\".;#{identity};drag;"
+      $logger.log "behaviour" , "PASS;Operation drag executed successfully with direction \"#{direction}\", distance \"#{distance}\", button \"#{button.to_s}\".;#{identity};drag;"
 
-		  self
-	    end
+      self
+      end
       
       # == description
       # Drag the object to the given coordinates.
@@ -661,7 +663,7 @@ module MobyBehaviour
       # == exceptions
       # ArgumentError
       #  description: One of the arguments is not valid  
-	    def drag_to( x, y, button = :Left, optional_params= {} )
+      def drag_to( x, y, button = :Left, optional_params= {} )
 
         begin
           optional_params.merge!({ :isDrag => true , :button=>button})
@@ -710,40 +712,40 @@ module MobyBehaviour
       # == exceptions
       # ArgumentError
       #   description: One of the arguments is not valid   
-	    def drag_to_object(target_object, button = :Left, optional_params = {})       
+      def drag_to_object(target_object, button = :Left, optional_params = {})       
 
-		    begin
+        begin
 
           use_tap_screen = optional_params[:use_tap_screen].nil? ? $parameters[ @sut.id][ :use_tap_screen, 'false'] :
           optional_params[:use_tap_screen].to_s
           optional_params[:useTapScreen] = use_tap_screen
 
-		      distance = distance_to_point(target_object.object_center_x, target_object.object_center_y)
-		      #no drag needed, maybe even attempting to drag to it self
-		      return if distance == 0
+          distance = distance_to_point(target_object.object_center_x, target_object.object_center_y)
+          #no drag needed, maybe even attempting to drag to it self
+          return if distance == 0
 
-		      speed = calculate_speed(distance, @sut.parameter[:gesture_drag_speed])
+          speed = calculate_speed(distance, @sut.parameter[:gesture_drag_speed])
           params = {:gesture_type => :MouseGestureTo, :speed => speed, :isDrag => true, :button => button}
           params[:targetId] = target_object.id
           params[:targetType] = target_object.attribute('objectType')
           params.merge!(optional_params)
           do_gesture(params)
-		      do_sleep(speed)
+          do_sleep(speed)
 
-		    rescue Exception => e      
+        rescue Exception => e      
 
-		      $logger.log "behaviour" , "FAIL;Failed drag_to_object with button \"#{button.to_s}\".;#{identity};drag;"
-		      Kernel::raise e        
+          $logger.log "behaviour" , "FAIL;Failed drag_to_object with button \"#{button.to_s}\".;#{identity};drag;"
+          Kernel::raise e        
 
-		    end      
+        end      
 
-		    $logger.log "behaviour" , "PASS;Operation drag_to_object executed successfully with button \"#{button.to_s}\".;#{identity};drag;"
+        $logger.log "behaviour" , "PASS;Operation drag_to_object executed successfully with button \"#{button.to_s}\".;#{identity};drag;"
 
-		    self
+        self
 
-	    end
+      end
       
-	    # == description
+      # == description
       # Perform a pointer move starting at the object
       #
       # == arguments
@@ -781,154 +783,154 @@ module MobyBehaviour
       # == exceptions
       # ArgumentError
       #  description: One of the arguments is not valid    
-	    def move(direction, distance, button = :Left, optional_params = {})
+      def move(direction, distance, button = :Left, optional_params = {})
 
-		    begin
+        begin
 
           use_tap_screen = optional_params[:use_tap_screen].nil? ? $parameters[ @sut.id][ :use_tap_screen, 'false'] :
           optional_params[:use_tap_screen].to_s
           optional_params[:useTapScreen] = use_tap_screen
 
-		      speed = calculate_speed( distance, @sut.parameter[ :gesture_drag_speed ] )
+          speed = calculate_speed( distance, @sut.parameter[ :gesture_drag_speed ] )
           params = {:gesture_type => :MouseGesture, :direction => direction, :speed => speed, :distance => distance, :isDrag => false, :button => button, :isMove => true}
           params.merge!(optional_params)
           do_gesture(params)
-		      do_sleep( speed )
+          do_sleep( speed )
 
-		    rescue Exception => e      
+        rescue Exception => e      
 
-		      $logger.log "behaviour" , "FAIL;Failed move with direction \"#{direction}\", distance \"#{distance}\",.;#{identity};move;"
-		      Kernel::raise e        
+          $logger.log "behaviour" , "FAIL;Failed move with direction \"#{direction}\", distance \"#{distance}\",.;#{identity};move;"
+          Kernel::raise e        
 
-		    end      
+        end      
 
-		    $logger.log "behaviour" , "PASS;Operation move executed successfully with direction \"#{direction}\", distance \"#{distance}\",.;#{identity};move;"
+        $logger.log "behaviour" , "PASS;Operation move executed successfully with direction \"#{direction}\", distance \"#{distance}\",.;#{identity};move;"
 
-		    self
+        self
 
-	    end
+      end
        
 
       # == nodoc
-	    # utility function for getting the x coordinate of the center of the object, should this be private method?
-	    def object_center_x
-  		  center_x
-	    end
+      # utility function for getting the x coordinate of the center of the object, should this be private method?
+      def object_center_x
+        center_x
+      end
 
       # == nodoc
-	    # utility function for getting the y coordinate of the center of the object, should this be private method?
-	    def object_center_y
-  		  center_y
-	    end  
+      # utility function for getting the y coordinate of the center of the object, should this be private method?
+      def object_center_y
+        center_y
+      end  
 
     private
 
-	    # Performs the actual gesture operation. 
-	    # Verifies that the parameters are correct and send the command
-	    # to the sut. 
-	    # gesture_type: :MouseGesture, :MouseGestureTo, :MouseGestureToCoordinates
-	    # params = {:direction => :Up, duration => 2, :distance =>100, :isDrag =>false, :isMove =>false }
-	    def do_gesture(params)
-		    validate_gesture_params!(params)
+      # Performs the actual gesture operation. 
+      # Verifies that the parameters are correct and send the command
+      # to the sut. 
+      # gesture_type: :MouseGesture, :MouseGestureTo, :MouseGestureToCoordinates
+      # params = {:direction => :Up, duration => 2, :distance =>100, :isDrag =>false, :isMove =>false }
+      def do_gesture(params)
+        validate_gesture_params!(params)
 
-		    if attribute('objectType') == 'Embedded' or attribute('objectType') == 'Web'
-		      params['obj_x'] = center_x
-		      params['obj_y'] = center_y
-		      params['useCoordinates'] = 'true'
-		    end
+        if attribute('objectType') == 'Embedded' or attribute('objectType') == 'Web'
+          params['obj_x'] = center_x
+          params['obj_y'] = center_y
+          params['useCoordinates'] = 'true'
+        end
 
-		    command = command_params #in qt_behaviour           
-		    command.command_name(params[:gesture_type].to_s)
-		    command.command_params( params )
-		    @sut.execute_command( command )
-	    end
+        command = command_params #in qt_behaviour           
+        command.command_name(params[:gesture_type].to_s)
+        command.command_params( params )
+        @sut.execute_command( command )
+      end
 
-	    def validate_gesture_params!(params)
-		    #direction		
-		    if params[:gesture_type] == :MouseGesture or params[:gesture_type] == :MouseGestureFromCoordinates
-		      if params[:direction].kind_of?(Integer)
-			    raise ArgumentError.new( "Invalid direction." ) unless 0 <= params[:direction].to_i and params[:direction].to_i <= 360 
-		      else
-			    raise ArgumentError.new( "Invalid direction." ) unless @@_valid_directions.include?(params[:direction])  
-			    params[:direction] = @@_direction_map[params[:direction]]
-		      end
-		      #distance
-		      params[:distance] = params[:distance].to_i unless params[:distance].kind_of?(Integer)
-		      raise ArgumentError.new( "Distance must be an integer and greater than zero." ) unless  params[:distance] > 0
-		    elsif params[:gesture_type] == :MouseGestureToCoordinates or params[:gesture_type] == :MouseGestureFromCoordinates
-		      raise ArgumentError.new("X and Y must be integers.") unless params[:x].kind_of?(Integer) and params[:y].kind_of?(Integer)
-		    elsif params[:gesture_type] == :MouseGestureTo
-		      raise ArgumentError.new("targetId and targetType must be defined.") unless params[:targetId] and params[:targetType]
-		    end			  
+      def validate_gesture_params!(params)
+        #direction    
+        if params[:gesture_type] == :MouseGesture or params[:gesture_type] == :MouseGestureFromCoordinates
+          if params[:direction].kind_of?(Integer)
+          raise ArgumentError.new( "Invalid direction." ) unless 0 <= params[:direction].to_i and params[:direction].to_i <= 360 
+          else
+          raise ArgumentError.new( "Invalid direction." ) unless @@_valid_directions.include?(params[:direction])  
+          params[:direction] = @@_direction_map[params[:direction]]
+          end
+          #distance
+          params[:distance] = params[:distance].to_i unless params[:distance].kind_of?(Integer)
+          raise ArgumentError.new( "Distance must be an integer and greater than zero." ) unless  params[:distance] > 0
+        elsif params[:gesture_type] == :MouseGestureToCoordinates or params[:gesture_type] == :MouseGestureFromCoordinates
+          raise ArgumentError.new("X and Y must be integers.") unless params[:x].kind_of?(Integer) and params[:y].kind_of?(Integer)
+        elsif params[:gesture_type] == :MouseGestureTo
+          raise ArgumentError.new("targetId and targetType must be defined.") unless params[:targetId] and params[:targetType]
+        end        
 
-		    #duration/speed 
-		    params[:speed] = params[:speed].to_f unless params[:speed].kind_of?(Numeric)
-		    raise ArgumentError.new( "Duration must be a number and greated than zero, was:" + params[:speed].to_s) unless params[:speed] > 0
-		    duration_secs = params[:speed].to_f
-		    duration_secs = duration_secs*1000
-		    params[:speed] = duration_secs.to_i
+        #duration/speed 
+        params[:speed] = params[:speed].to_f unless params[:speed].kind_of?(Numeric)
+        raise ArgumentError.new( "Duration must be a number and greated than zero, was:" + params[:speed].to_s) unless params[:speed] > 0
+        duration_secs = params[:speed].to_f
+        duration_secs = duration_secs*1000
+        params[:speed] = duration_secs.to_i
 
-		    #mouseMove true always
-		    params[:mouseMove] = true
+        #mouseMove true always
+        params[:mouseMove] = true
 
-		    params[:button] = :Left unless params[:button]
-		    raise ArgumentError.new( "Invalid button." ) unless @@_valid_buttons.include?(params[:button])
-		    params[:button] = @@_buttons_map[params[:button]]
+        params[:button] = :Left unless params[:button]
+        raise ArgumentError.new( "Invalid button." ) unless @@_valid_buttons.include?(params[:button])
+        params[:button] = @@_buttons_map[params[:button]]
 
-		    if params[:isMove] == true
-		      params[:press] = 'false'
-		      params[:release] = 'false'
-		    end
+        if params[:isMove] == true
+          params[:press] = 'false'
+          params[:release] = 'false'
+        end
 
-	    end
+      end
 
-	    def do_sleep(time)
+      def do_sleep(time)
 
-		    if $parameters[ @sut.id ][ :sleep_disabled, nil ] != true
+        if $parameters[ @sut.id ][ :sleep_disabled, nil ] != true
 
-		      time = time.to_f * 1.3
+          time = time.to_f * 1.3
 
-		      #for flicks the duration of the gesture is short but animation (scroll etc..) may not
-		      #so wait at least one second
-		      time = 1 if time < 1
+          #for flicks the duration of the gesture is short but animation (scroll etc..) may not
+          #so wait at least one second
+          time = 1 if time < 1
 
-		      sleep time
+          sleep time
 
-		    else
+        else
 
-		      # store the biggest value which will then be used in multitouch situations to sleep
-		      $parameters[ @sut.id ][ :skipped_sleep_time ] = time if time > $parameters[ @sut.id ][ :skipped_sleep_time, 0 ]
+          # store the biggest value which will then be used in multitouch situations to sleep
+          $parameters[ @sut.id ][ :skipped_sleep_time ] = time if time > $parameters[ @sut.id ][ :skipped_sleep_time, 0 ]
 
-		    end
+        end
 
-	    end
+      end
 
-	    def calculate_speed(distance, speed)
+      def calculate_speed(distance, speed)
 
-		    distance = distance.to_f
-		    speed = speed.to_f
-		    duration = distance/speed
-		    duration
+        distance = distance.to_f
+        speed = speed.to_f
+        duration = distance/speed
+        duration
 
-	    end
+      end
 
-	    def distance_to_point(x, y)
+      def distance_to_point(x, y)
 
-		    x = x.to_i
-		    y = y.to_i
-		    dist_x = x - center_x.to_i
-		    dist_y = y - center_y.to_i
+        x = x.to_i
+        y = y.to_i
+        dist_x = x - center_x.to_i
+        dist_y = y - center_y.to_i
 
-		    return 0 if dist_y == 0 and dist_x == 0     
-		    distance = Math.hypot( dist_x, dist_y )
-		    distance
+        return 0 if dist_y == 0 and dist_x == 0     
+        distance = Math.hypot( dist_x, dist_y )
+        distance
 
-	    end
+      end
 
-	    # enable hooking for performance measurement & debug logging
-	    TDriver::Hooking.hook_methods( self ) if defined?( TDriver::Hooking )
+      # enable hooking for performance measurement & debug logging
+      TDriver::Hooking.hook_methods( self ) if defined?( TDriver::Hooking )
 
-	  end
+    end
 
   end
 end
