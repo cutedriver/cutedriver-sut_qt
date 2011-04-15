@@ -84,25 +84,32 @@ module MobyBehaviour
       def flick( direction, button = :Left, optional_params = {} )
 
       begin
-            use_tap_screen = optional_params[:use_tap_screen].nil? ? $parameters[ @sut.id][ :use_tap_screen, 'false'] :
-              optional_params[:use_tap_screen].to_s
-            optional_params[:useTapScreen] = use_tap_screen
+        
+        if optional_params[:use_tap_screen].nil?
+          use_tap_screen = @sut_parameters[ :use_tap_screen, 'false']
+        else
+          use_tap_screen = optional_params[:use_tap_screen].to_s
+        end
+
+        optional_params[:useTapScreen] = use_tap_screen
             
-        speed = calculate_speed(@sut.parameter[:gesture_flick_distance], @sut.parameter[:gesture_flick_speed])
-        distance = @sut.parameter[:gesture_flick_distance].to_i
-            params = {:gesture_type => :MouseGesture, :direction => direction, :speed => speed, :distance => distance, :isDrag => false, :button => button, :useTapScreen => use_tap_screen}
-            params.merge!(optional_params)
+        speed = calculate_speed(@sut_parameters[:gesture_flick_distance], @sut_parameters[:gesture_flick_speed])
+        distance = @sut_parameters[:gesture_flick_distance].to_i
+
+        params = {:gesture_type => :MouseGesture, :direction => direction, :speed => speed, :distance => distance, :isDrag => false, :button => button, :useTapScreen => use_tap_screen}
+
+        params.merge!(optional_params)
 
         do_gesture(params)    
         do_sleep(speed)
         
       rescue Exception => e
 
-        $logger.log "behaviour" , "FAIL;Failed flick with direction \"#{direction}\", button \"#{button.to_s}\".;#{identity};flick;"
+        $logger.behaviour "FAIL;Failed flick with direction \"#{direction}\", button \"#{button.to_s}\".;#{identity};flick;"
         Kernel::raise e        
       end      
 
-      $logger.log "behaviour" , "PASS;Operation flick executed successfully with direction \"#{direction}\", button \"#{button.to_s}\".;#{identity};flick;"
+      $logger.behaviour "PASS;Operation flick executed successfully with direction \"#{direction}\", button \"#{button.to_s}\".;#{identity};flick;"
 
       self
       end
@@ -147,23 +154,39 @@ module MobyBehaviour
       def flick_to( x, y, button = :Left, optional_params = {})
 
       begin
-            use_tap_screen = optional_params[:use_tap_screen].nil? ? $parameters[ @sut.id][ :use_tap_screen, 'false'] :
-              optional_params[:use_tap_screen].to_s
-            optional_params[:useTapScreen] = use_tap_screen
+      
+        if optional_params[:use_tap_screen].nil?
+          use_tap_screen = @sut_parameters[:use_tap_screen, 'false']
+        else
+          use_tap_screen = optional_params[:use_tap_screen].to_s
+        end
+  
+        optional_params[:useTapScreen] = use_tap_screen
 
+        speed = calculate_speed( @sut_parameters[ :gesture_flick_distance ], @sut_parameters[ :gesture_flick_speed ] )
+
+        do_gesture(
+          {
+            :gesture_type => :MouseGestureToCoordinates, 
+            :x => x, 
+            :y => y, 
+            :speed => speed, 
+            :isDrag => false, 
+            :button => button, 
+            :useTapScreen => use_tap_screen
+          }
+        )
         
-
-        speed = calculate_speed( @sut.parameter[ :gesture_flick_distance ], @sut.parameter[ :gesture_flick_speed ] )
-        do_gesture({:gesture_type => :MouseGestureToCoordinates, :x => x, :y => y, :speed => speed, :isDrag => false, :button => button, :useTapScreen => use_tap_screen})    
         do_sleep(speed)
 
       rescue Exception => e
 
-        $logger.log "behaviour" , "FAIL;Failed flick_to with x \"#{x}\", y \"#{y}\", button \"#{button.to_s}\".;#{identity};drag;"
+        $logger.behaviour "FAIL;Failed flick_to with x \"#{x}\", y \"#{y}\", button \"#{button.to_s}\".;#{identity};drag;"
         Kernel::raise e        
+
       end      
 
-      $logger.log "behaviour" , "PASS;Operation flick_to executed successfully with x \"#{x}\", y \"#{y}\", button \"#{button.to_s}\".;#{identity};drag;"
+      $logger.behaviour "PASS;Operation flick_to executed successfully with x \"#{x}\", y \"#{y}\", button \"#{button.to_s}\".;#{identity};drag;"
 
       self
 
@@ -227,14 +250,16 @@ module MobyBehaviour
       def gesture( direction, speed, distance, optional_params = {:button => :Left, :isDrag => false}) 
 
       begin
-            # change the format for api consitency
-            use_tap_screen = optional_params[:use_tap_screen].nil? ? $parameters[ @sut.id][ :use_tap_screen, 'false'] :
-              optional_params[:use_tap_screen].to_s
-            optional_params[:useTapScreen] = use_tap_screen
-            optional_params['x_off'] = $parameters[ @sut.id ][:tap_x_offset , '0' ],
-            optional_params['y_off'] = $parameters[ @sut.id ][:tap_y_offset , '0' ]
 
+        if optional_params[:use_tap_screen].nil?
+          use_tap_screen = @sut_parameters[ :use_tap_screen, 'false']
+        else
+          use_tap_screen = optional_params[:use_tap_screen].to_s
+        end
 
+        optional_params[:useTapScreen] = use_tap_screen
+        optional_params['x_off'] = @sut_parameters[:tap_x_offset , '0' ],
+        optional_params['y_off'] = @sut_parameters[:tap_y_offset , '0' ]
 
         #do_gesture(direction, speed, distance, isDrag, button)
         params = {
@@ -296,9 +321,13 @@ module MobyBehaviour
       def gesture_to(x, y, speed, optional_params = {:button => :Left, :isDrag => false})
 
         begin      
-          # change the format for api consitency
-          use_tap_screen = optional_params[:use_tap_screen].nil? ? $parameters[ @sut.id][ :use_tap_screen, 'false'] :
-            optional_params[:use_tap_screen].to_s
+
+          if optional_params[:use_tap_screen].nil?
+            use_tap_screen = @sut_parameters[ :use_tap_screen, 'false']
+          else
+            use_tap_screen = optional_params[:use_tap_screen].to_s
+          end
+
           optional_params[:useTapScreen] = use_tap_screen
 
           params = {:gesture_type => :MouseGestureToCoordinates, :speed => speed}
@@ -323,11 +352,11 @@ module MobyBehaviour
 
         rescue Exception => e
 
-          $logger.log "behaviour" , "FAIL;Failed gesture_to with x \"#{x}\", y \"#{y}\", speed \"#{speed.to_s}\", button \".;#{identity};gesture;"
+          $logger.behaviour "FAIL;Failed gesture_to with x \"#{x}\", y \"#{y}\", speed \"#{speed.to_s}\", button \".;#{identity};gesture;"
           Kernel::raise e        
         end
 
-        $logger.log "behaviour" , "PASS;Operation gesture_to executed successfully with x \"#{x}\", y \"#{y}\", speed \"#{speed.to_s}\".;#{identity};gesture;"
+        $logger.behaviour "PASS;Operation gesture_to executed successfully with x \"#{x}\", y \"#{y}\", speed \"#{speed.to_s}\".;#{identity};gesture;"
         self
       end
 
@@ -380,25 +409,26 @@ module MobyBehaviour
       #  description: One of the arguments is not valid, or the initial point is outside the target object.
       #
       def gesture_from(x, y, speed, distance, direction, optional_params = {:button => :Left, :isDrag => false})
+
         begin
+
           raise ArgumentError.new( "Coordinate x:#{x} x_abs:#{x} outside object." ) unless ( x <= attribute( 'width' ).to_i and x >= 0 )
           raise ArgumentError.new( "Coordinate y:#{y} y_abs:#{y} outside object." ) unless ( y <= attribute( 'height' ).to_i and y >= 0 )
           
           x_absolute = attribute('x_absolute').to_i + x.to_i 
           y_absolute = attribute('y_absolute').to_i + y.to_i 
 
-              params = {:gesture_type => :MouseGestureFromCoordinates, :x => x_absolute, :y => y_absolute, :speed => speed, :distance => distance, :direction => direction}
+          params = {:gesture_type => :MouseGestureFromCoordinates, :x => x_absolute, :y => y_absolute, :speed => speed, :distance => distance, :direction => direction}
 
-              params.merge!(optional_params)
+          params.merge!(optional_params)
           do_gesture(params)
           do_sleep(speed) 
 
-
         rescue Exception => e      
-          $logger.log "behaviour" , "FAIL;Failed gesture_from with x \"#{x}\", y \"#{y}\", speed \"#{speed.to_s}\", distance \"#{distance.to_s}\", button \".;#{identity};gesture;"
+          $logger.behaviour "FAIL;Failed gesture_from with x \"#{x}\", y \"#{y}\", speed \"#{speed.to_s}\", distance \"#{distance.to_s}\", button \".;#{identity};gesture;"
           Kernel::raise e        
         end
-        $logger.log "behaviour" , "PASS;Operation gesture_from executed successfully with x \"#{x}\", y \"#{y}\", speed \"#{speed.to_s}\", distance \"#{distance.to_s}\".;#{identity};gesture;"
+        $logger.behaviour "PASS;Operation gesture_from executed successfully with x \"#{x}\", y \"#{y}\", speed \"#{speed.to_s}\", distance \"#{distance.to_s}\".;#{identity};gesture;"
         self
       end
 
@@ -450,12 +480,13 @@ module MobyBehaviour
 
       begin
 
-        # change the format for api consitency
-        use_tap_screen = optional_params[:use_tap_screen].nil? ? $parameters[ @sut.id][ :use_tap_screen, 'false'] :
-          optional_params[:use_tap_screen].to_s
+        if optional_params[:use_tap_screen].nil?
+          use_tap_screen = @sut_parameters[ :use_tap_screen, 'false']
+        else
+          use_tap_screen = optional_params[:use_tap_screen].to_s
+        end
+
         optional_params[:useTapScreen] = use_tap_screen
-
-
 
         params = {:gesture_type => :MouseGestureTo, :speed => duration}
         params[:targetId] = target_object.id
@@ -466,12 +497,12 @@ module MobyBehaviour
 
       rescue Exception => e      
 
-        $logger.log "behaviour" , "FAIL;Failed gesture_to_object with button.;#{identity};drag;"
+        $logger.behaviour "FAIL;Failed gesture_to_object with button.;#{identity};drag;"
         Kernel::raise e        
 
       end      
 
-      $logger.log "behaviour" , "PASS;Operation gesture_to_object executed successfully with button.;#{identity};drag;"
+      $logger.behaviour "PASS;Operation gesture_to_object executed successfully with button.;#{identity};drag;"
 
       self
 
@@ -515,8 +546,12 @@ module MobyBehaviour
 
         begin
 
-          use_tap_screen = optional_params[:use_tap_screen].nil? ? $parameters[ @sut.id][ :use_tap_screen, 'false'] :
-          optional_params[:use_tap_screen].to_s
+          if optional_params[:use_tap_screen].nil?
+            use_tap_screen = @sut_parameters[:use_tap_screen, 'false']
+          else
+            use_tap_screen = optional_params[:use_tap_screen].to_s
+          end
+
           optional_params[:useTapScreen] = use_tap_screen
 
           mouse_details[:press] = true  unless mouse_details.has_value?(:press)
@@ -606,24 +641,30 @@ module MobyBehaviour
       def drag(direction, distance, button = :Left, optional_params = {})
 
       begin
-            use_tap_screen = optional_params[:use_tap_screen].nil? ? $parameters[ @sut.id][ :use_tap_screen, 'false'] :
-              optional_params[:use_tap_screen].to_s
-            optional_params[:useTapScreen] = use_tap_screen
 
-        speed = calculate_speed( distance, @sut.parameter[ :gesture_drag_speed ] )
-            params = {:gesture_type => :MouseGesture, :direction => direction, :speed => speed, :distance => distance, :isDrag => true, :button => button}
-            params.merge!(optional_params)
-            do_gesture(params)    
+        if optional_params[:use_tap_screen].nil?
+          use_tap_screen = @sut_parameters[:use_tap_screen, 'false']
+        else
+          use_tap_screen = optional_params[:use_tap_screen].to_s
+        end
+
+        optional_params[:useTapScreen] = use_tap_screen
+
+        speed = calculate_speed( distance, @sut_parameters[ :gesture_drag_speed ] )
+        
+        params = {:gesture_type => :MouseGesture, :direction => direction, :speed => speed, :distance => distance, :isDrag => true, :button => button}
+        params.merge!(optional_params)
+        do_gesture(params)    
         do_sleep( speed )
 
       rescue Exception => e      
         
-        $logger.log "behaviour" , "FAIL;Failed drag with direction \"#{direction}\", distance \"#{distance}\", button \"#{button.to_s}\".;#{identity};drag;"
+        $logger.behaviour "FAIL;Failed drag with direction \"#{direction}\", distance \"#{distance}\", button \"#{button.to_s}\".;#{identity};drag;"
         Kernel::raise e        
 
       end      
 
-      $logger.log "behaviour" , "PASS;Operation drag executed successfully with direction \"#{direction}\", distance \"#{distance}\", button \"#{button.to_s}\".;#{identity};drag;"
+      $logger.behaviour "PASS;Operation drag executed successfully with direction \"#{direction}\", distance \"#{distance}\", button \"#{button.to_s}\".;#{identity};drag;"
 
       self
       end
@@ -666,17 +707,17 @@ module MobyBehaviour
       def drag_to( x, y, button = :Left, optional_params= {} )
 
         begin
-          optional_params.merge!({ :isDrag => true , :button=>button})
+          optional_params.merge!({ :isDrag => true, :button=>button})
           distance = distance_to_point(x,y)
-          speed = calculate_speed(distance, @sut.parameter[:gesture_drag_speed])
+          speed = calculate_speed(distance, @sut_parameters[:gesture_drag_speed])
           gesture_to(x, y, speed, optional_params )
 
         rescue Exception => e      
-          $logger.log "behaviour" , "FAIL;Failed drag_to with x \"#{x}\", y \"#{y}\", button \"#{button.to_s}\".;#{identity};drag;"
+          $logger.behaviour "FAIL;Failed drag_to with x \"#{x}\", y \"#{y}\", button \"#{button.to_s}\".;#{identity};drag;"
           Kernel::raise e        
         end      
 
-        $logger.log "behaviour" , "PASS;Operation drag_to executed successfully with x \"#{x}\", y \"#{y}\", button \"#{button.to_s}\".;#{identity};drag;"
+        $logger.behaviour "PASS;Operation drag_to executed successfully with x \"#{x}\", y \"#{y}\", button \"#{button.to_s}\".;#{identity};drag;"
 
         self
 
@@ -716,15 +757,19 @@ module MobyBehaviour
 
         begin
 
-          use_tap_screen = optional_params[:use_tap_screen].nil? ? $parameters[ @sut.id][ :use_tap_screen, 'false'] :
-          optional_params[:use_tap_screen].to_s
+          if optional_params[:use_tap_screen].nil? 
+            use_tap_screen = @sut_parameters[:use_tap_screen, 'false']
+          else
+            use_tap_screen = optional_params[:use_tap_screen].to_s
+          end
+
           optional_params[:useTapScreen] = use_tap_screen
 
           distance = distance_to_point(target_object.object_center_x, target_object.object_center_y)
           #no drag needed, maybe even attempting to drag to it self
           return if distance == 0
 
-          speed = calculate_speed(distance, @sut.parameter[:gesture_drag_speed])
+          speed = calculate_speed(distance, @sut_parameters[:gesture_drag_speed])
           params = {:gesture_type => :MouseGestureTo, :speed => speed, :isDrag => true, :button => button}
           params[:targetId] = target_object.id
           params[:targetType] = target_object.attribute('objectType')
@@ -734,12 +779,12 @@ module MobyBehaviour
 
         rescue Exception => e      
 
-          $logger.log "behaviour" , "FAIL;Failed drag_to_object with button \"#{button.to_s}\".;#{identity};drag;"
+          $logger.behaviour "FAIL;Failed drag_to_object with button \"#{button.to_s}\".;#{identity};drag;"
           Kernel::raise e        
 
         end      
 
-        $logger.log "behaviour" , "PASS;Operation drag_to_object executed successfully with button \"#{button.to_s}\".;#{identity};drag;"
+        $logger.behaviour "PASS;Operation drag_to_object executed successfully with button \"#{button.to_s}\".;#{identity};drag;"
 
         self
 
@@ -787,11 +832,16 @@ module MobyBehaviour
 
         begin
 
-          use_tap_screen = optional_params[:use_tap_screen].nil? ? $parameters[ @sut.id][ :use_tap_screen, 'false'] :
+          if optional_params[:use_tap_screen].nil?
+            use_tap_screen = @sut_parameters[:use_tap_screen, 'false']
+          else
+            use_tap_screen = optional_params[:use_tap_screen].to_s
+          end
+
           optional_params[:use_tap_screen].to_s
           optional_params[:useTapScreen] = use_tap_screen
 
-          speed = calculate_speed( distance, @sut.parameter[ :gesture_drag_speed ] )
+          speed = calculate_speed( distance, @sut_parameters[ :gesture_drag_speed ] )
           params = {:gesture_type => :MouseGesture, :direction => direction, :speed => speed, :distance => distance, :isDrag => false, :button => button, :isMove => true}
           params.merge!(optional_params)
           do_gesture(params)
@@ -799,12 +849,12 @@ module MobyBehaviour
 
         rescue Exception => e      
 
-          $logger.log "behaviour" , "FAIL;Failed move with direction \"#{direction}\", distance \"#{distance}\",.;#{identity};move;"
+          $logger.behaviour "FAIL;Failed move with direction \"#{direction}\", distance \"#{distance}\",.;#{identity};move;"
           Kernel::raise e        
 
         end      
 
-        $logger.log "behaviour" , "PASS;Operation move executed successfully with direction \"#{direction}\", distance \"#{distance}\",.;#{identity};move;"
+        $logger.behaviour "PASS;Operation move executed successfully with direction \"#{direction}\", distance \"#{distance}\",.;#{identity};move;"
 
         self
 
@@ -831,6 +881,7 @@ module MobyBehaviour
       # gesture_type: :MouseGesture, :MouseGestureTo, :MouseGestureToCoordinates
       # params = {:direction => :Up, duration => 2, :distance =>100, :isDrag =>false, :isMove =>false }
       def do_gesture(params)
+
         validate_gesture_params!(params)
 
         if attribute('objectType') == 'Embedded' or attribute('objectType') == 'Web'
@@ -886,7 +937,7 @@ module MobyBehaviour
 
       def do_sleep(time)
 
-        if $parameters[ @sut.id ][ :sleep_disabled, nil ] != true
+        if @sut_parameters[ :sleep_disabled, nil ] != true
 
           time = time.to_f * 1.3
 
@@ -899,7 +950,7 @@ module MobyBehaviour
         else
 
           # store the biggest value which will then be used in multitouch situations to sleep
-          $parameters[ @sut.id ][ :skipped_sleep_time ] = time if time > $parameters[ @sut.id ][ :skipped_sleep_time, 0 ]
+          @sut_parameters[ :skipped_sleep_time ] = time if time > @sut_parameters[ :skipped_sleep_time, 0 ]
 
         end
 
