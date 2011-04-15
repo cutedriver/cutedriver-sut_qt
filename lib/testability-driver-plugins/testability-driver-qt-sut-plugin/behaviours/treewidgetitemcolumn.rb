@@ -81,14 +81,18 @@ module MobyBehaviour
 		      raise ArgumentError.new( "new_state must be an integer. Check qt docs for allowed values (Qt::CheckState." ) unless new_state.kind_of?(Integer) 
 		      
 		      command = MobyCommand::WidgetCommand.new
-		      command.object_id(self.attribute('parentWidget'))
+
+		      command.object_id(attribute('parentWidget'))
+
 		      command.application_id(get_application_id)    
 		      command.object_type(:Standard)                          
-		      command.command_name('CheckState')    
-		      command.set_event_type($parameters[ @sut.id ][ :event_type, "0" ])
-		      params = {:state => new_state, :column => self.attribute('column'), :item => self.attribute('parentItem')}      
+		      command.command_name('CheckState')
+    
+		      command.set_event_type( @sut_parameters[ :event_type, "0" ] )
 
-              command.set_event_type($parameters[ @sut.id ][ :event_type, "0" ])
+		      params = {:state => new_state, :column => attribute('column'), :item => attribute('parentItem')}      
+
+          command.set_event_type( @sut_parameters[ :event_type, "0" ] )
 
 		      command.command_params(params)
 		      @sut.execute_command(command)

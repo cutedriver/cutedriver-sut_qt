@@ -60,18 +60,18 @@ module MobyBehaviour
 
 		      button = :Left
 		      command = MobyCommand::WidgetCommand.new
-		      command.object_id(self.attribute('viewPort'))
+		      command.object_id(attribute('viewPort'))
 		      command.application_id(get_application_id)    
 		      command.object_type(:Standard)                          
 		      command.command_name('Tap')    
-		      command.set_event_type($parameters[ @sut.id ][ :event_type, "0" ])
+		      command.set_event_type(@sut_parameters[ :event_type, "0" ])
 
 		      mouse_move = @sut.parameter[:in_tap_move_pointer]
 		      mouse_move = 'false' unless mouse_move
 
 		      params = {'x'=>center_x, 'y' => center_y, 'count' => 1, 'button' => @@_buttons_map[button], 'mouseMove'=>mouse_move, 'useCoordinates' => 'true'}      
 
-              command.set_event_type($parameters[ @sut.id ][ :event_type, "0" ])
+              command.set_event_type(@sut_parameters[ :event_type, "0" ])
 
 		      command.command_params(params)
 		      @sut.execute_command(command)

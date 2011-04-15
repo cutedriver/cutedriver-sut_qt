@@ -332,7 +332,7 @@ module MobyBehaviour
 
           params = {:gesture_type => :MouseGestureToCoordinates, :speed => speed}
           if attribute('objectType') == 'Web'
-            elemens_xml_data, unused_rule = @test_object_adapter.get_objects( @sut.xml_data, { :id => self.attribute('webFrame')}, true )
+            elemens_xml_data, unused_rule = @test_object_adapter.get_objects( @sut.xml_data, { :id => attribute('webFrame')}, true )
             object_xml_data = elemens_xml_data[0]
             object_attributes = @test_object_adapter.test_object_attributes(object_xml_data, ['x_absolute', 'y_absolute'])
             frame_x_absolute = object_attributes['x_absolute'].to_i
@@ -463,7 +463,7 @@ module MobyBehaviour
       def gesture_to_object(target_object, duration, optional_params = {:button => :Left, :isDrag => false})    
 
       if attribute('objectType') == 'Web'
-        elemens_xml_data, unused_rule = @test_object_adapter.get_objects( @sut.xml_data, { :id => self.attribute('webFrame')}, true )
+        elemens_xml_data, unused_rule = @test_object_adapter.get_objects( @sut.xml_data, { :id => attribute('webFrame')}, true )
         object_xml_data = elemens_xml_data[0]
         object_attributes = @test_object_adapter.test_object_attributes(object_xml_data, ['x', 'y'])
         frame_x = object_attributes['x'].to_i

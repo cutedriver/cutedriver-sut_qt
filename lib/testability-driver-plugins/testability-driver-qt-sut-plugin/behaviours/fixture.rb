@@ -89,22 +89,20 @@ module MobyBehaviour
 		  params = {:name => fixture_name, :command_name => fixture_method, :parameters => parameters_hash, :async => false}
 		  #for sut send the fixture command to qttasserver (appid nil)
 		  if self.class == MobyBase::SUT
-			params.merge!( {:application_id => nil, :object_id => self.id, :object_type => :Application} )
-			ret = self.execute_command( MobyCommand::Fixture.new( params ) )
+			params.merge!( {:application_id => nil, :object_id => @id, :object_type => :Application} )
+			ret = execute_command( MobyCommand::Fixture.new( params ) )
 		  else
-			params.merge!( {:application_id => get_application_id, :object_id => self.id, :object_type => self.attribute( 'objectType' ).intern} )
+			params.merge!( {:application_id => get_application_id, :object_id => @id, :object_type => attribute( 'objectType' ).intern} )
 			ret = @sut.execute_command( MobyCommand::Fixture.new( params ) )
 		  end				  
 		rescue Exception => e
 
-		  $logger.log "behaviour", 
-			"FAIL;Failed when calling fixture with name #{fixture_name} method #{fixture_method} parameters #{parameters_hash.inspect}.;#{id.to_s};sut;{};fixture;"
+		  $logger.behaviour "FAIL;Failed when calling fixture with name #{fixture_name} method #{fixture_method} parameters #{parameters_hash.inspect}.;#{id.to_s};sut;{};fixture;"
 
 		  Kernel::raise MobyBase::BehaviourError.new("Fixture", "Failed to execute fixture name #{fixture_name} method #{fixture_method}")
 		end
 
-		$logger.log "behaviour", 
-		  "PASS;The fixture command was executed successfully with name #{fixture_name} method #{fixture_method} parameters #{parameters_hash.inspect}.;#{id.to_s};sut;{};fixture;"
+		$logger.behaviour "PASS;The fixture command was executed successfully with name #{fixture_name} method #{fixture_method} parameters #{parameters_hash.inspect}.;#{id.to_s};sut;{};fixture;"
 
 		ret
 
@@ -154,22 +152,20 @@ module MobyBehaviour
 		  params = {:name => fixture_name, :command_name => fixture_method, :parameters => parameters_hash, :async => true}
 		  #for sut send the fixture command to qttasserver (appid nil)
 		  if self.class == MobyBase::SUT
-			params.merge!( {:application_id => nil, :object_id => self.id, :object_type => :Application} )
-			ret = self.execute_command( MobyCommand::Fixture.new( params ) )
+			params.merge!( {:application_id => nil, :object_id => @id, :object_type => :Application} )
+			ret = execute_command( MobyCommand::Fixture.new( params ) )
 		  else
-			params.merge!( {:application_id => get_application_id, :object_id => self.id, :object_type => self.attribute( 'objectType' ).intern} )
+			params.merge!( {:application_id => get_application_id, :object_id => @id, :object_type => attribute( 'objectType' ).intern} )
 			ret = @sut.execute_command( MobyCommand::Fixture.new( params ) )
 		  end
 		rescue Exception => e
 
-		  $logger.log "behaviour" , 
-			"FAIL;Failed when calling async_fixture with name #{fixture_name} method #{fixture_method} parameters #{parameters_hash.inspect}.;#{id.to_s};sut;{};fixture;"
+		  $logger.behaviour "FAIL;Failed when calling async_fixture with name #{fixture_name} method #{fixture_method} parameters #{parameters_hash.inspect}.;#{id.to_s};sut;{};fixture;"
 
 		  Kernel::raise MobyBase::BehaviourError.new("Fixture", "Failed to execute async_fixture name #{fixture_name} method #{fixture_method}")
 		end
 
-		$logger.log "behaviour", 
-		  "PASS;The fixture command was executed successfully with name #{fixture_name} method #{fixture_method} parameters #{parameters_hash.inspect}.;#{id.to_s};sut;{};fixture;"
+		$logger.behaviour "PASS;The fixture command was executed successfully with name #{fixture_name} method #{fixture_method} parameters #{parameters_hash.inspect}.;#{id.to_s};sut;{};fixture;"
 
 		ret
 
