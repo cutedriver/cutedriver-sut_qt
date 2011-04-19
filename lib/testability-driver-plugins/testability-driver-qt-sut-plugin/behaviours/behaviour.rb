@@ -66,7 +66,7 @@ module MobyBehaviour
           end
         end
 
-        command.set_event_type(@sut_parameters[ :event_type, "0" ])
+        command.set_event_type(sut_parameters[ :event_type, "0" ])
 
         #for components with object visible on screen but not actual widgets or graphicsitems
         if attribute( 'objectType' ) == 'Embedded'
@@ -86,7 +86,7 @@ module MobyBehaviour
       # == nodoc
       # should this method be private?
       def plugin_command( require_response = false, command = MobyCommand::WidgetCommand.new )
-        command.set_event_type(@sut_parameters[ :event_type, "0" ])
+        command.set_event_type(sut_parameters[ :event_type, "0" ])
         command.application_id( get_application_id )
         command.object_id( @id )
         command.object_type( attribute('objectType' ).intern)

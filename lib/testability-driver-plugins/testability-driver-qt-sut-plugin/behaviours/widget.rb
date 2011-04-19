@@ -68,9 +68,9 @@ module MobyBehaviour
           # Hide all future params in a hash
           use_tap_screen = false
           if move_params.kind_of? Hash
-            use_tap_screen = move_params[:use_tap_screen].nil? ? @sut_parameters[ :use_tap_screen, 'false'] : move_params[:use_tap_screen].to_s
+            use_tap_screen = move_params[:use_tap_screen].nil? ? sut_parameters[ :use_tap_screen, 'false'] : move_params[:use_tap_screen].to_s
           else
-            use_tap_screen = @sut_parameters[ :use_tap_screen, 'false']
+            use_tap_screen = sut_parameters[ :use_tap_screen, 'false']
           end
           command = command_params #in qt_behaviour
           command.command_name('MouseMove')
@@ -81,8 +81,8 @@ module MobyBehaviour
               'y' => center_y, 
               'useCoordinates' => 'true',
               'useTapScreen' => use_tap_screen,
-              'x_off' => @sut_parameters[:tap_x_offset , '0' ],
-              'y_off' => @sut_parameters[:tap_y_offset , '0' ]
+              'x_off' => sut_parameters[:tap_x_offset , '0' ],
+              'y_off' => sut_parameters[:tap_y_offset , '0' ]
             }
           else
             params = {'useTapScreen' => use_tap_screen.to_s}
@@ -177,11 +177,11 @@ module MobyBehaviour
             end
 
             tap_count = tap_params[:tap_count].nil? ? 1 : tap_params[:tap_count]
-            use_tap_screen = tap_params[:use_tap_screen].nil? ? @sut_parameters[ :use_tap_screen, 'false'] : tap_params[:use_tap_screen].to_s
+            use_tap_screen = tap_params[:use_tap_screen].nil? ? sut_parameters[ :use_tap_screen, 'false'] : tap_params[:use_tap_screen].to_s
           else
             tap_count = tap_params
 
-            use_tap_screen = @sut_parameters[ :use_tap_screen, 'false']
+            use_tap_screen = sut_parameters[ :use_tap_screen, 'false']
           end
 
           raise ArgumentError.new( "Invalid button." ) unless @@_valid_buttons.include?(button)
@@ -195,10 +195,10 @@ module MobyBehaviour
           params = {
             'count' => tap_count.to_s,
             'button' => @@_buttons_map[button],
-            'mouseMove' => @sut_parameters[ :in_tap_move_pointer, 'false' ],
+            'mouseMove' => sut_parameters[ :in_tap_move_pointer, 'false' ],
             'useTapScreen' => use_tap_screen,
-            'x_off' => @sut_parameters[:tap_x_offset , '0' ],
-            'y_off' => @sut_parameters[:tap_y_offset , '0' ]
+            'x_off' => sut_parameters[:tap_x_offset , '0' ],
+            'y_off' => sut_parameters[:tap_y_offset , '0' ]
           }
 
 
@@ -330,9 +330,9 @@ module MobyBehaviour
             command_name = tap_params[:command].nil? ? 'Tap' : tap_params[:command]
             behavior_name = tap_params[:behavior_name].nil? ? 'tap_object' : tap_params[:behavior_name]
 
-            use_tap_screen = tap_params[:use_tap_screen].nil? ? @sut_parameters[ :use_tap_screen, 'false'] : tap_params[:use_tap_screen].to_s
+            use_tap_screen = tap_params[:use_tap_screen].nil? ? sut_parameters[ :use_tap_screen, 'false'] : tap_params[:use_tap_screen].to_s
           else
-            use_tap_screen = @sut_parameters[ :use_tap_screen, 'false']
+            use_tap_screen = sut_parameters[ :use_tap_screen, 'false']
             command_name = 'Tap'
             behavior_name = 'tap_object'
           end
@@ -350,11 +350,11 @@ module MobyBehaviour
                                  'y' => ( attribute('y_absolute').to_i + y.to_i ).to_s,
                                  'count' => tap_count.to_s,
                                  'button' => @@_buttons_map[ button ],
-                                 'mouseMove' => @sut_parameters[ :in_tap_move_pointer, 'false' ],
+                                 'mouseMove' => sut_parameters[ :in_tap_move_pointer, 'false' ],
                                  'useCoordinates' => 'true',
                                  'useTapScreen' => use_tap_screen,
-                                 'x_off' => @sut_parameters[:tap_x_offset , '0' ],
-                                 'y_off' => @sut_parameters[:tap_y_offset , '0' ]
+                                 'x_off' => sut_parameters[:tap_x_offset , '0' ],
+                                 'y_off' => sut_parameters[:tap_y_offset , '0' ]
                                  
                                  )
 
@@ -587,7 +587,7 @@ module MobyBehaviour
       def tap_down( button = :Left, refresh = false, tap_params = {} )
 
         begin
-          use_tap_screen = tap_params[:use_tap_screen].nil? ? @sut_parameters[ :use_tap_screen, 'false'] : tap_params[:use_tap_screen].to_s
+          use_tap_screen = tap_params[:use_tap_screen].nil? ? sut_parameters[ :use_tap_screen, 'false'] : tap_params[:use_tap_screen].to_s
           tap_params[:useTapScreen] = use_tap_screen
 
           raise ArgumentError.new( "Invalid button." ) unless @@_valid_buttons.include?(button)
@@ -596,10 +596,10 @@ module MobyBehaviour
 
           params = {
             'button' => @@_buttons_map[button],
-            'mouseMove' => @sut_parameters[ :in_tap_move_pointer, 'false' ],
+            'mouseMove' => sut_parameters[ :in_tap_move_pointer, 'false' ],
             'useTapScreen' => use_tap_screen,
-            'x_off' => @sut_parameters[:tap_x_offset , '0' ],
-            'y_off' => @sut_parameters[:tap_y_offset , '0' ]
+            'x_off' => sut_parameters[:tap_x_offset , '0' ],
+            'y_off' => sut_parameters[:tap_y_offset , '0' ]
           }
 
           if attribute('objectType') == 'Web' or attribute('objectType') == 'Embedded'
@@ -659,7 +659,7 @@ module MobyBehaviour
       def tap_up( button = :Left, refresh = true, tap_params = {} )
 
         begin
-          use_tap_screen = tap_params[:use_tap_screen].nil? ? @sut_parameters[ :use_tap_screen, 'false'] : tap_params[:use_tap_screen].to_s
+          use_tap_screen = tap_params[:use_tap_screen].nil? ? sut_parameters[ :use_tap_screen, 'false'] : tap_params[:use_tap_screen].to_s
           tap_params[:useTapScreen] = use_tap_screen
 
           raise ArgumentError.new( "Invalid button." ) unless @@_valid_buttons.include?(button)
@@ -671,8 +671,8 @@ module MobyBehaviour
             params['x'] = center_x
             params['y'] = center_y
             params['useCoordinates'] = 'true'
-            params['x_off'] = @sut_parameters[:tap_x_offset , '0' ]
-            params['y_off'] = @sut_parameters[:tap_y_offset , '0' ]
+            params['x_off'] = sut_parameters[:tap_x_offset , '0' ]
+            params['y_off'] = sut_parameters[:tap_y_offset , '0' ]
 
           end
           params.merge!(tap_params)
@@ -720,8 +720,8 @@ module MobyBehaviour
                                  'count' => tap_count.to_s,
                                  'button' => @@_buttons_map[button],
                                  'mouseMove'=>'true',
-                                 'x_off' => @sut_parameters[:tap_x_offset , '0' ],
-                                 'y_off' => @sut_parameters[:tap_y_offset , '0' ]
+                                 'x_off' => sut_parameters[:tap_x_offset , '0' ],
+                                 'y_off' => sut_parameters[:tap_y_offset , '0' ]
                                  )
 
           @sut.execute_command(command)

@@ -91,11 +91,11 @@ module MobyBehaviour
           key.check_type [ Fixnum, Symbol, MobyCommand::KeySequence ], 'wrong argument type $1 for key (expected $2)'
 
 					# verify that keymap is defined for sut if symbol used. 
-					raise ArgumentError, "Symbol #{ key.inspect } cannot be used due to no keymap defined for #{ @sut.id } in TDriver configuration file." if key.kind_of?( Symbol ) && @sut_parameters.has_key?( :keymap ) == false
+					raise ArgumentError, "Symbol #{ key.inspect } cannot be used due to no keymap defined for #{ @sut.id } in TDriver configuration file." if key.kind_of?( Symbol ) && sut_parameters.has_key?( :keymap ) == false
 
 					if key.kind_of?( Symbol )
 
-					  scancode = TDriver::KeymapUtilities.fetch_keycode( key, @sut_parameters[ :keymap ] )
+					  scancode = TDriver::KeymapUtilities.fetch_keycode( key, sut_parameters[ :keymap ] )
 
             # convert hexadecimal (string) to fixnum
 					  scancode = scancode.hex if scancode.kind_of?( String )
@@ -112,9 +112,9 @@ module MobyBehaviour
 
 					  key.get_sequence.each do | key_event |
 					        
-					    #tempcode = @sut_parameters[ :keymap ][ key_event[ :value ], nil ]
+					    #tempcode = sut_parameters[ :keymap ][ key_event[ :value ], nil ]
 
-  					  tempcode = TDriver::KeymapUtilities.fetch_keycode( key_event[ :value ], @sut_parameters[ :keymap ] )
+  					  tempcode = TDriver::KeymapUtilities.fetch_keycode( key_event[ :value ], sut_parameters[ :keymap ] )
 
 					    tempcode = tempcode.hex if tempcode.kind_of?( String )
 						

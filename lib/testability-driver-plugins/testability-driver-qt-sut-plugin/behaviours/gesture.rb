@@ -86,15 +86,15 @@ module MobyBehaviour
       begin
         
         if optional_params[:use_tap_screen].nil?
-          use_tap_screen = @sut_parameters[ :use_tap_screen, 'false']
+          use_tap_screen = sut_parameters[ :use_tap_screen, 'false']
         else
           use_tap_screen = optional_params[:use_tap_screen].to_s
         end
 
         optional_params[:useTapScreen] = use_tap_screen
             
-        speed = calculate_speed(@sut_parameters[:gesture_flick_distance], @sut_parameters[:gesture_flick_speed])
-        distance = @sut_parameters[:gesture_flick_distance].to_i
+        speed = calculate_speed(sut_parameters[:gesture_flick_distance], sut_parameters[:gesture_flick_speed])
+        distance = sut_parameters[:gesture_flick_distance].to_i
 
         params = {:gesture_type => :MouseGesture, :direction => direction, :speed => speed, :distance => distance, :isDrag => false, :button => button, :useTapScreen => use_tap_screen}
 
@@ -156,14 +156,14 @@ module MobyBehaviour
       begin
       
         if optional_params[:use_tap_screen].nil?
-          use_tap_screen = @sut_parameters[:use_tap_screen, 'false']
+          use_tap_screen = sut_parameters[:use_tap_screen, 'false']
         else
           use_tap_screen = optional_params[:use_tap_screen].to_s
         end
   
         optional_params[:useTapScreen] = use_tap_screen
 
-        speed = calculate_speed( @sut_parameters[ :gesture_flick_distance ], @sut_parameters[ :gesture_flick_speed ] )
+        speed = calculate_speed( sut_parameters[ :gesture_flick_distance ], sut_parameters[ :gesture_flick_speed ] )
 
         do_gesture(
           {
@@ -252,14 +252,14 @@ module MobyBehaviour
       begin
 
         if optional_params[:use_tap_screen].nil?
-          use_tap_screen = @sut_parameters[ :use_tap_screen, 'false']
+          use_tap_screen = sut_parameters[ :use_tap_screen, 'false']
         else
           use_tap_screen = optional_params[:use_tap_screen].to_s
         end
 
         optional_params[:useTapScreen] = use_tap_screen
-        optional_params['x_off'] = @sut_parameters[:tap_x_offset , '0' ],
-        optional_params['y_off'] = @sut_parameters[:tap_y_offset , '0' ]
+        optional_params['x_off'] = sut_parameters[:tap_x_offset , '0' ],
+        optional_params['y_off'] = sut_parameters[:tap_y_offset , '0' ]
 
         #do_gesture(direction, speed, distance, isDrag, button)
         params = {
@@ -323,7 +323,7 @@ module MobyBehaviour
         begin      
 
           if optional_params[:use_tap_screen].nil?
-            use_tap_screen = @sut_parameters[ :use_tap_screen, 'false']
+            use_tap_screen = sut_parameters[ :use_tap_screen, 'false']
           else
             use_tap_screen = optional_params[:use_tap_screen].to_s
           end
@@ -481,7 +481,7 @@ module MobyBehaviour
       begin
 
         if optional_params[:use_tap_screen].nil?
-          use_tap_screen = @sut_parameters[ :use_tap_screen, 'false']
+          use_tap_screen = sut_parameters[ :use_tap_screen, 'false']
         else
           use_tap_screen = optional_params[:use_tap_screen].to_s
         end
@@ -547,7 +547,7 @@ module MobyBehaviour
         begin
 
           if optional_params[:use_tap_screen].nil?
-            use_tap_screen = @sut_parameters[:use_tap_screen, 'false']
+            use_tap_screen = sut_parameters[:use_tap_screen, 'false']
           else
             use_tap_screen = optional_params[:use_tap_screen].to_s
           end
@@ -643,14 +643,14 @@ module MobyBehaviour
       begin
 
         if optional_params[:use_tap_screen].nil?
-          use_tap_screen = @sut_parameters[:use_tap_screen, 'false']
+          use_tap_screen = sut_parameters[:use_tap_screen, 'false']
         else
           use_tap_screen = optional_params[:use_tap_screen].to_s
         end
 
         optional_params[:useTapScreen] = use_tap_screen
 
-        speed = calculate_speed( distance, @sut_parameters[ :gesture_drag_speed ] )
+        speed = calculate_speed( distance, sut_parameters[ :gesture_drag_speed ] )
         
         params = {:gesture_type => :MouseGesture, :direction => direction, :speed => speed, :distance => distance, :isDrag => true, :button => button}
         params.merge!(optional_params)
@@ -709,7 +709,7 @@ module MobyBehaviour
         begin
           optional_params.merge!({ :isDrag => true, :button=>button})
           distance = distance_to_point(x,y)
-          speed = calculate_speed(distance, @sut_parameters[:gesture_drag_speed])
+          speed = calculate_speed(distance, sut_parameters[:gesture_drag_speed])
           gesture_to(x, y, speed, optional_params )
 
         rescue Exception => e      
@@ -758,7 +758,7 @@ module MobyBehaviour
         begin
 
           if optional_params[:use_tap_screen].nil? 
-            use_tap_screen = @sut_parameters[:use_tap_screen, 'false']
+            use_tap_screen = sut_parameters[:use_tap_screen, 'false']
           else
             use_tap_screen = optional_params[:use_tap_screen].to_s
           end
@@ -769,7 +769,7 @@ module MobyBehaviour
           #no drag needed, maybe even attempting to drag to it self
           return if distance == 0
 
-          speed = calculate_speed(distance, @sut_parameters[:gesture_drag_speed])
+          speed = calculate_speed(distance, sut_parameters[:gesture_drag_speed])
           params = {:gesture_type => :MouseGestureTo, :speed => speed, :isDrag => true, :button => button}
           params[:targetId] = target_object.id
           params[:targetType] = target_object.attribute('objectType')
@@ -833,7 +833,7 @@ module MobyBehaviour
         begin
 
           if optional_params[:use_tap_screen].nil?
-            use_tap_screen = @sut_parameters[:use_tap_screen, 'false']
+            use_tap_screen = sut_parameters[:use_tap_screen, 'false']
           else
             use_tap_screen = optional_params[:use_tap_screen].to_s
           end
@@ -841,7 +841,7 @@ module MobyBehaviour
           optional_params[:use_tap_screen].to_s
           optional_params[:useTapScreen] = use_tap_screen
 
-          speed = calculate_speed( distance, @sut_parameters[ :gesture_drag_speed ] )
+          speed = calculate_speed( distance, sut_parameters[ :gesture_drag_speed ] )
           params = {:gesture_type => :MouseGesture, :direction => direction, :speed => speed, :distance => distance, :isDrag => false, :button => button, :isMove => true}
           params.merge!(optional_params)
           do_gesture(params)
@@ -937,7 +937,7 @@ module MobyBehaviour
 
       def do_sleep(time)
 
-        if @sut_parameters[ :sleep_disabled, nil ] != true
+        if sut_parameters[ :sleep_disabled, nil ] != true
 
           time = time.to_f * 1.3
 
@@ -950,7 +950,7 @@ module MobyBehaviour
         else
 
           # store the biggest value which will then be used in multitouch situations to sleep
-          @sut_parameters[ :skipped_sleep_time ] = time if time > @sut_parameters[ :skipped_sleep_time, 0 ]
+          sut_parameters[ :skipped_sleep_time ] = time if time > sut_parameters[ :skipped_sleep_time, 0 ]
 
         end
 

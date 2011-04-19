@@ -94,7 +94,7 @@ module MobyBehaviour
 		
 		    db_connection = MobyUtil::DBConnection.new(  db_type, host, database_file, username, password )
 
-		    table_name = @sut_parameters[ :localisation_server_database_tablename, "" ]
+		    table_name = sut_parameters[ :localisation_server_database_tablename, "" ]
                     
 		    begin
 			    tmp_path = $parameters[:tmp_folder] + "/locale_db_tmp"
