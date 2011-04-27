@@ -148,7 +148,7 @@ module MobyBehaviour
 	  private
 	  
 	  def parse_results(results_xml)
-		xml_as_object = MobyBase::StateObject.new( results_xml )
+		xml_as_object = @sut.state_object( results_xml )
 		results = []
 		count = xml_as_object.results.attribute('count').to_i
 		for i in 0...count
