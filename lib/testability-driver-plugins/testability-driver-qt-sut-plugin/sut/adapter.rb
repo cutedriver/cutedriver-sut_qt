@@ -62,11 +62,18 @@ module MobyController
         @socket_read_timeout = receive_timeout
         @socket_write_timeout = send_timeout
 
-
         @counter = rand( 1000 )
 
-        # connect socket
-        #connect( @sut_id )
+        # determine which inflate method to use
+        if $parameters[ @sut_id ][ :win_native, false ].to_s == "true"
+
+          @inflate_method = method( :inflate_windows_native )
+
+        else
+
+          @inflate_method = method( :inflate )
+
+        end
 
       end
 
@@ -86,14 +93,20 @@ module MobyController
 
         begin
 
-          @socket = TCPSocket.open( $parameters[ id ][ :qttas_server_ip ], $parameters[ id ][ :qttas_server_port ].to_i )
+          ip = $parameters[ id ][ :qttas_server_ip, "" ]
 
-        rescue => ex
+          port = $parameters[ id ][ :qttas_server_port, "" ]
 
-          ip = "no ip" if ( ip = $parameters[ id ][ :qttas_server_ip, "" ] ).empty?
-          port = "no port" if ( port = $parameters[ id ][ :qttas_server_port, "" ] ).empty?
+          @socket = TCPSocket.open( ip, port.to_i )
 
-          Kernel::raise IOError.new("Unable to connect QTTAS server, verify that it is running properly (#{ ip }:#{ port }): .\nException: #{ ex.message }")
+        rescue
+
+          ip = "no ip" if ip.empty?
+
+          port = "no port" if port.empty?
+
+          raise IOError, "Unable to connect QTTAS server, verify that it is running properly (#{ ip }:#{ port }): .\nException: #{ $!.message }"
+
         end
 
         @connected = true
@@ -108,7 +121,7 @@ module MobyController
       end
 
       # Set the document builder for the grouped behaviour message.
-      def set_message_builder(builder)
+      def set_message_builder( builder )
 
         @_group = true
 
@@ -119,7 +132,11 @@ module MobyController
       # TODO: document me
       def append_command(node_list)
 
-        node_list.each {|ch| @_builder.doc.root.add_child(ch)}          
+        node_list.each { | ch | 
+
+          @_builder.doc.root.add_child( ch ) 
+
+        }
 
       end
 
@@ -133,7 +150,11 @@ module MobyController
 
         size = @_builder.doc.root.children.size
 
-        send_service_request(Comms::MessageGenerator.generate(@_builder.to_xml))
+        send_service_request(
+
+          Comms::MessageGenerator.generate( @_builder.to_xml )
+
+        )
 
         @_builder = nil
 
@@ -149,10 +170,13 @@ module MobyController
       # the response body
       def send_service_request( message, return_crc = false )
 
-        connect if !@connected        
+        connect if !@connected
+
+        # increase message count
+        @counter += 1
 
         # set request message id
-        message.message_id = ( @counter += 1 )
+        message.message_id = @counter
 
         # write request message to socket
         write_socket( message.make_binary_message( @counter ) )
@@ -164,11 +188,11 @@ module MobyController
         # header[ 3 ] = compression_flag
         # header[ 4 ] = message_id
 
+        read_message_id = 0
+
         header = nil
 
         body = nil
-
-        read_message_id = 0
 
         until read_message_id == @counter
         
@@ -185,34 +209,23 @@ module MobyController
 
           if read_message_id < @counter
 
-            $logger.log "warning", "Response to request did not match: \"#{ header[ 4 ].to_s }\"<\"#{ @counter.to_s }\""
+            $logger.warning "Response to request did not match: \"#{ header[ 4 ].to_s }\"<\"#{ @counter.to_s }\""
 
           elsif read_message_id > @counter
 
-            $logger.log "fatal", "Response to request did not match: \"#{ header[ 4 ].to_s }\">\"#{ @counter.to_s }\""
+            $logger.fatal "Response to request did not match: \"#{ header[ 4 ].to_s }\">\"#{ @counter.to_s }\""
 
             # save to file?
-            $logger.log "fatal", body
+            $logger.fatal body
 
-            Kernel::raise RuntimeError.new( "Response to request did not match: \"#{ header[ 4 ].to_s }\"!=\"#{ @counter.to_s }\"" )
+            raise RuntimeError, "Response to request did not match: \"#{ header[ 4 ].to_s }\"!=\"#{ @counter.to_s }\""
 
           end
           
         end
       
         # inflate the message body if compressed
-        if ( header[ 3 ] == 2 )
-
-		  if $parameters[ @sut_id ][ :win_native, false ] == "true"
-			zstream = Zlib::Inflate.new(-Zlib::MAX_WBITS)			
-			body = zstream.inflate(body) unless body.empty?
-		  else
-			# remove leading 4 bytes		  
-			body = body[ 4 .. -1 ] 
-			body = Zlib::Inflate.inflate( body ) unless body.empty?
-		  end
-
-        end
+        body = @inflate_method.call( body ) if ( header[ 3 ] == 2 )
 
         # raise exception if messages error flag is set
         # Flag statuses:
@@ -223,11 +236,11 @@ module MobyController
 
           if body =~ /The application with Id \d+ is no longer available/
 
-            Kernel::raise MobyBase::ApplicationNotAvailableError, body
+            raise MobyBase::ApplicationNotAvailableError, body
 
           else
 
-            Kernel::raise RuntimeError, body
+            raise RuntimeError, body
 
           end
 
@@ -247,17 +260,17 @@ module MobyController
         start_time = Time.now
 
         # verify that there is data available to be read 
-        Kernel::raise IOError.new( "Socket reading timeout (%i) exceeded for %i bytes" % [ @socket_read_timeout, bytes_count ] ) if TCPSocket::select( [ @socket ], nil, nil, @socket_read_timeout ).nil?
+        raise IOError, "Socket reading timeout (#{ @socket_read_timeout.to_i }) exceeded for #{ bytes_count.to_i } bytes" if TCPSocket::select( [ @socket ], nil, nil, @socket_read_timeout ).nil?
 
         # read data from socket
         read_buffer = @socket.read( bytes_count ){
 
-          Kernel::raise IOError.new( "Socket reading timeout (%i) exceeded for %i bytes" % [ @socket_read_timeout, bytes_count ] ) if ( Time.now - start_time ) > @socket_read_timeout
+          raise IOError, "Socket reading timeout (#{ @socket_read_timeout.to_i }) exceeded for #{ bytes_count.to_i } bytes" if ( Time.now - start_time ) > @socket_read_timeout
 
         }
 
         # useless?
-        Kernel::raise IOError.new( "Socket reading error for %i bytes - No data retrieved" % [ bytes_count ] ) if read_buffer.nil?
+        raise IOError, "Socket reading error for #{ bytes_count.to_i } bytes - No data retrieved" if read_buffer.nil?
 
         @socket_received_bytes += read_buffer.size
 
@@ -331,7 +344,7 @@ module MobyController
         @socket.write( data )
 
         # verify that there is no data in writing buffer 
-        Kernel::raise IOError.new( "Socket writing timeout (%i) exceeded for %i bytes" % [ @socket_write_timeout, data.length ] ) if TCPSocket::select( nil, [ @socket ], nil, @socket_write_timeout ).nil?
+        raise IOError, "Socket writing timeout (#{ @socket_write_timeout.to_i }) exceeded for #{ data.length.to_i } bytes" if TCPSocket::select( nil, [ @socket ], nil, @socket_write_timeout ).nil?
  
 =begin
 
@@ -364,6 +377,41 @@ module MobyController
         end
 
 =end
+
+      end
+
+    private
+
+      # inflate to be used in native windows env.
+      def inflate_windows_native( body )
+
+        unless body.empty?
+
+          Zlib::Inflate.new( -Zlib::MAX_WBITS ).inflate( body )
+
+        else  
+
+          body
+
+        end 
+
+      end
+
+      # inflate to be used by default
+      def inflate( body )
+
+        # remove leading 4 bytes
+        tmp = body[ 4 .. -1 ]
+
+        unless tmp.empty?
+
+          Zlib::Inflate.inflate( tmp )
+
+        else
+
+          tmp
+
+        end
 
       end
 
