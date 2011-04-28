@@ -327,6 +327,38 @@ module MobyBehaviour
 
 
       # == description
+      # Starts logging the power usage of the device
+      # NOTE: not supported on all platforms. Platforms not supporting this will return -1 values.
+      # Logging is done to a file in the given intervals (seconds). Small (<1) intervals may cause problems and should be avoided.
+      #
+      # The default behaviour is that a new log file will be created whenever the logging is started.
+      # If you need to save the old results use the append parameter to tell the logger to append the results to the existing file.
+      #
+      # == arguments
+      # params
+      #  Hash
+      #   description: Update interval and path for the log file. Interval value is in seconds.
+      #   The file path given must exist on the target.
+      #   Optional append parameter can also be given and if true the log file will not be cleared if one exists (by default a new file will always be started).
+      #   example: {:interval => 1, :filePath => 'C:\Data', :append => true}
+      #
+      # == returns
+      # nil
+      #  description: -
+      #  example: -
+      # == exceptions
+      # ArgumentError
+      #  description: For missing / wrong argument types
+      #
+      # == info
+      #
+      def log_pwr(params)
+        params[:action] = 'start'
+        execute_info('pwr', params)
+      end
+
+
+      # == description
       # Stops the gpu memory logging and returns the results and xml data.
       # Will return an error if the logging was not started.
       # The logging is done by writing the values to a log file.
@@ -460,6 +492,117 @@ module MobyBehaviour
         params[:action] = 'stop'
         execute_info('gpu', params)
       end
+      
+
+      # == description
+      # Stops the power logging and returns the results and xml data.
+      # Will return an error if the logging was not started.
+      # The logging is done by writing the values to a log file.
+      # When the logging is stopped the file is read and a xml format of the data is returned. The file is removed.\n
+      #
+      # Top object is of type logData and name pwrUsage. It contains the number of entries. The entries are the child elements of logData element.
+      #
+      # [code]
+      #   <object id="0" name="pwrUsage" type="logData" >
+      #    <attributes>
+      #      <attribute name="entryCount" >
+      #        <value>8</value>
+      #      </attribute>
+      #    </attributes>
+      #    <objects>
+      # [/code]
+      #
+      # Each logEntry contains a timeStamp (yyyyMMddhhmmsszzz), totalMem, usedMem, freeMem, processPrivateMem and processSharedMem. Process specific details may not always be available. \n
+      #
+      # [code]
+      #    <object id="0" name="LogEntry" type="logEntry" >
+      #      <attributes>
+      #        <attribute name="timeStamp" >
+      #        <value>20100108190741059</value>
+      #        </attribute>
+      #        <attribute name="voltage" >
+      #          <value>4317</value>
+      #        </attribute>
+      #        <attribute name="current" >
+      #          <value>-107</value>
+      #        </attribute>
+      #      </attributes>
+      #    </object>
+      # [/code]
+      #
+      # You can use xpath to access the data directly to form any your own reports. Another way is to create a state object out of the data. This way you can access the data as you access ui state objects.
+      #
+      # [code]
+      #   # start logging
+      #   @app.log_pwr( :interval => 1, :filePath => 'C:\Data' )
+      #  
+      #   # perform the tests here...
+      # 
+      #   # stop logging and get data as state object
+      #   log_data_object = MobyBase::StateObject.new( @app.stop_pwr )
+      # 
+      #   # create arrays for the results
+      #   voltage             = [] 
+      #   current             = [] 
+      # 
+      #   # collect values from each log entry and store to results array
+      #   ( 0 .. log_data_object.logData.attribute( 'entryCount' ).to_i ).each do | index |
+      # 
+      #     # store log entry reference to variable  
+      #     entry = log_data_object.logEntry( :id => index.to_s ) 
+      # 
+      #     # store entry values to array
+      #     voltage            << entry.attribute( 'voltage' ).to_i
+      #     current            << entry.attribute( 'current' ).to_i
+      # 
+      #   end 
+      # 
+      #   g = Gruff::Line.new
+      #   g.title = "Application cpu usage%"
+      #   g.data( "voltage", voltage )
+      #   g.data( "current", current )
+      #   g.write( "info_pwr.png" )
+      # [/code]
+      #
+      # The example produces a graph which shows the power usage (values depend on the testing steps, device, platform etc...).
+      #
+      # == arguments
+      # params
+      #  Hash
+      #   description: Optional parameters.
+      #   example: {:clearLog => true}
+      #
+      # == returns
+      # Xml
+      #  description: data is returned in the same format as the ui state xml
+      #  example: <object id="0" name="LogEntry" type="logEntry" >
+      #      <attributes>
+      #        <attribute name="timeStamp" >
+      #        <value>20100108190741059</value>
+      #        </attribute>
+      #        <attribute name="voltage" >
+      #          <value>4318</value>
+      #        </attribute>
+      #        <attribute name="current" >
+      #          <value>-107</value>
+      #        </attribute>
+      #      </attributes>
+      #    </object>
+      #
+      # == exceptions
+      # RuntimeError
+      #  description: When no data has been colleted
+      # ArgumentError
+      #  description: For missing / wrong argument types
+      #
+      # == info
+      #
+      def stop_pwr_log(params={})
+        params[:action] = 'stop'
+        execute_info('pwr', params)
+      end
+      
+      
 
       # == description
       # Load the cpu log without stopping the logging.
@@ -544,6 +687,35 @@ module MobyBehaviour
       def load_gpu_log(params={})
         params[:action] = 'load'
         execute_info('gpu', params)
+      end
+      
+
+      # == description
+      # Load the power log without stopping the logging.
+      #
+      # == arguments
+      # params
+      #  Hash
+      #   description: Optional params hash. If :clearLog => true given will clear the log when loading by default log will not be cleared.
+      #   example: {:clearLog = true}
+      #
+      #
+      # == returns
+      # Xml
+      #  description: data is returned in the same format as the ui state xml
+      #  example: -
+      #
+      # == exceptions
+      # RuntimeError
+      #  description: When no data has been colleted
+      # ArgumentError
+      #  description: For missing / wrong argument types
+      #
+      # == info
+      #
+      def load_pwr_log(params={})
+        params[:action] = 'load'
+        execute_info('pwr', params)
       end
 
       private
