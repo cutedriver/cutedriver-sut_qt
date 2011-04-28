@@ -57,7 +57,7 @@ module MobyBehaviour
       # should this method be private?
       def command_params( command = MobyCommand::WidgetCommand.new )   
 
-        if self.attribute( 'objectType' ) == 'Graphics' and self.attribute( 'visibleOnScreen' ) == 'false' and self.creation_attributes[:visibleOnScreen] != 'false'
+        if attribute( 'objectType' ) == 'Graphics' and attribute( 'visibleOnScreen' ) == 'false' and self.creation_attributes[:visibleOnScreen] != 'false'
           begin
             self.creation_attributes.merge!({'visibleOnScreen' => 'true'})
             self.parent.child(self.creation_attributes)
@@ -66,17 +66,17 @@ module MobyBehaviour
           end
         end
 
-        command.set_event_type($parameters[ @sut.id ][ :event_type, "0" ])
+        command.set_event_type(sut_parameters[ :event_type, "0" ])
 
         #for components with object visible on screen but not actual widgets or graphicsitems
-        if self.attribute( 'objectType' ) == 'Embedded'
+        if attribute( 'objectType' ) == 'Embedded'
           command.application_id( get_application_id )
           command.object_id( parent.id )
           command.object_type( parent.attribute( 'objectType' ).intern )
         else
           command.application_id( get_application_id )
-          command.object_id( self.id )
-          command.object_type( self.attribute( 'objectType' ).intern )
+          command.object_id( @id )
+          command.object_type( attribute( 'objectType' ).intern )
         end
 
         command
@@ -86,10 +86,10 @@ module MobyBehaviour
       # == nodoc
       # should this method be private?
       def plugin_command( require_response = false, command = MobyCommand::WidgetCommand.new )
-        command.set_event_type($parameters[ @sut.id ][ :event_type, "0" ])
+        command.set_event_type(sut_parameters[ :event_type, "0" ])
         command.application_id( get_application_id )
-        command.object_id( self.id )
-        command.object_type( self.attribute('objectType' ).intern)
+        command.object_id( @id )
+        command.object_type( attribute('objectType' ).intern)
         command.transitions_off    
         command
       end
@@ -109,23 +109,23 @@ module MobyBehaviour
 
       def center_x
 
-        #x = self.attribute( 'x_absolute' ).to_i
-        #width = self.attribute( 'width' ).to_i
+        #x = attribute( 'x_absolute' ).to_i
+        #width = attribute( 'width' ).to_i
         #x = x + ( width/2 )
         #x.to_s
 
-        ( ( self.attribute( 'x_absolute' ).to_i ) + ( self.attribute( 'width' ).to_i / 2 ) ).to_s
+        ( ( attribute( 'x_absolute' ).to_i ) + ( attribute( 'width' ).to_i / 2 ) ).to_s
 
       end
 
       def center_y
 
-        #y = self.attribute( 'y_absolute' ).to_i
-        #height = self.attribute( 'height' ).to_i
+        #y = attribute( 'y_absolute' ).to_i
+        #height = attribute( 'height' ).to_i
         #y = y + ( height/2 )
         #y.to_s
 
-        ( ( self.attribute( 'y_absolute' ).to_i ) + ( self.attribute( 'height' ).to_i / 2 ) ).to_s
+        ( ( attribute( 'y_absolute' ).to_i ) + ( attribute( 'height' ).to_i / 2 ) ).to_s
 
       end  
 

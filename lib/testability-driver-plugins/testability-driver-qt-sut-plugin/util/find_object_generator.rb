@@ -21,84 +21,170 @@ module MobyUtil
   
   module FindObjectGenerator
 	
-	def generate_message
+    def generate_message
+    
+      # get sut paramteres only once, store to local variable
+      sut_parameters = $parameters[ @_sut.id ]
+
+	    filter_type = sut_parameters[ :filter_type, 'none' ]
 	
-	  filter_type = $parameters[ @_sut.id ][ :filter_type, 'none' ]
-	
-	  filters = make_params if filter_type == 'dynamic'
+	    if filter_type != 'none'
 
-	  builder = Nokogiri::XML::Builder.new do |xml|
+	      filters = {}
+	      
+	      filters[ 'filterProperties' ] = value if ( value = sut_parameters[ :filter_properties, nil ] )
+	      filters[ 'pluginBlackList'  ] = value if ( value = sut_parameters[ :plugin_blacklist,  nil ] )
+	      filters[ 'pluginWhiteList'  ] = value if ( value = sut_parameters[ :plugin_whitelist,  nil ] )
 
-		  xml.TasCommands( ( @_app_details || {} ).merge( :service => "findObject") ) {			
-
-		    xml.Target{			  
-
-			    add_objects( xml, @_params )
-
-			    xml.Command( :name => 'findObject' ){ filters.collect{ | name, value | xml.param( :name => name, :value => value ) } } if filter_type == 'dynamic'
-
-		    } if @_params and @_params.size > 0
-
-		  }
-
-	  end
-
-	  builder.to_xml
-
-	end
-
-	private
-
-	def add_objects( builder, params )
-
-	  parent = builder.parent
-
-	  params.each{| objectParams | parent = create_object_node( builder, objectParams, parent ) }
-
-	end
-	
-	def create_object_node( builder, params, parent )
-
-	  node = Nokogiri::XML::Node.new( 'object', builder.doc )
-
-	  params.keys.each{ | key | node[ key.to_s ] = params[ key ].to_s }
-
-	  parent.add_child( node )
-
-	end
-
-
-	def make_params
-	
-	  params = {}
-
-	  # get sut paramteres only once, store to local variable
-	  sut_parameters = $parameters[ @_sut.id ]
-
-	  params[ 'filterProperties' ] = $last_parameter if sut_parameters[ :filter_properties, nil ]
-	  params[ 'pluginBlackList'  ] = $last_parameter if sut_parameters[ :plugin_blacklist,  nil ]
-	  params[ 'pluginWhiteList'  ] = $last_parameter if sut_parameters[ :plugin_whitelist,  nil ]
-
-	  case sut_parameters[ :filter_type, 'none' ]
+	      case filter_type
 		
-	    when 'dynamic'
+	        when 'dynamic'
 
-		    # updates the filter with the current backtrace file list
-		    #MobyUtil::DynamicAttributeFilter.instance.update_filter( caller( 0 ) ) 
-
-		    white_list = MobyUtil::DynamicAttributeFilter.instance.filter_string
-		    params['attributeWhiteList'] = white_list if white_list
+		        filters[ 'attributeWhiteList' ] = value if ( value = MobyUtil::DynamicAttributeFilter.instance.filter_string ) 
 		
-	    when 'static'
+	        when 'static'
 
-		    params['attributeBlackList'] = $last_parameter if sut_parameters[ :attribute_blacklist, nil ]
-		    params['attributeWhiteList'] = $last_parameter if sut_parameters[ :attribute_whitelist, nil ]
+		        filters[ 'attributeBlackList' ] = value if ( value = sut_parameters[ :attribute_blacklist, nil ] )
+		        filters[ 'attributeWhiteList' ] = value if ( value = sut_parameters[ :attribute_whitelist, nil ] ) 
 		
+	        end
+
+      else
+
+        filters = {}
+
+      end
+
+      #xml = "<?xml version=\"1.0\"?>"
+
+      xml = "<TasCommands service=\"findObject\" #{ @_app_details.to_attributes }"
+      
+      unless @_params.empty?
+
+        # TasCommands close    
+        xml << '><Target>'
+        
+        # temp. objects xml fragment
+        objects = ""
+
+        # collect objects with attributes
+        @_params.reverse.each_with_index{ | parameters, index |
+        
+          if index == 0
+          
+            objects = "<object #{ parameters.to_attributes } />"          
+            
+          else
+          
+            objects = "<object #{ parameters.to_attributes }>#{ objects }</object>"
+            
+          end
+        
+        }
+
+        # add objects to xml
+        xml << objects
+
+        xml << '<Command name="findObject">'
+
+        filters.each{ | name, value | xml << "<param name=\"#{ name }\" value=\"#{ value }\" />" }
+
+        xml << '</Command></Target></TasCommands>'
+    
+      else
+    
+        # TasCommands close
+        xml << ' />'
+      
+      end
+      
+      xml
+
+    end
+
+
+=begin	
+	  def generate_message
+	
+	    filter_type = $parameters[ @_sut.id ][ :filter_type, 'none' ]
+	
+	    filters = make_params if filter_type == 'dynamic'
+
+	    builder = Nokogiri::XML::Builder.new do |xml|
+
+		    xml.TasCommands( ( @_app_details || {} ).merge( :service => "findObject") ) {			
+
+		      xml.Target{			  
+
+			      add_objects( xml, @_params )
+
+			      xml.Command( :name => 'findObject' ){ filters.collect{ | name, value | xml.param( :name => name, :value => value ) } } if filter_type == 'dynamic'
+
+		      } if @_params and @_params.size > 0
+
+		    }
+
 	    end
 
-	    params		
+	    builder.to_xml
 
 	  end
+	
+
+  private
+
+	  def add_objects( builder, params )
+
+	    parent = builder.parent
+
+	    params.each{| objectParams | 
+	    
+	      parent = create_object_node( builder, objectParams, parent ) 
+	      
+      }
+
+	  end
+	
+	  def create_object_node( builder, params, parent )
+
+	    node = Nokogiri::XML::Node.new( 'object', builder.doc )
+
+	    params.keys.each{ | key | node[ key.to_s ] = params[ key ].to_s }
+
+	    parent.add_child( node )
+
+	  end
+
+	  def make_params
+	
+	    params = {}
+
+	    # get sut paramteres only once, store to local variable
+	    sut_parameters = $parameters[ @_sut.id ]
+
+	    params[ 'filterProperties' ] = $last_parameter if sut_parameters[ :filter_properties, nil ]
+	    params[ 'pluginBlackList'  ] = $last_parameter if sut_parameters[ :plugin_blacklist,  nil ]
+	    params[ 'pluginWhiteList'  ] = $last_parameter if sut_parameters[ :plugin_whitelist,  nil ]
+
+	    case sut_parameters[ :filter_type, 'none' ]
+		
+	      when 'dynamic'
+
+		      white_list = MobyUtil::DynamicAttributeFilter.instance.filter_string
+		      
+		      params['attributeWhiteList'] = white_list if white_list
+		
+	      when 'static'
+
+		      params['attributeBlackList'] = $last_parameter if sut_parameters[ :attribute_blacklist, nil ]
+		      params['attributeWhiteList'] = $last_parameter if sut_parameters[ :attribute_whitelist, nil ]
+		
+      end
+
+      params		
+
+    end
+=end
 
     # enable hoo./base/test_object/factory.rb:king for performance measurement & debug logging
     TDriver::Hooking.hook_methods( self ) if defined?( TDriver::Hooking )
@@ -106,3 +192,4 @@ module MobyUtil
   end
   
 end
+

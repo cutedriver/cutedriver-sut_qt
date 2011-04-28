@@ -76,7 +76,7 @@ module MobyBehaviour
 
                   if type != "QWebFrame"
                   command.command_name('ExecuteJavaScriptOnWebElement')
-                  webframe_id = self.attribute('webFrame') if webframe_id.to_s == "0"				  
+                  webframe_id = attribute('webFrame') if webframe_id.to_s == "0"				  
                   else
                   command.command_name('ExecuteJavaScriptOnQWebFrame')
                   end
@@ -86,7 +86,7 @@ module MobyBehaviour
                     'java_script'   => java_script,
                     'locator_query' => locator_query,
                     'index'         => index.to_s,
-                    'elementId'     => self.id.to_s, 
+                    'elementId'     => @id.to_s, 
                     'webframe_id'   => webframe_id.to_s
                   }
                   
@@ -96,12 +96,12 @@ module MobyBehaviour
           
                 rescue Exception => e      
 
-                    $logger.log "behaviour" , "FAIL;Failed send javascript with execute_javascript \"#{java_script}\""
+                    $logger.behaviour "FAIL;Failed send javascript with execute_javascript \"#{java_script}\""
                     Kernel::raise e        
 
                 end      
 
-                $logger.log "behaviour" , "PASS;Operation send javascript executed successfully with execute_javascript \"#{java_script}\""
+                $logger.behaviour "PASS;Operation send javascript executed successfully with execute_javascript \"#{java_script}\""
 
               returnValue
 
@@ -154,7 +154,7 @@ module MobyBehaviour
     		  
     		  if type != "QWebFrame" #&& parent_object.type == "QWebFrame")
     		    #webframe_id = parent_object.id
-				webframe_id = self.attribute('webFrame')
+				webframe_id = attribute('webFrame')
     		  end
 
               execute_javascript_query( java_script, nil, index, webframe_id)
@@ -195,13 +195,13 @@ module MobyBehaviour
         temp_id = ""
 
         if type == "QWebFrame"
-          temp_id = self.id
+          temp_id = @id
         else
-          temp_id = self.attribute('webFrame')
+          temp_id = attribute('webFrame')
 		  
-		  elemens_xml_data, unused_rule = TDriver::TestObjectAdapter.get_objects( @sut.xml_data, { :id => self.attribute('webFrame')}, true )
+		  elemens_xml_data, unused_rule = @test_object_adapter.get_objects( @sut.xml_data, { :id => attribute('webFrame')}, true )
 		  object_xml_data = elemens_xml_data[0]
-		  object_attributes = TDriver::TestObjectAdapter.test_object_attributes(object_xml_data)
+		  object_attributes = @test_object_adapter.test_object_attributes(object_xml_data)
 		  x_absolute = object_attributes['x_absolute'].to_i 
 		  y_absolute = object_attributes['y_absolute'].to_i 
 		  width = object_attributes['width'].to_i
@@ -230,15 +230,15 @@ module MobyBehaviour
           else
             #bring fully visible
             if(center_y.to_i > frame_down_border)
-              dy = self.attribute("y_absolute").to_i + self.attribute("height").to_i - y_absolute - height + horizontalScrollBarHeight
+              dy = attribute("y_absolute").to_i + attribute("height").to_i - y_absolute - height + horizontalScrollBarHeight
             elsif (center_y.to_i < y_absolute)
-              dy = self.attribute("y_absolute").to_i - y_absolute
+              dy = attribute("y_absolute").to_i - y_absolute
             end
           
             if(center_x.to_i > frame_right_border)
-              dx = self.attribute("x_absolute").to_i + self.attribute("width").to_i - x_absolute - width + verticalScrollBarWidth
+              dx = attribute("x_absolute").to_i + attribute("width").to_i - x_absolute - width + verticalScrollBarWidth
             elsif (center_x.to_i < x_absolute)
-              dx = self.attribute("x_absolute").to_i - x_absolute
+              dx = attribute("x_absolute").to_i - x_absolute
             end
           end
         end

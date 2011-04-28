@@ -108,8 +108,8 @@ module MobyBehaviour
           begin
 
             signals_xml = MobyUtil::XML.parse_string( self.fixture( 'signal', 'get_signal' ) )
-			_signal_found_xml, unused_rule = TDriver::TestObjectAdapter.get_objects( signals_xml, { :type => 'QtSignal', :name => signal_name}, true )
-			signal_found = true unless _signal_found_xml.empty? 
+			      _signal_found_xml, unused_rule = @test_object_adapter.get_objects( signals_xml, { :type => 'QtSignal', :name => signal_name}, true )
+			      signal_found = true unless _signal_found_xml.empty? 
 
           end # begin
 
