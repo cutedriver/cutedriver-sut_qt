@@ -122,7 +122,7 @@ module MobyBehaviour
       #   # perform the tests here...
       # 
       #   # stop logging and get data as state object
-      #   log_data_object = @sut.state_object( @app.stop_cpu_log )
+      #   log_data_object = @sut.state_object( :source_data => @app.stop_cpu_log )
       # 
       #   # collect values from log_data_object to result array
       #   result = ( 0 .. log_data_object.logData.attribute( 'entryCount' ).to_i ).collect do | index | 
@@ -245,7 +245,7 @@ module MobyBehaviour
       #   # perform the tests here...
       # 
       #   # stop logging and get data as state object
-      #   log_data_object = @sut.state_object( @app.stop_mem_log )
+      #   log_data_object = @sut.state_object( :source_data => @app.stop_mem_log )
       # 
       #   # collect values from log_data_object to result array
       #   result = ( 0 .. log_data_object.logData.attribute( 'entryCount' ).to_i ).collect do | index | 
@@ -412,7 +412,7 @@ module MobyBehaviour
       #   # perform the tests here...
       # 
       #   # stop logging and get data as state object
-      #   log_data_object = @sut.state_object( @app.stop_gpu_log )
+      #   log_data_object = @sut.state_object( :source_data => @app.stop_gpu_log )
       # 
       #   # create arrays for the results
       #   total_memory            = [] 

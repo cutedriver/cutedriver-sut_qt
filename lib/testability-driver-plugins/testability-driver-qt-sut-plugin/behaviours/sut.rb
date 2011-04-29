@@ -369,10 +369,10 @@ module MobyBehaviour
       def system_information
 
         # xml_source = execute_command( MobyCommand::Application.new( :SystemInfo, nil) )
-        # @sut.state_object( xml_source )
+        # @sut.state_object( :source_data => xml_source )
 
         @sut.state_object( 
-          execute_command( 
+          :source_data => execute_command( 
             MobyCommand::Application.new( :SystemInfo ) 
           )
         )
