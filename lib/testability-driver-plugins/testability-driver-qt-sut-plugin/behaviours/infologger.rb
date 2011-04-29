@@ -539,7 +539,7 @@ module MobyBehaviour
       #   # perform the tests here...
       # 
       #   # stop logging and get data as state object
-      #   log_data_object = MobyBase::StateObject.new( @app.stop_pwr )
+      #   log_data_object = @sut.state_object( @app.stop_pwr )
       # 
       #   # create arrays for the results
       #   voltage             = [] 
