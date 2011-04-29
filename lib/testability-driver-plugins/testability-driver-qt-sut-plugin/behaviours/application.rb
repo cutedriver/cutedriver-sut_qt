@@ -107,7 +107,7 @@ module MobyBehaviour
 
         }
 
-        @sut.state_object( :source_data => xml_data )
+        @sut.state_object( xml_data )
 
 	    end
 
