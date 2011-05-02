@@ -69,9 +69,12 @@ module MobyBehaviour
 	    #   description: -
 	    #   example: -
 	    #
-	    def track_popup(class_name, wait_time=1)
-		    wait_time = wait_time*1000
-		    fixture('popup', 'waitPopup',{:className => class_name, :interval => wait_time.to_s})
+	    def track_popup( class_name, wait_time = 1 )
+
+		    wait_time = wait_time * 1000
+
+		    fixture( 'popup', 'waitPopup',{ :className => class_name, :interval => wait_time.to_s } )
+
 	    end
 
 	    # == description
@@ -99,15 +102,15 @@ module MobyBehaviour
 	    #
 	    def verify_popup( class_name, time_out = 5 )
 
-        xml_source = nil
+        response = nil
 
         verify( time_out ){
 
-          xml_source = @sut.application.fixture( 'popup', 'printPopup', { :className => class_name } )
+          response = @sut.application.fixture( 'popup', 'printPopup', { :className => class_name } )
 
         }
 
-        @sut.state_object( xml_data )
+        @sut.state_object( response )
 
 	    end
 
