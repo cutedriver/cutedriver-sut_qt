@@ -208,23 +208,28 @@ module MobyBehaviour
           #pid = execute_command( MobyCommand::Application.new( :Shell, command, nil, nil, nil, nil, nil, nil, param ) ).to_i
 
           pid = execute_command( MobyCommand::Application.new( :Shell, { :application_name => command, :flags => param } ) ).to_i
-
+         
           data = "" 
           if pid != 0
             time = Time.new + timeout
             while true
+
               obj = shell_command(pid)
+
               sleep 1
-              data += obj['output']
+
+              data += obj['output'].to_s # cast to string in case of output is nil
+
               if Time.new > time
-              command_params = {:kill => 'true'}
-              command_output = shell_command(pid, command_params)['output']
-              Kernel::raise RuntimeError.new( "Timeout of #{timeout.to_s} seconds reached. #{command_output}")
+                command_params = {:kill => 'true'}
+                command_output = shell_command(pid, command_params)['output']
+                Kernel::raise RuntimeError.new( "Timeout of #{timeout.to_s} seconds reached. #{command_output}")
               elsif obj['status'] == "RUNNING"
-              next
+                next
               else 
-              break
+                break
               end
+
             end
           end
           return data
@@ -291,13 +296,15 @@ module MobyBehaviour
 
 		      object_xml_data.collect{ | element |
 		      
-  			    data.merge!(
-  			      @test_object_adapter.test_object_attributes( element ) 
-		        )
+  			    data.merge!( 
+
+              @test_object_adapter.test_object_attributes( element ) 
+
+            )
 
 		      }
 
-		      return data
+		      data
 
 		    else
 

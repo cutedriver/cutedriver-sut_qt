@@ -31,7 +31,7 @@ module MobyUtil
 	    if filter_type != 'none'
 
 	      filters = {}
-	      
+	      value = nil
 	      filters[ 'filterProperties' ] = value if ( value = sut_parameters[ :filter_properties, nil ] )
 	      filters[ 'pluginBlackList'  ] = value if ( value = sut_parameters[ :plugin_blacklist,  nil ] )
 	      filters[ 'pluginWhiteList'  ] = value if ( value = sut_parameters[ :plugin_whitelist,  nil ] )
