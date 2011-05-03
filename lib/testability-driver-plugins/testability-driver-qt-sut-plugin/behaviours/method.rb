@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ############################################################################
 ## 
 ## Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies). 
@@ -50,31 +51,55 @@ module MobyBehaviour
 			# Calls an invokable method of the Qt test object.
 			# Slots and signals are automatically invokable, but other methods must be explicitly made invokable.
 			# This version does not support method arguments or return values.
+      # 
+      # warning: Use with caution - function parameters must match exactly to the Qt slot. Otherwise
+      #          behavior is undefined.
 			# 
 			# == arguments
 			# method_name
 			#  String
 			#   description: name of method to invoke, including empty parenthesis
 			#   example: "clear()"
+      # params
+      #  One or more parameters, currently primitive types (String,Fixnum,Float, boolean) are supported
+      #   
 			#
 			# == returns
 			# Undefined
-			#  description: on success, returns unspecified value of unspecified type
-			#  example: "OK"
+			#  description: returns slot return value, empty string if void.
 			#
 			# == exceptions
 			# RuntimeError
 			#   description: invoking the method failed
-			def call_method( method_name )
+			def call_method( method_name, *params )
 
 				Kernel::raise ArgumentError.new( "Method name was empty" ) if method_name.empty?
 				command = command_params #in qt_behaviour      
 				command.transitions_off     
 				command.command_name( 'CallMethod' )
-				command.command_params( 'method_name' => method_name.to_s )
+
+        # Syntactically terrible..
+        pars = {'method_name' => method_name.to_s }
+
+        params.each_with_index{ |param,i|
+          case param
+          when String:
+              key = "S"
+          when Fixnum:
+              key = "I"
+          when Float:
+              key = "D"
+          when TrueClass,FalseClass:
+              key = "B"
+          else
+            Kernel::raise ArgumentError.new( "Method parameter #{i}: Only String,Fixunum,Float and Boolean types are supported" ) 
+          end
+         pars["method_param#{i}"] = key+param.to_s
+        }
+				command.command_params(pars)
 				command.service( 'objectManipulation' )
+
 				returnValue = @sut.execute_command( command )
-				Kernel::raise RuntimeError.new( "Calling method '%s' failed with error: %s" % [ method_name, returnValue ] ) if ( returnValue != "OK" )
 			end
 
 			# enable hooking for performance measurement & debug logging
