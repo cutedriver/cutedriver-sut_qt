@@ -85,11 +85,11 @@ module MobyBehaviour
         begin
           # execute the application control service request
           apps = execute_command( MobyCommand::Application.new( :ListApps ) )
-          $logger.log "behaviour", "PASS;Successfully listed applications.;#{ id };sut;{};list_apps;"
+          $logger.behaviour "PASS;Successfully listed applications.;#{ id };sut;{};list_apps;"
 
         rescue Exception => e
 
-          $logger.log "behaviour", "FAIL;Failed to list applications.;#{ id };sut;{};list_apps;"
+          $logger.behaviour "FAIL;Failed to list applications.;#{ id };sut;{};list_apps;"
           Kernel::raise RuntimeError.new( "Unable to list applications: Exception: #{ e.message } (#{ e.class })" )
 
         end
@@ -118,11 +118,11 @@ module MobyBehaviour
         begin
           # execute the application control service request
           apps = execute_command( MobyCommand::Application.new( :ListStartedApps ) )
-          $logger.log "behaviour", "PASS;Successfully listed applications.;#{ id };sut;{};list_started_apps;"
+          $logger.behaviour "PASS;Successfully listed applications.;#{ id };sut;{};list_started_apps;"
 
         rescue Exception => e
 
-          $logger.log "behaviour", "FAIL;Failed to list applications.;#{ id };sut;{};list_started_apps;"
+          $logger.behaviour "FAIL;Failed to list applications.;#{ id };sut;{};list_started_apps;"
           Kernel::raise RuntimeError.new( "Unable to list started applications: Exception: #{ e.message } (#{ e.class })" )
 
         end
@@ -144,9 +144,9 @@ module MobyBehaviour
         begin
           # execute the application control service request
           apps = execute_command( MobyCommand::Application.new( :ListCrashedApps ) )
-          $logger.log "behaviour", "PASS;Successfully listed crashed applications.;#{ id };sut;{};list_crashed_apps;"
+          $logger.behaviour "PASS;Successfully listed crashed applications.;#{ id };sut;{};list_crashed_apps;"
         rescue Exception => e
-          $logger.log "behaviour", "FAIL;Failed to list crashed applications.;#{ id };sut;{};list_crashed_apps;"
+          $logger.behaviour "FAIL;Failed to list crashed applications.;#{ id };sut;{};list_crashed_apps;"
           Kernel::raise RuntimeError.new( "Unable to list crashed applications: Exception: #{ e.message } (#{ e.class })" )
         end
 
@@ -208,23 +208,28 @@ module MobyBehaviour
           #pid = execute_command( MobyCommand::Application.new( :Shell, command, nil, nil, nil, nil, nil, nil, param ) ).to_i
 
           pid = execute_command( MobyCommand::Application.new( :Shell, { :application_name => command, :flags => param } ) ).to_i
-
+         
           data = "" 
           if pid != 0
             time = Time.new + timeout
             while true
+
               obj = shell_command(pid)
+
               sleep 1
-              data += obj['output']
+
+              data += obj['output'].to_s # cast to string in case of output is nil
+
               if Time.new > time
-              command_params = {:kill => 'true'}
-              command_output = shell_command(pid, command_params)['output']
-              Kernel::raise RuntimeError.new( "Timeout of #{timeout.to_s} seconds reached. #{command_output}")
+                command_params = {:kill => 'true'}
+                command_output = shell_command(pid, command_params)['output']
+                Kernel::raise RuntimeError.new( "Timeout of #{timeout.to_s} seconds reached. #{command_output}")
               elsif obj['status'] == "RUNNING"
-              next
+                next
               else 
-              break
+                break
               end
+
             end
           end
           return data
@@ -285,22 +290,21 @@ module MobyBehaviour
 
         if param[ :kill ].nil?
 
-          #xml = Nokogiri::XML( xml_source )
-          xml = MobyUtil::XML.parse_string( xml_source )
-
           data = {}
 
-		      object_xml_data, unused_rule = @test_object_adapter.get_objects( xml, { :type => 'Response' }, true )
+		      object_xml_data, unused_rule = @test_object_adapter.get_objects( MobyUtil::XML.parse_string( xml_source ), { :type => 'Response' }, true )
 
 		      object_xml_data.collect{ | element |
 		      
-  			    data.merge!(
-  			      @test_object_adapter.test_object_attributes( element ) 
-		        )
+  			    data.merge!( 
+
+              @test_object_adapter.test_object_attributes( element ) 
+
+            )
 
 		      }
 
-		      return data
+		      data
 
 		    else
 
@@ -315,51 +319,51 @@ module MobyBehaviour
       end
 
 
-  # == description
-  # launches application in symbian device based on UID and return launched application if succesfull.
-  #
-  # == arguments
-  # hash_application
-  #  Hash
-  #   description: Hash defining required expected attributes of the application
-  #   example: { :UID => '' }
-  #
-  # == returns
-  # MobyBase::Application
-  #  description: launched application that matched the uid
-  #  example: -
-  #
-  # == exceptions
-  # TypeError
-  #  description: Wrong argument type %s for attributes (expected Hash)
-  #
-  def launch_with_uid( hash_uid = {} )
+      # == description
+      # launches application in symbian device based on UID and return launched application if succesfull.
+      #
+      # == arguments
+      # hash_application
+      #  Hash
+      #   description: Hash defining required expected attributes of the application
+      #   example: { :UID => '' }
+      #
+      # == returns
+      # MobyBase::Application
+      #  description: launched application that matched the uid
+      #  example: -
+      #
+      # == exceptions
+      # TypeError
+      #  description: Wrong argument type %s for attributes (expected Hash)
+      #
+      def launch_with_uid( hash_uid = {} )
 
-    begin
+        begin
 
-      raise TypeError.new( "Input parameter not of Type: Hash.\nIt is: #{ hash_uid.class }" ) unless hash_uid.kind_of?( Hash )
-      the_uid =  "failed with uid:" + hash_uid[:UID].to_s
-      fullname = @sut.fixture("launch","launch_with_uid",hash_uid)
-      
-      if(fullname == the_uid)
-        raise fullname
+          raise TypeError.new( "Input parameter not of Type: Hash.\nIt is: #{ hash_uid.class }" ) unless hash_uid.kind_of?( Hash )
+          the_uid =  "failed with uid:" + hash_uid[:UID].to_s
+          fullname = @sut.fixture("launch","launch_with_uid",hash_uid)
+          
+          if(fullname == the_uid)
+            raise fullname
+          end
+          full_shortname = fullname.rpartition('\\')[-1]
+          shortname = full_shortname.rpartition('.')[0]
+          app_child = @sut.application(:name=>shortname)
+
+        rescue Exception => e
+
+          $logger.behaviour "FAIL;Failed to find application.;#{id.to_s};sut;{};application;" << (hash_uid.kind_of?(Hash) ? hash_uid.inspect : hash_uid.class.to_s)
+          Kernel::raise e
+
+        end
+
+        $logger.behaviour "PASS;Application found.;#{id.to_s};sut;{};application;" << hash_uid.inspect
+
+        app_child
+
       end
-      full_shortname = fullname.rpartition('\\')[-1]
-      shortname = full_shortname.rpartition('.')[0]
-      app_child = @sut.application(:name=>shortname)
-
-    rescue Exception => e
-
-      $logger.log "behaviour" , "FAIL;Failed to find application.;#{id.to_s};sut;{};application;" << (hash_uid.kind_of?(Hash) ? hash_uid.inspect : hash_uid.class.to_s)
-      Kernel::raise e
-
-    end
-
-    $logger.log "behaviour" , "PASS;Application found.;#{id.to_s};sut;{};application;" << hash_uid.inspect
-
-    app_child
-
-  end
 
       # == description
       # Returns details about the tested target. The data is platform/device specific which will make your scripts platform dependant. For devices with mobility apis the data available from them is returned and could be somewhat similar across platforms. Memory details are returned in a fixed format so they can be used and still maintain compatibility cross platforms. However it should be noted that platforms which do not support memory details will return -1 (scripts will not break but data will not be usable).
@@ -372,10 +376,13 @@ module MobyBehaviour
       def system_information
 
         # xml_source = execute_command( MobyCommand::Application.new( :SystemInfo, nil) )
+        # @sut.state_object( xml_source )
 
-        xml_source = execute_command( MobyCommand::Application.new( :SystemInfo ) )
-
-        MobyBase::StateObject.new( xml_source )            
+        @sut.state_object( 
+          execute_command( 
+            MobyCommand::Application.new( :SystemInfo ) 
+          )
+        )
 
       end
 
@@ -464,7 +471,7 @@ module MobyBehaviour
           nil
         rescue Exception => e      
           
-          $logger.log "behaviour" , "FAIL;Failed tap_screen on coords \"#{x}:#{y}\";"
+          $logger.behaviour "FAIL;Failed tap_screen on coords \"#{x}:#{y}\";"
           Kernel::raise e        
           
         end      
@@ -485,9 +492,9 @@ module MobyBehaviour
         begin
           # execute the application control service request
           execute_command( MobyCommand::Application.new( :CloseQttas ) )
-          $logger.log "behaviour", "PASS;Successfully closed qttas.;#{ id };sut;{};close_qttas;"
+          $logger.behaviour "PASS;Successfully closed qttas.;#{ id };sut;{};close_qttas;"
         rescue Exception => e
-          $logger.log "behaviour", "FAIL;Failed to close qttas.;#{ id };sut;{};close_qttas;"
+          $logger.behaviour "FAIL;Failed to close qttas.;#{ id };sut;{};close_qttas;"
           Kernel::raise RuntimeError.new( "Unable to close qttas: Exception: #{ e.message } (#{ e.class })" )
         end
         nil
@@ -550,11 +557,11 @@ module MobyBehaviour
             ) 
           )
 
-          $logger.log "behaviour", "PASS;Successfully started process memory logging.;#{ id };sut;{};log_process_mem_start;"
+          $logger.behaviour "PASS;Successfully started process memory logging.;#{ id };sut;{};log_process_mem_start;"
 
         rescue Exception => e
 
-          $logger.log "behaviour", "FAIL;Failed to start process memory logging.;#{ id };sut;{};log_process_mem_start;"
+          $logger.behaviour "FAIL;Failed to start process memory logging.;#{ id };sut;{};log_process_mem_start;"
           Kernel::raise RuntimeError.new( "Unable to start process memory logging: Exception: #{ e.message } (#{ e.class })" )
 
         end
@@ -591,15 +598,6 @@ module MobyBehaviour
         log = nil
         begin
 
-=begin
-          log = execute_command(
-                    MobyCommand::Application.new(
-                                   :ProcessMemLoggingStop,
-                                   thread_name,
-                                   nil, nil, nil, nil, nil, nil,
-                                   {:return_data => return_data} ) )
-=end
-
           log = execute_command(
             MobyCommand::Application.new(
               :ProcessMemLoggingStop,
@@ -607,9 +605,9 @@ module MobyBehaviour
             ) 
           )
 
-          $logger.log "behaviour", "PASS;Successfully stopped process memory logging.;#{ id };sut;{};log_process_mem_stop;"
+          $logger.behaviour "PASS;Successfully stopped process memory logging.;#{ id };sut;{};log_process_mem_stop;"
         rescue Exception => e
-          $logger.log "behaviour", "FAIL;Failed to stop process memory logging.;#{ id };sut;{};log_process_mem_stop;"
+          $logger.behaviour "FAIL;Failed to stop process memory logging.;#{ id };sut;{};log_process_mem_stop;"
           Kernel::raise RuntimeError.new( "Unable to stop process memory logging: Exception: #{ e.message } (#{ e.class })" )
         end
         log
@@ -650,11 +648,11 @@ module MobyBehaviour
             ) 
           )
 
-          $logger.log "behaviour", "PASS;Successfully started generating CPU load.;#{ id };sut;{};cpu_load_start;"
+          $logger.behaviour "PASS;Successfully started generating CPU load.;#{ id };sut;{};cpu_load_start;"
 
         rescue Exception => e
 
-          $logger.log "behaviour", "FAIL;Failed to start generating CPU load.;#{ id };sut;{};cpu_load_start;"
+          $logger.behaviour "FAIL;Failed to start generating CPU load.;#{ id };sut;{};cpu_load_start;"
 
           Kernel::raise RuntimeError.new( "Unable to start generating CPU load: Exception: #{ e.message } (#{ e.class })" )
 
@@ -675,9 +673,9 @@ module MobyBehaviour
       def cpu_load_stop
         begin
           status = execute_command(MobyCommand::Application.new(:CpuLoadStop) )
-          $logger.log "behaviour", "PASS;Successfully started generating CPU load.;#{ id };sut;{};cpu_load_start;"
+          $logger.behaviour "PASS;Successfully started generating CPU load.;#{ id };sut;{};cpu_load_start;"
         rescue Exception => e
-          $logger.log "behaviour", "FAIL;Failed to start generating CPU load.;#{ id };sut;{};cpu_load_start;"
+          $logger.behaviour "FAIL;Failed to start generating CPU load.;#{ id };sut;{};cpu_load_start;"
           Kernel::raise RuntimeError.new( "Unable to start generating CPU load: Exception: #{ e.message } (#{ e.class })" )
         end
       end
@@ -730,9 +728,9 @@ module MobyBehaviour
           # commands have been executed
           sleep ( ret * interval )
 
-          $logger.log "behaviour", "PASS;Successfully executed grouped behaviours.;#{ id };sut;{};group_behaviours;"
+          $logger.behaviour "PASS;Successfully executed grouped behaviours.;#{ id };sut;{};group_behaviours;"
         rescue Exception => e
-          $logger.log "behaviour", "FAIL;Failed to execute grouped behaviours.;#{ id };sut;{};group_behaviours;"
+          $logger.behaviour "FAIL;Failed to execute grouped behaviours.;#{ id };sut;{};group_behaviours;"
           Kernel::raise RuntimeError.new( "Unable to execute grouped behaviours: Exception: #{ e.message } (#{ e.class })" )
         end
         nil
