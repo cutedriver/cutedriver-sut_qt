@@ -715,6 +715,14 @@
                 <description>Stop cpu logging and get the results.</description>
                 <example>stop_cpu_log</example>
             </method>
+            <method name="log_pwr">
+                <description>Log the power usage of the process</description>
+                <example>log_pwr</example>
+            </method>
+            <method name="stop_pwr_log">
+                <description>Stop power logging and get the results.</description>
+                <example>stop_pwr_log</example>
+            </method>
             <method name="log_mem">
                 <description>Log memory usage.</description>
                 <example>log_mem</example>
@@ -734,6 +742,10 @@
             <method name="load_cpu_log">
                 <description>Load cpu logging results.</description>
                 <example>load_cpu_log</example>
+            </method>
+            <method name="load_pwr_log">
+                <description>Load power logging results.</description>
+                <example>load_pwr_log</example>
             </method>
             <method name="load_gpu_log">
                 <description>Load Gpu logging results.</description>
