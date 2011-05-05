@@ -52,7 +52,7 @@ module MobyBehaviour
 			# Slots and signals are automatically invokable, but other methods must be explicitly made invokable.
 			# This version does not support method arguments or return values.
       # 
-      # warning: Use with caution - function parameters must match exactly to the Qt slot. Otherwise
+      # Warning: Use with caution - function parameters must match exactly to the Qt slot. Otherwise
       #          behavior is undefined.
 			# 
 			# == arguments
@@ -60,13 +60,15 @@ module MobyBehaviour
 			#  String
 			#   description: name of method to invoke, including empty parenthesis
 			#   example: "clear()"
-      # params
-      #  One or more parameters, currently primitive types (String,Fixnum,Float, boolean) are supported
-      #   
+      # *params
+      #  Array
+      #   description: One or more parameters, currently primitive types (String,Fixnum,Float, boolean) are supported
+      #   example: 1.2, 'Hello'
 			#
 			# == returns
-			# Undefined
+			# String
 			#  description: returns slot return value, empty string if void.
+      #  example: "1"
 			#
 			# == exceptions
 			# RuntimeError
