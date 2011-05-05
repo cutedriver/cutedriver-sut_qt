@@ -50,7 +50,6 @@ module MobyBehaviour
 			# == description
 			# Calls an invokable method of the Qt test object.
 			# Slots and signals are automatically invokable, but other methods must be explicitly made invokable.
-			# This version does not support method arguments or return values.
       # 
       # Warning: Use with caution - function parameters must match exactly to the Qt slot. Otherwise
       #          behavior is undefined.
@@ -62,7 +61,8 @@ module MobyBehaviour
 			#   example: "clear()"
       # *params
       #  Array
-      #   description: One or more parameters, currently primitive types (String,Fixnum,Float, boolean) are supported
+      #   description: Parameters for the method. Currently primitive types (String,Fixnum,Float, boolean) are supported. 
+      #                Must match the parameters and types of the slot.
       #   example: 1.2, 'Hello'
 			#
 			# == returns
