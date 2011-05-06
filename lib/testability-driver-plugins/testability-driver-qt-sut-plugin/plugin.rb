@@ -127,6 +127,18 @@ module MobyPlugin
 
         )
 
+        # create sut object
+				sut = MobyBase::SUT.new(
+
+          sut_controller,
+
+          # pass test object factory class
+					MobyBase::TestObjectFactory.instance,
+
+          # pass sut id
+					sut_id 
+				)
+
         # hook connect method
         adapter.add_hook( 'before_connect' ){}
 
@@ -159,21 +171,10 @@ module MobyPlugin
 
           end
 
-          sut_controller.test_object_adapter = adapter
+          #sut_controller.test_object_adapter = adapter
+          sut.instance_variable_set( :@test_object_adapter, adapter )
 
         }
-
-        # create sut object
-				sut = MobyBase::SUT.new(
-
-          sut_controller,
-
-          # pass test object factory class
-					MobyBase::TestObjectFactory.instance,
-
-          # pass sut id
-					sut_id 
-				)
 
         # return sut object as result
         sut
