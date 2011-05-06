@@ -114,6 +114,7 @@ module MobyPlugin
 
           # tcp/ip write timeouts, default: 15 (seconds)
           $parameters[ sut_id ][ :socket_write_timeout, "15" ].to_i
+
         )
 
           # create controller for sut
@@ -125,18 +126,6 @@ module MobyPlugin
           adapter
 
         )
-
-        # create sut object
-				sut = MobyBase::SUT.new(
-
-          sut_controller,
-
-          # pass test object factory class
-					MobyBase::TestObjectFactory.instance,
-
-          # pass sut id
-					sut_id 
-				)
 
         # hook connect method
         adapter.add_hook( 'before_connect' ){}
@@ -170,9 +159,21 @@ module MobyPlugin
 
           end
 
-          sut.instance_variable_set( :@test_object_adapter, adapter )
+          sut_controller.test_object_adapter = adapter
 
         }
+
+        # create sut object
+				sut = MobyBase::SUT.new(
+
+          sut_controller,
+
+          # pass test object factory class
+					MobyBase::TestObjectFactory.instance,
+
+          # pass sut id
+					sut_id 
+				)
 
         # return sut object as result
         sut
