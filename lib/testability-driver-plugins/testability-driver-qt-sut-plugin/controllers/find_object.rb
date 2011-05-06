@@ -21,30 +21,39 @@ module MobyController
 
   module QT
 
-	module FindObjectCommand
-	  include MobyUtil::FindObjectGenerator
+    module FindObjectCommand
 
-	  # Execute the command
-	  # Sends the message to the device using the @sut_adapter (see base class)     
-	  # == params         
-	  # == returns
-	  # == raises
-	  # NotImplementedError: raised if unsupported command type       
-	  def execute
-		msg = generate_message
-		@sut_adapter.send_service_request(MobyController::QT::Comms::MessageGenerator.generate(msg), true)		
-	  end
+      include MobyUtil::FindObjectGenerator
 
-	  def set_adapter( adapter )
-		@sut_adapter = adapter
-	  end
+      # Execute the command
+      # Sends the message to the device using the @sut_adapter (see base class)     
+      # == params         
+      # == returns
+      # == raises
+      # NotImplementedError: raised if unsupported command type       
+      def execute
 
-	  # enable hooking for performance measurement & debug logging
-	  TDriver::Hooking.hook_methods( self ) if defined?( TDriver::Hooking )
+        @sut_adapter.send_service_request( 
 
-	end #module FindObjectCommand
-	
-  end #module QT
+          # *[ message, return_crc ]
+          MobyController::QT::Comms::MessageGenerator.generate( generate_message ), true 
 
-end #module MobyController
+        )
+
+      end
+
+      def set_adapter( adapter )
+
+        @sut_adapter = adapter
+
+      end
+
+      # enable hooking for performance measurement & debug logging
+      TDriver::Hooking.hook_methods( self ) if defined?( TDriver::Hooking )
+
+    end # FindObjectCommand
+  
+  end # QT
+
+end # MobyController
 
