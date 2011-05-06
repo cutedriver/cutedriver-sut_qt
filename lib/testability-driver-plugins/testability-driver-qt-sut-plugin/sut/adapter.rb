@@ -75,8 +75,18 @@ module MobyController
 
         end
 
+        @hooks = {}
+
       end
 
+      def add_hook( id, &block )
+
+        raise ArgumentError, 'Unable to add hook due to no block was given' unless block_given?
+
+        @hooks[ id ] = block
+
+      end
+  
       # TODO: document me
       def disconnect
 
@@ -97,7 +107,15 @@ module MobyController
 
           port = $parameters[ id ][ :qttas_server_port, "" ]
 
+          # executes the code block before openning the connection
+          execute_hook( 'before_connect', id, ip, port.to_i ) if hooked?( 'before_connect' ) 
+
           @socket = TCPSocket.open( ip, port.to_i )
+
+          @connected = true
+
+          # communication authentication etc can be done here
+          execute_hook( 'after_connect', id, ip, port.to_i, @socket ) if hooked?( 'after_connect' ) 
 
         rescue
 
@@ -105,11 +123,13 @@ module MobyController
 
           port = "no port" if port.empty?
 
+          execute_hook( 'connection_failed', id, ip, port.to_i, $! ) if hooked?( 'connection_failed' ) 
+
           raise IOError, "Unable to connect QTTAS server, verify that it is running properly (#{ ip }:#{ port }): .\nException: #{ $!.message }"
 
         end
 
-        @connected = true
+        true
 
       end
 
@@ -159,6 +179,12 @@ module MobyController
         @_builder = nil
 
         size
+
+      end
+
+      def connected?
+
+        @connected
 
       end
 
@@ -252,6 +278,20 @@ module MobyController
       end
 
     private
+
+      # TODO: document me
+      def execute_hook( id, *arguments )
+
+        @hooks[ id ].call( *arguments )
+
+      end
+
+      # TODO: document me
+      def hooked? ( id )
+
+        @hooks.has_key?( id )
+
+      end
 
       # TODO: document me
       def read_socket( bytes_count )

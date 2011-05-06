@@ -100,8 +100,23 @@ module MobyPlugin
 			# returns SUT object - this method will be called from MobyBase::SUTFactory
 			def self.make_sut( sut_id )
 
+        # retrieve sut specific parameters
+        sut_parameters = $parameters[ sut_id ]
+
+        # create sut adapter
+        adapter = MobyController::QT::SutAdapter.new( 
+
+          # sut id
+          sut_id,
+
+          # tcp/ip read timeouts, default: 15 (seconds) 
+          $parameters[ sut_id ][ :socket_read_timeout,  "15" ].to_i,
+
+          # tcp/ip write timeouts, default: 15 (seconds)
+          $parameters[ sut_id ][ :socket_write_timeout, "15" ].to_i
+        )
         # create sut object
-				MobyBase::SUT.new(
+				sut = MobyBase::SUT.new(
 
           # create controller for sut
 					MobyBase::SutController.new( 
@@ -109,18 +124,7 @@ module MobyPlugin
             # controller id
             "QT", 
 
-            # create sut adapter
-            MobyController::QT::SutAdapter.new( 
-
-              # sut id
-              sut_id,
-
-      				# tcp/ip read timeouts, default: 15 (seconds) 
-              $parameters[ sut_id ][ :socket_read_timeout,  "15" ].to_i,
-
-      				# tcp/ip write timeouts, default: 15 (seconds)
-              $parameters[ sut_id ][ :socket_write_timeout, "15" ].to_i
-            )
+            adapter
 
           ), 
 
@@ -130,6 +134,15 @@ module MobyPlugin
           # pass sut id
 					sut_id 
 				)
+
+        # hook connect method
+        adapter.add_hook( 'before_connect' ){}
+
+        # hook connect method
+        adapter.add_hook( 'after_connect' ){}
+
+        # return sut object as result
+        sut
 
 			end
 
