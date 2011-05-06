@@ -115,18 +115,21 @@ module MobyPlugin
           # tcp/ip write timeouts, default: 15 (seconds)
           $parameters[ sut_id ][ :socket_write_timeout, "15" ].to_i
         )
+
+          # create controller for sut
+				sut_controller = MobyBase::SutController.new( 
+
+          # controller id
+          "QT", 
+
+          adapter
+
+        )
+
         # create sut object
 				sut = MobyBase::SUT.new(
 
-          # create controller for sut
-					MobyBase::SutController.new( 
-
-            # controller id
-            "QT", 
-
-            adapter
-
-          ), 
+          sut_controller,
 
           # pass test object factory class
 					MobyBase::TestObjectFactory.instance,
@@ -139,7 +142,37 @@ module MobyPlugin
         adapter.add_hook( 'before_connect' ){}
 
         # hook connect method
-        adapter.add_hook( 'after_connect' ){}
+        adapter.add_hook( 'after_connect' ){
+
+          begin
+
+            # send service request for agent version number
+            agent_version = sut_controller.__send__( :execute_command, MobyCommand::VersionCommand.new )
+
+            case agent_version
+
+              when "1.2"
+
+                # use optimized XML format; if adapter is not found we're going through rescue block
+                adapter = TDriver::OptimizedXML::TestObjectAdapter
+
+            else
+
+              # didn't recognize the version number use old TDriver::TestObjectAdapter
+              raise
+
+            end
+
+          rescue
+
+            # in case of any exceptions use TDriver::TestObjectAdapter with old XML format
+            adapter = TDriver::TestObjectAdapter
+
+          end
+
+          sut.instance_variable_set( :@test_object_adapter, adapter )
+
+        }
 
         # return sut object as result
         sut
