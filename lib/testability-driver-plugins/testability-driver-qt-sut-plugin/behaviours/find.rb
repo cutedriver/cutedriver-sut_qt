@@ -64,11 +64,11 @@ module MobyBehaviour
 				## flick_to (center)
 				search_result.flick_to(window_x.to_i, window_y.to_i)
 			  rescue Exception => e
-				##$logger.log "behaviour" , "FAIL;Failed to find test object.;#{id.to_s};sut;{};find;" << (find_hash.kind_of?(Hash) ? find_hash.inspect : find_hash.class.to_s)  
+				##$logger.behaviour "FAIL;Failed to find test object.;#{id.to_s};sut;{};find;" << (find_hash.kind_of?(Hash) ? find_hash.inspect : find_hash.class.to_s)  
 				## Rescue from center and flick
 				Kernel::raise e
 			  end
-			  $logger.log "behaviour" , "PASS;Test object found and centered.;#{id.to_s};sut;{};application;" << find_hash.inspect  
+			  $logger.behaviour "PASS;Test object found and centered.;#{id.to_s};sut;{};application;" << find_hash.inspect  
 			  search_result
 			end
 

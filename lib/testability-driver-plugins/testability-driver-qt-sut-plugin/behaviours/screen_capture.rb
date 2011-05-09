@@ -112,16 +112,16 @@ module MobyBehaviour
 
 				rescue Exception => e
 
-					#$logger.log "behaviour" , "FAIL;Failed capture_screen with format \"#{format}\", file_name \"#{file_name}\".;#{ identity };capture_screen;"
+					#$logger.behaviour "FAIL;Failed capture_screen with format \"#{format}\", file_name \"#{file_name}\".;#{ identity };capture_screen;"
 
-					$logger.log "behaviour" , "FAIL;Failed capture_screen with format \"%s\", file_name \"%s\".;%s;capture_screen;" % [ format, file_name, identity ]
+					$logger.behaviour "FAIL;Failed capture_screen with format \"%s\", file_name \"%s\".;%s;capture_screen;" % [ format, file_name, identity ]
 
 					Kernel::raise e
 
 				end
 
-				#$logger.log "behaviour" , "PASS;Operation capture_screen executed successfully with format \"#{format}\", file_name \"#{file_name}\".;#{ identity };capture_screen;"
-				$logger.log "behaviour" , "PASS;Operation capture_screen executed successfully with format \"%s\", file_name \"%s\".;%s;capture_screen;" % [ format, file_name, identity ]
+				#$logger.behaviour "PASS;Operation capture_screen executed successfully with format \"#{format}\", file_name \"#{file_name}\".;#{ identity };capture_screen;"
+				$logger.behaviour "PASS;Operation capture_screen executed successfully with format \"%s\", file_name \"%s\".;%s;capture_screen;" % [ format, file_name, identity ]
 
 				image_binary
 
@@ -205,15 +205,13 @@ module MobyBehaviour
 
 				rescue Exception => e
 
-					$logger.log "behaviour", 
-						"FAIL;Failed when searching for image on the screen.;#{ identity };find_on_screen;#{(image_or_path.respond_to?(:filename) ? image_or_path.filename : image_or_path.to_s)},#{tolerance.to_s}"  
+					$logger.behaviour "FAIL;Failed when searching for image on the screen.;#{ identity };find_on_screen;#{(image_or_path.respond_to?(:filename) ? image_or_path.filename : image_or_path.to_s)},#{tolerance.to_s}"  
 
 					Kernel::raise e
 
 				end
 
-				$logger.log "behaviour", 
-					"PASS;Image search completed successfully.;#{ identity };find_on_screen;#{(image_or_path.respond_to?(:filename) ? image_or_path.filename : image_or_path.to_s)},#{tolerance.to_s}"
+				$logger.behaviour "PASS;Image search completed successfully.;#{ identity };find_on_screen;#{(image_or_path.respond_to?(:filename) ? image_or_path.filename : image_or_path.to_s)},#{tolerance.to_s}"
 
 				result
 
@@ -258,16 +256,14 @@ module MobyBehaviour
 					result = !find_on_screen(image_or_path, tolerance).nil?
 				rescue Exception => exc
 
-					$logger.log "behaviour", 
-						"FAIL;Failed when searching for image on the screen.;#{ identity };screen_contains?;#{(image_or_path.respond_to?(:filename) ? image_or_path.filename : image_or_path.to_s)},#{tolerance.to_s}"
+					$logger.behaviour	"FAIL;Failed when searching for image on the screen.;#{ identity };screen_contains?;#{(image_or_path.respond_to?(:filename) ? image_or_path.filename : image_or_path.to_s)},#{tolerance.to_s}"
 
 					Kernel::raise exc
 
 
 				end      
 
-				$logger.log "behaviour", 
-					"PASS;Image search completed successfully.;#{ identity };screen_contains?;#{(image_or_path.respond_to?(:filename) ? image_or_path.filename : image_or_path.to_s)},#{tolerance.to_s}"
+				$logger.behaviour "PASS;Image search completed successfully.;#{ identity };screen_contains?;#{(image_or_path.respond_to?(:filename) ? image_or_path.filename : image_or_path.to_s)},#{tolerance.to_s}"
 
 				result
 

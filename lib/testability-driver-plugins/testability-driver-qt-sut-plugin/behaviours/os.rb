@@ -62,10 +62,10 @@ module MobyBehaviour
       # @sut.execute_command(command)
       # self.force_refresh
       # rescue Exception => e
-      # $logger.log "behaviour" , "FAIL;Failed open_file with path \"#{path}\", dialog_name \"#{dialog_name}\", button \"#{button.to_s}\".;#{identity};open_file;"
+      # $logger.behaviour "FAIL;Failed open_file with path \"#{path}\", dialog_name \"#{dialog_name}\", button \"#{button.to_s}\".;#{identity};open_file;"
       # Kernel::raise e
       # end
-      # $logger.log "behaviour" , "PASS;Operation file executed successfully with path \"#{path}\", dialog_name \"#{dialog_name}\", button \"#{button.to_s}\".;#{identity};open_file;"
+      # $logger.behaviour "PASS;Operation file executed successfully with path \"#{path}\", dialog_name \"#{dialog_name}\", button \"#{button.to_s}\".;#{identity};open_file;"
       # nil
       # end			
 			# Press Enter on the keyboard. Useful to accept crash warnings on windows
@@ -85,10 +85,10 @@ module MobyBehaviour
 				  end
 				  self.execute_command( MobyCommand::WidgetCommand.new( nil, nil, nil, 'PressEnter', params, nil, 'uiCommand') )
 				rescue Exception => e
-					$logger.log "behaviour" , "FAIL;Failed to send an Enter keystroke request to the qttas server;press_enter;"
+					$logger.behaviour "FAIL;Failed to send an Enter keystroke request to the qttas server;press_enter;"
 					Kernel::raise e
 				end
-					$logger.log "behaviour" , "PASS;Successfuly sent an Enter keystroke request to the qttas server;press_enter;"
+					$logger.behaviour "PASS;Successfuly sent an Enter keystroke request to the qttas server;press_enter;"
 				nil
 			end
 

@@ -73,12 +73,12 @@ module MobyBehaviour
 		  self.fixture('fps', 'startFps')
 		rescue Exception => e
 
-		  $logger.log "behaviour" , "FAIL;Failed start_fps_measurement.;#{ identity };start_fps_measurement;"
+		  $logger.behaviour "FAIL;Failed start_fps_measurement.;#{ identity };start_fps_measurement;"
 		  Kernel::raise e
 
 		end
 
-		$logger.log "behaviour" , "PASS;Operation start_fps_measurement executed successfully.;#{ identity };start_fps_measurement;"
+		$logger.behaviour "PASS;Operation start_fps_measurement executed successfully.;#{ identity };start_fps_measurement;"
 
 		nil
 	  end
@@ -102,12 +102,12 @@ module MobyBehaviour
 		  results = parse_results( self.fixture('fps', 'stopFps') )
 		rescue Exception => e
 
-		  $logger.log "behaviour" , "FAIL;Failed stop_fps_measurement.;#{ identity };stop_fps_measurement;"
+		  $logger.behaviour "FAIL;Failed stop_fps_measurement.;#{ identity };stop_fps_measurement;"
 		  Kernel::raise e
 
 		end
 
-		$logger.log "behaviour" , "PASS;Operation stop_fps_measurement executed successfully.;#{ identity };stop_fps_measurement;"
+		$logger.behaviour "PASS;Operation stop_fps_measurement executed successfully.;#{ identity };stop_fps_measurement;"
 
 		results
 	  end
@@ -135,12 +135,12 @@ module MobyBehaviour
 		  results = parse_results( self.fixture('fps', 'collectData') )
 		rescue Exception => e
 
-		  $logger.log "behaviour" , "FAIL;Failed collect_fps_data.;#{ identity };collect_fps_data;"
+		  $logger.behaviour "FAIL;Failed collect_fps_data.;#{ identity };collect_fps_data;"
 		  Kernel::raise e
 
 		end
 
-		$logger.log "behaviour" , "PASS;Operation collect_fps_data executed successfully.;#{ identity };collect_fps_data;"
+		$logger.behaviour "PASS;Operation collect_fps_data executed successfully.;#{ identity };collect_fps_data;"
 
 		results
 	  end
