@@ -240,11 +240,11 @@ module MobyBehaviour
 			    begin 
 				  returnValue = @sut.execute_command( command )
 				rescue
-				  $logger.log "behaviour" , "FAIL;Failed when calling method set_attribute with values attribute:#{attribute.to_s} value:#{value.to_s}.;#{identity};set_attribute;"
+				  $logger.behaviour "FAIL;Failed when calling method set_attribute with values attribute:#{attribute.to_s} value:#{value.to_s}.;#{identity};set_attribute;"
 				  Kernel::raise RuntimeError.new("Setting attribute '%s' to value '%s' failed with error: %s" % [attribute, value, returnValue])
 				end
 			  
-			    $logger.log "behaviour" , "PASS;The method set_attribute was executed successfully with with values attribute:#{attribute.to_s} value:#{value.to_s}.;#{identity};set_attribute;"
+			    $logger.behaviour "PASS;The method set_attribute was executed successfully with with values attribute:#{attribute.to_s} value:#{value.to_s}.;#{identity};set_attribute;"
 	  
 			    nil
 

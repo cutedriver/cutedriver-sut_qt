@@ -82,12 +82,12 @@ module MobyBehaviour
 
         rescue Exception => e
 
-          $logger.log "behaviour" , "FAIL;Failed enable_events with refresh \"#{filter_array.to_s}\".;#{ identity };enable_events;"
+          $logger.behaviour "FAIL;Failed enable_events with refresh \"#{filter_array.to_s}\".;#{ identity };enable_events;"
           Kernel::raise e
 
         end
 
-        $logger.log "behaviour" , "PASS;Operation enable_events executed successfully with refresh \"#{ filter_array.to_s }\".;#{ identity };enable_events;"
+        $logger.behaviour "PASS;Operation enable_events executed successfully with refresh \"#{ filter_array.to_s }\".;#{ identity };enable_events;"
         nil
       end
 
@@ -111,11 +111,11 @@ module MobyBehaviour
           command.service( 'collectEvents' )
           @sut.execute_command( command)
         rescue Exception => e
-          $logger.log "behaviour" , "FAIL;Failed disable_events.;#{ identity };disable_events;"
+          $logger.behaviour "FAIL;Failed disable_events.;#{ identity };disable_events;"
           Kernel::raise e 
         end 
 
-        $logger.log "behaviour" , "PASS;Operation disable_events executed successfully.;#{ identity };disable_events;"
+        $logger.behaviour "PASS;Operation disable_events executed successfully.;#{ identity };disable_events;"
         nil
 
       end
@@ -146,12 +146,12 @@ module MobyBehaviour
 
         rescue Exception => e
 
-          $logger.log "behaviour" , "FAIL;Failed get_events.;#{ identity };get_events;"
+          $logger.behaviour "FAIL;Failed get_events.;#{ identity };get_events;"
           Kernel::raise e
     
         end
 
-        $logger.log "behaviour" , "PASS;Operation get_events executed successfully.;#{ identity };get_events;"
+        $logger.behaviour "PASS;Operation get_events executed successfully.;#{ identity };get_events;"
         
         ret
         

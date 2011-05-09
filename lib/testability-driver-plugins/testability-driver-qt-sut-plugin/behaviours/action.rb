@@ -88,12 +88,12 @@ module MobyBehaviour
 
 				rescue Exception => e
 
-					$logger.log "behaviour" , "FAIL;Failed hover with refresh \"#{ refresh.to_s }\".;#{ identity };hover;"
+					$logger.behaviour "FAIL;Failed hover with refresh \"#{ refresh.to_s }\".;#{ identity };hover;"
 					Kernel::raise e
 
 				end
 
-				$logger.log "behaviour" , "PASS;Hover operation executed successfully with refresh \"#{ refresh.to_s }\".;#{ identity };hover;"
+				$logger.behaviour "PASS;Hover operation executed successfully with refresh \"#{ refresh.to_s }\".;#{ identity };hover;"
 				nil
 			end
 
@@ -136,12 +136,12 @@ module MobyBehaviour
 
 				rescue Exception => e
 
-					$logger.log "behaviour" , "FAIL;Failed trigger with refresh \"#{ refresh.to_s }\".;#{ identity };trigger;"
+					$logger.behaviour "FAIL;Failed trigger with refresh \"#{ refresh.to_s }\".;#{ identity };trigger;"
 					Kernel::raise e
 
 				end
 
-				$logger.log "behaviour" , "PASS;Trigger operation executed successfully with refresh \"#{ refresh.to_s }\".;#{ identity };trigger;"
+				$logger.behaviour "PASS;Trigger operation executed successfully with refresh \"#{ refresh.to_s }\".;#{ identity };trigger;"
 				nil
 			end
 
