@@ -20,6 +20,160 @@
 module MobyUtil
 
 	module MessageComposer
+
+    class TasCommands
+
+      # TODO: document me
+      def initialize( options = {} )
+      
+        @command_attributes = options
+            
+        @targets = []
+        
+      end # initialize
+
+      # TODO: document me
+      def target( options = {} )
+       
+        @targets << { :arguments => options, :objects => [], :commands => [] }
+      
+      end # target
+      
+      # TODO: document me
+      def targets
+      
+        @targets
+      
+      end # targets
+
+      def object( *arguments )
+      
+      end
+
+      # TODO: document me
+      def command( *arguments )
+      
+        command_hash = { :parameters => [] }
+      
+        while arguments.count > 0
+        
+          value = arguments.shift
+          
+          if value.kind_of?( Hash )
+          
+            command_hash[ :arguments ] = value
+          
+          else
+
+            command_hash[ :value ] = value
+          
+          end
+        
+        end
+      
+        @targets.last[ :commands ] << command_hash
+        
+      end # command
+
+      # TODO: document me
+      def parameter( *arguments )
+
+        params_hash = {}
+
+        while arguments.count > 0
+        
+          value = arguments.shift
+          
+          if value.kind_of?( Hash )
+          
+            params_hash[ :arguments ] = value
+          
+          else
+
+            params_hash[ :value ] = value
+          
+          end
+        
+        end
+      
+        @targets.last[ :commands ][ :parameters ] << params_hash
+      
+      end # parameter
+
+      # TODO: document me
+      def to_xml
+      
+        targets = targets_to_xml 
+      
+        if targets.length > 0
+        
+          "<TasCommands #{ @command_attributes.to_attributes }>#{ targets }</TasCommands>"
+          
+        else
+
+          "<TasCommands #{ @command_attributes.to_attributes } />"
+          
+        end
+      
+        
+      end # to_xml
+
+    private
+      
+      # TODO: document me
+      def targets_to_xml
+      
+        @targets.collect do | target |
+
+          commands = target[ :commands ].collect do | command |
+
+            value = command[ :value ]
+
+            params = command[ :parameters ].collect do | parameter |
+            
+              if parameter.has_key?( :value )
+
+                "<param #{ parameters[ :arguments ].to_attributes }>#{ parameters[ :value ] }</param>"
+              
+              else
+
+                "<param #{ parameters[ :arguments ].to_attributes } />"
+              
+              end
+                          
+            end.join
+            
+            value = params if params.count > 0
+
+            unless value.nil?
+
+              "<Command #{ command[ :arguments ].to_attributes }>#{ command[ :value ] }</Command>"
+            
+            else
+
+              "<Command #{ command[ :arguments ].to_attributes } />"
+            
+            end
+          
+          end
+          
+          if commands.count > 0
+          
+            commands.unshift("<Target #{ target[ :arguments ].to_attributes }></Target>")
+          
+          else
+          
+            commands.unshift("<Target #{ target[ :arguments ].to_attributes } />")
+          
+          end
+        
+          commands.join
+        
+        end.join
+      
+      end # targets_to_xml
+
+    end # TasCommands
 	 
 	  def make_parametrized_message( service_details, command_name, params, command_params = {} )		
 		service_details[:plugin_timeout] = $parameters[ @_sut.id ][ :qttas_plugin_timeout, 10000 ] if @_sut

@@ -60,7 +60,7 @@ module MobyBehaviour
 
 		      button = :Left
 		      command = MobyCommand::WidgetCommand.new
-		      command.object_id(attribute('viewPort'))
+		      command.set_object_id(attribute('viewPort'))
 		      command.application_id(get_application_id)    
 		      command.object_type(:Standard)                          
 		      command.command_name('Tap')    

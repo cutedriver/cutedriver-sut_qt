@@ -81,8 +81,9 @@ module MobyBehaviour
 					command = command_params #in qt_behaviour
 					command.object_type( :Action )
 					command.command_name( 'Hover' )
-					command.object_id( @parent.id )
+					command.set_object_id( @parent.id )
 					command.command_params( 'id' => id )
+
 					@sut.execute_command( command )
 					self.force_refresh({:id => get_application_id}) if refresh
 
@@ -128,7 +129,7 @@ module MobyBehaviour
 					command = command_params #in qt_behaviour
 					command.object_type( :Action )
 					command.command_name( 'Trigger' )
-					command.object_id( @parent.id )
+					command.set_object_id( @parent.id )
 					command.command_params( 'id'=>id )
 
 					@sut.execute_command( command )

@@ -82,7 +82,7 @@ module MobyBehaviour
 		      
 		      command = MobyCommand::WidgetCommand.new
 
-		      command.object_id(attribute('parentWidget'))
+		      command.set_object_id(attribute('parentWidget'))
 
 		      command.application_id(get_application_id)    
 		      command.object_type(:Standard)                          

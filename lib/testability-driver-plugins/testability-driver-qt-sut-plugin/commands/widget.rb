@@ -42,7 +42,7 @@ module MobyCommand
 			@@_valid_types = [ nil, :Standard, :Graphics, :Application, :Action, :Web ]
 
 			self.application_id(application_id )
-			self.object_id( object_id )
+			self.set_object_id( object_id )
 			self.object_type( object_type )
 			self.command_name( command_name )    
 			self.command_params( params )
@@ -123,7 +123,7 @@ module MobyCommand
 		# == returns  
 		# == raises
 		# ArgumentError:: When the supplied id is not of type String   
-		def object_id(id)
+		def set_object_id(id)
 			raise ArgumentError.new( "Object id must be a string." ) unless id == nil or id.kind_of?( String )
 			@_object_id = id
 		end
