@@ -83,6 +83,8 @@ module MobyBehaviour
 
       end
 
+    private   
+
       # == nodoc
       # should this method be private?
       def plugin_command( require_response = false, command = MobyCommand::WidgetCommand.new )
@@ -93,8 +95,6 @@ module MobyBehaviour
         command.transitions_off    
         command
       end
-
-    private   
 
       def do_sleep(time)
 
