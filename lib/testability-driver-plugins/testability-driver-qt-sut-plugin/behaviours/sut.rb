@@ -99,6 +99,39 @@ module MobyBehaviour
       end
 
       # == description
+      # Returns XML list of processes running in the target.
+      # \n
+      # == arguments
+      #
+      # == returns
+      # String
+      #   description: tasMessage XML
+      #
+      # == exceptions
+      # RuntimeError
+      #   description: if getting applications list throws any exception it's converted to RuntimeError with descriptive message
+      def list_processes
+
+        apps = nil
+
+        begin
+          # execute the application control service request
+          apps = execute_command( MobyCommand::Application.new( :ListRunningProcesses ) )
+          $logger.behaviour "PASS;Successfully listed processes.;#{ id };sut;{};list_processes;"
+
+        rescue Exception => e
+
+          $logger.behaviour "FAIL;Failed to list processes.;#{ id };sut;{};list_processes;"
+          Kernel::raise RuntimeError.new( "Unable to list processes: Exception: #{ e.message } (#{ e.class })" )
+
+        end
+
+        apps     
+
+      end
+
+
+      # == description
       # Returns XML list of applications and start times for applications started by qttasserver
       # \n
       # == arguments

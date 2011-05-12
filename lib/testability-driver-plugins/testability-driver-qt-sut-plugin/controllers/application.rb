@@ -73,6 +73,11 @@ module MobyController
 		  service_details = {:service => 'listApps', :name => @_application_name, :id => @_application_uid}
 		  command_xml = make_xml_message(service_details, 'listApps', nil )
 
+		  # list applications		      
+		elsif @_command == :ListRunningProcesses
+		  service_details = {:service => 'listRunningProcesses', :name => @_application_name, :id => @_application_uid}
+		  command_xml = make_xml_message(service_details, 'listRunningProcesses', nil )
+
 		  # list started applications		      
 		elsif @_command == :ListStartedApps
 		  service_details = {:service => 'startedApps', :name => @_application_name, :id => @_application_uid}
