@@ -20,7 +20,98 @@
 module MobyUtil
   
   module FindObjectGenerator
+
+    def generate_message
+    
+      # get sut paramteres only once, store to local variable
+      sut_parameters = $parameters[ @_sut.id ]
+
+	    filter_type = sut_parameters[ :filter_type, 'none' ]
 	
+	    if filter_type != 'none'
+
+	      filters = {}
+
+        sut_parameters.if_found( :filter_properties ){ | key, value | filters[ 'filterProperties' ] = value }
+        sut_parameters.if_found( :plugin_blacklist  ){ | key, value | filters[ 'pluginBlackList'  ] = value }
+        sut_parameters.if_found( :plugin_whitelist  ){ | key, value | filters[ 'pluginWhiteList'  ] = value }
+
+	      case filter_type
+		
+	        when 'dynamic'
+		
+            value = MobyUtil::DynamicAttributeFilter.instance.filter_string
+
+		        filters[ 'attributeWhiteList' ] = value unless value.blank?
+
+	        when 'static'
+		
+            sut_parameters.if_found( :attribute_blacklist ){ | key, value | filters[ 'attributeBlackList' ] = value }
+            sut_parameters.if_found( :attribute_whitelist ){ | key, value | filters[ 'attributeWhiteList' ] = value }
+
+	        end
+
+      else
+
+        filters = {}
+
+      end
+
+      #xml = "<?xml version=\"1.0\"?>"
+
+      xml = "<TasCommands service=\"findObject\" #{ @_app_details.to_attributes }"
+
+      unless @_params.empty?
+
+        # pass checksum value if known from previous service request result
+        unless @_checksum.nil?
+
+          xml << " crc=\"#{ @_checksum.to_s }\" "
+
+        end
+
+        # TasCommands close    
+        xml << '><Target>'
+        
+        # temp. objects xml fragment
+        objects = ""
+
+        # collect objects with attributes
+        @_params.reverse_each{ | parameters |
+        
+          if parameters == @_params.last
+          
+            objects = "<object #{ parameters.to_attributes } />"          
+            
+          else
+          
+            objects = "<object #{ parameters.to_attributes }>#{ objects }</object>"
+            
+          end
+        
+        }
+
+        # add objects to xml
+        xml << objects
+
+        xml << '<Command name="findObject">'
+
+        filters.each{ | name, value | xml << "<param name=\"#{ name }\" value=\"#{ value }\" />" }
+
+        xml << '</Command></Target></TasCommands>'
+    
+      else
+    
+        # TasCommands close
+        xml << ' />'
+      
+      end
+      
+      xml
+
+    end
+
+=begin	
     def generate_message
     
       # get sut paramteres only once, store to local variable
@@ -101,7 +192,7 @@ module MobyUtil
       xml
 
     end
-
+=end
 
 =begin	
 	  def generate_message

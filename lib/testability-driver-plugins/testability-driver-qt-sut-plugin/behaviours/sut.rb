@@ -90,7 +90,7 @@ module MobyBehaviour
         rescue Exception => e
 
           $logger.behaviour "FAIL;Failed to list applications.;#{ id };sut;{};list_apps;"
-          Kernel::raise RuntimeError.new( "Unable to list applications: Exception: #{ e.message } (#{ e.class })" )
+          raise RuntimeError, "Unable to list applications: Exception: #{ e.message } (#{ e.class })"
 
         end
 
@@ -123,7 +123,7 @@ module MobyBehaviour
         rescue Exception => e
 
           $logger.behaviour "FAIL;Failed to list applications.;#{ id };sut;{};list_started_apps;"
-          Kernel::raise RuntimeError.new( "Unable to list started applications: Exception: #{ e.message } (#{ e.class })" )
+          raise RuntimeError, "Unable to list started applications: Exception: #{ e.message } (#{ e.class })"
 
         end
 
@@ -147,7 +147,7 @@ module MobyBehaviour
           $logger.behaviour "PASS;Successfully listed crashed applications.;#{ id };sut;{};list_crashed_apps;"
         rescue Exception => e
           $logger.behaviour "FAIL;Failed to list crashed applications.;#{ id };sut;{};list_crashed_apps;"
-          Kernel::raise RuntimeError.new( "Unable to list crashed applications: Exception: #{ e.message } (#{ e.class })" )
+          raise RuntimeError, "Unable to list crashed applications: Exception: #{ e.message } (#{ e.class })"
         end
 
         apps     
@@ -192,8 +192,8 @@ module MobyBehaviour
       #  description: Timeout of %s seconds reached. %s
       def execute_shell_command(command, param = { :detached => "false"} )      
 
-        Kernel::raise ArgumentError.new("The command argument must be a non empty String.") unless ( command.kind_of?( String ) and !command.empty? )
-        Kernel::raise ArgumentError.new("The parameters argumet must be a Hash.") unless ( param.kind_of?(Hash) )
+        raise ArgumentError, "The command argument must be a non empty String." unless command.kind_of?( String ) and !command.empty?
+        raise ArgumentError, "The parameters argumet must be a Hash." unless param.kind_of?( Hash )
 
         if param[:detached].nil?
           param[:detached] = "false"
@@ -223,7 +223,7 @@ module MobyBehaviour
               if Time.new > time
                 command_params = {:kill => 'true'}
                 command_output = shell_command(pid, command_params)['output']
-                Kernel::raise RuntimeError.new( "Timeout of #{timeout.to_s} seconds reached. #{command_output}")
+                raise RuntimeError, "Timeout of #{timeout.to_s} seconds reached. #{command_output}"
               elsif obj['status'] == "RUNNING"
                 next
               else 
@@ -274,7 +274,7 @@ module MobyBehaviour
       #
       def shell_command( pid, param = {} )
 
-        Kernel::raise ArgumentError.new("pid argument should be positive integer.") unless pid.to_i > 0
+        raise ArgumentError, "pid argument should be positive integer." unless pid.to_i > 0
 
         param[ :status ] = 'true'
 
@@ -292,23 +292,23 @@ module MobyBehaviour
 
           data = {}
 
-		      object_xml_data, unused_rule = @test_object_adapter.get_objects( MobyUtil::XML.parse_string( xml_source ), { :type => 'Response' }, true )
+          object_xml_data, unused_rule = @test_object_adapter.get_objects( MobyUtil::XML.parse_string( xml_source ), { :type => 'Response' }, true )
 
-		      object_xml_data.collect{ | element |
-		      
-  			    data.merge!( 
+          object_xml_data.collect{ | element |
+          
+            data.merge!( 
 
               @test_object_adapter.test_object_attributes( element ) 
 
             )
 
-		      }
+          }
 
-		      data
+          data
 
-		    else
+        else
 
-		      # Killed processes have no relevant data.
+          # Killed processes have no relevant data.
           data = {
             :status => "KILLED",
             :output => xml_source
@@ -352,10 +352,11 @@ module MobyBehaviour
           shortname = full_shortname.rpartition('.')[0]
           app_child = @sut.application(:name=>shortname)
 
-        rescue Exception => e
+        rescue Exception
 
-          $logger.behaviour "FAIL;Failed to find application.;#{id.to_s};sut;{};application;" << (hash_uid.kind_of?(Hash) ? hash_uid.inspect : hash_uid.class.to_s)
-          Kernel::raise e
+          $logger.behaviour "FAIL;Failed to find application.;#{id.to_s};sut;{};application;" << (hash_uid.kind_of?( Hash ) ? hash_uid.inspect : hash_uid.class.to_s)
+
+          raise
 
         end
 
@@ -469,10 +470,11 @@ module MobyBehaviour
         begin 
           execute_command( command )            
           nil
-        rescue Exception => e      
+        rescue Exception
           
-          $logger.behaviour "FAIL;Failed tap_screen on coords \"#{x}:#{y}\";"
-          Kernel::raise e        
+          $logger.behaviour "FAIL;Failed tap_screen on coords \"#{ x }:#{ y }\";"
+
+          raise
           
         end      
 
@@ -495,7 +497,7 @@ module MobyBehaviour
           $logger.behaviour "PASS;Successfully closed qttas.;#{ id };sut;{};close_qttas;"
         rescue Exception => e
           $logger.behaviour "FAIL;Failed to close qttas.;#{ id };sut;{};close_qttas;"
-          Kernel::raise RuntimeError.new( "Unable to close qttas: Exception: #{ e.message } (#{ e.class })" )
+          raise RuntimeError, "Unable to close qttas: Exception: #{ e.message } (#{ e.class })"
         end
         nil
       end
@@ -562,7 +564,7 @@ module MobyBehaviour
         rescue Exception => e
 
           $logger.behaviour "FAIL;Failed to start process memory logging.;#{ id };sut;{};log_process_mem_start;"
-          Kernel::raise RuntimeError.new( "Unable to start process memory logging: Exception: #{ e.message } (#{ e.class })" )
+          raise RuntimeError, "Unable to start process memory logging: Exception: #{ e.message } (#{ e.class })"
 
         end
 
@@ -608,7 +610,7 @@ module MobyBehaviour
           $logger.behaviour "PASS;Successfully stopped process memory logging.;#{ id };sut;{};log_process_mem_stop;"
         rescue Exception => e
           $logger.behaviour "FAIL;Failed to stop process memory logging.;#{ id };sut;{};log_process_mem_stop;"
-          Kernel::raise RuntimeError.new( "Unable to stop process memory logging: Exception: #{ e.message } (#{ e.class })" )
+          raise RuntimeError, "Unable to stop process memory logging: Exception: #{ e.message } (#{ e.class })"
         end
         log
       end
@@ -654,7 +656,7 @@ module MobyBehaviour
 
           $logger.behaviour "FAIL;Failed to start generating CPU load.;#{ id };sut;{};cpu_load_start;"
 
-          Kernel::raise RuntimeError.new( "Unable to start generating CPU load: Exception: #{ e.message } (#{ e.class })" )
+          raise RuntimeError, "Unable to start generating CPU load: Exception: #{ e.message } (#{ e.class })"
 
         end
 
@@ -676,7 +678,7 @@ module MobyBehaviour
           $logger.behaviour "PASS;Successfully started generating CPU load.;#{ id };sut;{};cpu_load_start;"
         rescue Exception => e
           $logger.behaviour "FAIL;Failed to start generating CPU load.;#{ id };sut;{};cpu_load_start;"
-          Kernel::raise RuntimeError.new( "Unable to start generating CPU load: Exception: #{ e.message } (#{ e.class })" )
+          raise RuntimeError, "Unable to start generating CPU load: Exception: #{ e.message } (#{ e.class })"
         end
       end
 
@@ -707,31 +709,31 @@ module MobyBehaviour
           interval_millis = interval*1000 # to millis
 
           # make one refresh before execution then freeze
-		  find_object_state = self.parameter[ :use_find_object, false ]
-		  self.parameter[ :use_find_object] = false 
+          find_object_state = self.parameter[ :use_find_object, false ]
+          self.parameter[ :use_find_object] = false 
 
           app.force_refresh({:id => get_application_id})
           self.freeze
 
           #disable sleep to avoid unnecessary sleeping
-		  self.parameter[ :sleep_disabled ] = true
+          self.parameter[ :sleep_disabled ] = true
 
           ret = execute_command( MobyCommand::Group.new(interval_millis.to_i, app, block ) )
 
-		  self.parameter[ :sleep_disabled ] = false
-		  self.parameter[ :use_find_object] = find_object_state
+          self.parameter[ :sleep_disabled ] = false
+          self.parameter[ :use_find_object] = find_object_state
 
           self.unfreeze
 
           # the behaviour returns the amout of behaviours
-          # sleep to avoid sending messages to the app untill the 
+          # sleep to avoid sending messages to the app until the 
           # commands have been executed
           sleep ( ret * interval )
 
           $logger.behaviour "PASS;Successfully executed grouped behaviours.;#{ id };sut;{};group_behaviours;"
         rescue Exception => e
           $logger.behaviour "FAIL;Failed to execute grouped behaviours.;#{ id };sut;{};group_behaviours;"
-          Kernel::raise RuntimeError.new( "Unable to execute grouped behaviours: Exception: #{ e.message } (#{ e.class })" )
+          raise RuntimeError, "Unable to execute grouped behaviours: Exception: #{ e.message } (#{ e.class })"
         end
         nil
       end
@@ -764,8 +766,8 @@ module MobyBehaviour
 
       # == nodoc
       # {:name => '', id => '', applicationUid => ''},[ {:objectName => '' , :className => , :text =>} ,..]
-      def find_object( app_details = nil, objects = nil )
-        execute_command( MobyCommand::FindObjectCommand.new( self, app_details, objects ) )
+      def find_object( app_details = nil, objects = nil, checksum = nil )
+        execute_command( MobyCommand::FindObjectCommand.new( self, app_details, objects, checksum ) )
       end
 
       # enable hooking for performance measurement & debug logging
