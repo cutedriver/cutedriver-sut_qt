@@ -204,8 +204,11 @@ module MobyController
         # set request message id
         message.message_id = @counter
 
+        # generate binary message to be sent to socket
+        binary_message = message.make_binary_message( @counter )
+
         # write request message to socket
-        write_socket( message.make_binary_message( @counter ) )
+        write_socket( binary_message )
 
         # read response to determine was the message handled properly and parse the header
         # header[ 0 ] = command_flag
