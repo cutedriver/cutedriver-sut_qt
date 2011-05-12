@@ -66,7 +66,7 @@ module MobyUtil
         # pass checksum value if known from previous service request result
         unless @_checksum.nil?
 
-          xml << " crc=\"#{ @_checksum.to_s }\" "
+          xml << " checksum=\"#{ @_checksum.to_s }\" "
 
         end
 
