@@ -20,28 +20,47 @@
 module MobyCommand
 
   class FindObjectCommand < MobyCommand::CommandData
-		
-	  # Constructor
-	  # == params
-	  # btn_id:: (optional) String, id for the button perform this command on
-	  # command_type:: (optional) Symbol, defines the command to perform on the button
-	  # == returns
-	  # MobyCommand::FindObjectCommand:: New CommandData object
-	  # == raises
-	  # ArgumentError:: When the supplied command_type is invalid.
-	  def initialize(sut, app_details = nil, params = nil)
-	    @_params = params
-	    @_app_details = app_details
-	    @_sut = sut
-	  end
+    
+    # Constructor
+    # == params
+    # btn_id:: (optional) String, id for the button perform this command on
+    # command_type:: (optional) Symbol, defines the command to perform on the button
+    # == returns
+    # MobyCommand::FindObjectCommand:: New CommandData object
+    # == raises
+    # ArgumentError:: When the supplied command_type is invalid.
+    def initialize( sut, app_details = nil, params = nil, checksum = nil )
 
-	  def application_details
-	    @_app_details
-	  end
+      @_params = params
 
-	  def search_parameters
-	    @_params
-	  end
+      @_app_details = app_details
+
+      @_sut = sut
+
+      @_checksum = checksum
+
+    end
+
+    # TODO: document me
+    def application_details
+
+      @_app_details
+
+    end
+
+    # TODO: document me
+    def search_parameters
+
+      @_params
+
+    end
+
+    # TODO: document me
+    def checksum
+
+      @_checksum
+
+    end
 
   end # FindObjectCommand
 
