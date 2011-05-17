@@ -290,20 +290,35 @@ module MobyUtil
 	  end
 	  
 	  def state_message
+
 		  app_details = { :service => 'uiState', :name => @_application_name, :id => @_application_uid }
+
 		  app_details[ :applicationUid ] = @_refresh_args[ :applicationUid ] if @_refresh_args.include?( :applicationUid )
+
+      app_details[ :checksum ] = @_checksum unless @_checksum.nil?
+
+	    params = @_flags || {}
 		
 		  case $parameters[ @_sut.id ][ :filter_type, 'none' ]
-		  when 'none' 
-		    command_xml = make_xml_message( app_details, 'UiState', @_flags || {} )
-		  when 'dynamic'
-		    params = @_flags || {}
-		    params[ :filtered ] = 'true'
-		    command_xml = make_parametrized_message( app_details, 'UiState', params, make_filters )
+
+		    when 'none' 
+
+		      command_xml = make_xml_message( app_details, 'UiState', params )
+
+		    when 'dynamic'
+
+		      params[ :filtered ] = 'true'
+
+		      command_xml = make_parametrized_message( app_details, 'UiState', params, make_filters )
+
 		  else
-		    command_xml = make_parametrized_message( app_details, 'UiState', @_flags || {}, make_filters )
+
+		    command_xml = make_parametrized_message( app_details, 'UiState', params, make_filters )
+
 		  end
+
 		  command_xml		
+
 	  end
 
 	  def run_message

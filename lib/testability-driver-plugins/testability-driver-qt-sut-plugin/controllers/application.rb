@@ -20,133 +20,181 @@
 module MobyController
   
   module QT
-	
-	module Application 
-	  
+  
+    module Application 
+      
       include MobyUtil::MessageComposer
 
-	  def set_adapter( adapter )
-		
-		@sut_adapter = adapter
-		
-	  end           
-	  
-	  # Execute the command). 
-	  # Sends the message to the device using the @sut_adapter (see base class)     
-	  # == params         
-	  # == returns
-	  # == raises
-	  # ArgumentError: raised if unsupported command type   
-	  def execute()
-		
-		return_response_crc = false
-		
-		# application ui state
-		if @_command == :State
-		  
-		  command_xml = state_message()
-		  return_response_crc = true
-		  
-		  # launch application
-		elsif @_command == :Run
-		  command_xml = run_message()
+      def set_adapter( adapter )
+    
+        @sut_adapter = adapter
+    
+      end           
+      
+      # Execute the command 
+      # Sends the message to the device using the @sut_adapter (see base class)     
+      # == params         
+      # == returns
+      # == raises
+      # ArgumentError: raised if unsupported command type   
+      def execute
+    
+        return_response_crc = false
 
-		  # close
-		elsif @_command == :Close
-		  command_xml = close_message()
+        case @_command
+        
+          # application ui state
+          when  :State        
 
-		  # close qttas
-		elsif @_command == :CloseQttas
-		  #params = {'uid' => '0'}
-		  command_xml = make_xml_message({:service => 'closeApplication'},'Close',{'uid' => '0'})
+            command_xml = state_message
 
-		  # kill application
-		elsif @_command == :Kill
-		  command_xml = make_xml_message({:service => 'closeApplication'},'Kill',{'uid' => @_application_uid})
+            return_response_crc = true
+          
+          # launch application
+          when :Run
+          
+            command_xml = run_message
 
-		  # list application -- raises exception??
-		elsif @_command == :List
-		  Kernel::raise ArgumentError.new( "Unknown command! " + @_command.to_s )
+          # close
+          when :Close
+          
+            command_xml = close_message
 
-		  # list applications		      
-		elsif @_command == :ListApps
-		  service_details = {:service => 'listApps', :name => @_application_name, :id => @_application_uid}
-		  command_xml = make_xml_message(service_details, 'listApps', nil )
+          # close qttas
+          when :CloseQttas
 
-		  # list applications		      
-		elsif @_command == :ListRunningProcesses
-		  service_details = {:service => 'listRunningProcesses', :name => @_application_name, :id => @_application_uid}
-		  command_xml = make_xml_message(service_details, 'listRunningProcesses', nil )
+            command_xml = make_xml_message( { :service => 'closeApplication' }, 'Close', { 'uid' => '0' } )
 
-		  # list started applications		      
-		elsif @_command == :ListStartedApps
-		  service_details = {:service => 'startedApps', :name => @_application_name, :id => @_application_uid}
-		  command_xml = make_xml_message(service_details, 'startedApps', nil )
+          # kill application
+          when :Kill
 
-		  # list crashed applications
-		elsif @_command == :ListCrashedApps
-		  service_details = {:service => 'listCrashedApps', :name => @_application_name, :id => @_application_uid}
-		  command_xml = make_xml_message(service_details, 'listCrashedApps', nil )
+            command_xml = make_xml_message( { :service => 'closeApplication' }, 'Kill', { 'uid' => @_application_uid } )
 
-		  # shell command
-		elsif @_command == :Shell
-		  command_xml = make_xml_message({:service => 'shellCommand'}, 'shellCommand', @_flags, @_application_name)
+          # list applications          
+          when :ListApps
 
-		  # kill all application started by agent_qt
-		elsif @_command == :KillAll
-		  command_xml = make_xml_message({:service =>'kill'},'Kill', nil)
+            service_details = { 
+              :service => 'listApps', 
+              :name => @_application_name, 
+              :id => @_application_uid 
+            }
 
-		  # tap screen
-		elsif @_command == :TapScreen
-		  command_xml = make_xml_message({:service =>'tapScreen'}, 'TapScreen', params)
+            command_xml = make_xml_message( service_details, 'listApps', nil )
 
-		  # bring application to foreground
-		elsif @_command == :BringToForeground
-		  command_xml = make_xml_message({:service => 'bringToForeground'},'BringToForeground', {'pid' => @_application_uid})
-		  
-		  # system info
-		elsif @_command == :SystemInfo
-		  command_xml = make_xml_message({:service => 'systemInfo'}, 'systemInfo', nil)
-		  
-		  # start process memory logging
-		elsif @_command == :ProcessMemLoggingStart
-		  
-		  parameters = {
-			'thread_name' => @_application_name, 
-			'file_name' => @_flags[ :file_name ],
-			'timestamp' => @_flags[ :timestamp ],
-			'interval_s' => @_flags[ :interval_s] }
+          # list applications          
+          when :ListRunningProcesses
 
-		  command_xml = make_xml_message({:service => 'resourceLogging'}, 'ProcessMemLoggingStart', parameters)
+            service_details = { 
+              :service => 'listRunningProcesses', 
+              :name => @_application_name, 
+              :id => @_application_uid 
+            }
 
+            command_xml = make_xml_message( service_details, 'listRunningProcesses', nil )
 
-		  # stop process memory logging
-		elsif @_command == :ProcessMemLoggingStop
-		  parameters = {'thread_name' => @_application_name,
-			'return_data' => @_flags[ :return_data ]}
+          # list started applications          
+          when :ListStartedApps
 
-		  command_xml = make_xml_message({ :service =>'resourceLogging'}, 'ProcessMemLoggingStop',parameters)
+            service_details = { 
+              :service => 'startedApps', 
+              :name => @_application_name, 
+              :id => @_application_uid 
+            }
 
-		  # start CPU load generating
-		elsif @_command == :CpuLoadStart
-		  parameters =  {'cpu_load' => @_flags[ :cpu_load ]}
-		  command_xml = make_xml_message({:service => 'resourceLogging'},'CpuLoadStart',parameters)
+            command_xml = make_xml_message( service_details, 'startedApps', nil )
 
-		  # stop CPU load generating
-		elsif @_command == :CpuLoadStop
-		  command_xml = make_xml_message({:service => 'resourceLogging'},'CpuLoadStop', nil)
+          # list crashed applications
+          when :ListCrashedApps
 
-		  # unknown command
-		else
-		  Kernel::raise ArgumentError.new( "Unknown command! " + @_command.to_s )
-		end
-		
-		message = Comms::MessageGenerator.generate( command_xml )
-		@sut_adapter.send_service_request( message, return_response_crc ) if message		
-	  end
+            service_details = { 
+              :service => 'listCrashedApps', 
+              :name => @_application_name, 
+              :id => @_application_uid 
+            }
 
-	end # application
+            command_xml = make_xml_message( service_details, 'listCrashedApps', nil )
 
-  end  # QT  	
+          # shell command
+          when :Shell
+
+            command_xml = make_xml_message( { :service => 'shellCommand' }, 'shellCommand', @_flags, @_application_name )
+
+          # kill all application started by agent_qt
+          when :KillAll
+
+            command_xml = make_xml_message( { :service => 'kill' }, 'Kill', nil )
+
+          # tap screen
+          when :TapScreen
+
+            command_xml = make_xml_message( { :service =>'tapScreen' }, 'TapScreen', params)
+
+          # bring application to foreground
+          when :BringToForeground
+
+            command_xml = make_xml_message( { :service => 'bringToForeground' }, 'BringToForeground', { 'pid' => @_application_uid } )
+          
+          # system info
+          when :SystemInfo
+
+            command_xml = make_xml_message( { :service => 'systemInfo' }, 'systemInfo', nil)
+          
+          # start process memory logging
+          when :ProcessMemLoggingStart
+          
+            parameters = {
+              'thread_name' => @_application_name, 
+              'file_name' => @_flags[ :file_name ],
+              'timestamp' => @_flags[ :timestamp ],
+              'interval_s' => @_flags[ :interval_s ]
+            }
+
+            command_xml = make_xml_message( { :service => 'resourceLogging' }, 'ProcessMemLoggingStart', parameters )
+
+          # stop process memory logging
+          when :ProcessMemLoggingStop
+
+            parameters = {
+              'thread_name' => @_application_name,
+              'return_data' => @_flags[ :return_data ]
+            }
+
+            command_xml = make_xml_message( { :service =>'resourceLogging' }, 'ProcessMemLoggingStop', parameters )
+
+          # start CPU load generating
+          when :CpuLoadStart
+
+            parameters = {
+              'cpu_load' => @_flags[ :cpu_load ]
+            }
+
+            command_xml = make_xml_message( { :service => 'resourceLogging' }, 'CpuLoadStart', parameters )
+
+          # stop CPU load generating
+          when :CpuLoadStop
+          
+            command_xml = make_xml_message( { :service => 'resourceLogging' }, 'CpuLoadStop', nil )
+
+          # list application -- raises exception??
+          #when :List
+
+            #raise ArgumentError, "Unknown command! #{ @_command.to_s }"
+        
+        else
+        
+          # unknown command
+          raise ArgumentError, "Unknown command! #{ @_command.to_s }"
+          
+        end
+    
+        message = Comms::MessageGenerator.generate( command_xml )
+
+        @sut_adapter.send_service_request( message, return_response_crc ) if message    
+
+      end
+
+    end # application
+
+  end  # QT    
 
 end # MobyController
