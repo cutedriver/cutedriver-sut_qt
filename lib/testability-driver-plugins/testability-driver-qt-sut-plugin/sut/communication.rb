@@ -127,7 +127,7 @@ module MobyController
           deflate if @size > 1000
 
           # calculate outgoing message crc; sent in message header to receiver for data validation
-          @crc = CRC::Crc16.crc16_ibm( @data, 0xffff )
+          @crc = TDriver::Checksum.crc16_ibm( @data )
 
 		    end
 
