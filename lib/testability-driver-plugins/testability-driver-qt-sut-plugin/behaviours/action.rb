@@ -81,19 +81,20 @@ module MobyBehaviour
 					command = command_params #in qt_behaviour
 					command.object_type( :Action )
 					command.command_name( 'Hover' )
-					command.object_id( @parent.id )
+					command.set_object_id( @parent.id )
 					command.command_params( 'id' => id )
+
 					@sut.execute_command( command )
 					self.force_refresh({:id => get_application_id}) if refresh
 
 				rescue Exception => e
 
-					$logger.log "behaviour" , "FAIL;Failed hover with refresh \"#{ refresh.to_s }\".;#{ identity };hover;"
+					$logger.behaviour "FAIL;Failed hover with refresh \"#{ refresh.to_s }\".;#{ identity };hover;"
 					Kernel::raise e
 
 				end
 
-				$logger.log "behaviour" , "PASS;Hover operation executed successfully with refresh \"#{ refresh.to_s }\".;#{ identity };hover;"
+				$logger.behaviour "PASS;Hover operation executed successfully with refresh \"#{ refresh.to_s }\".;#{ identity };hover;"
 				nil
 			end
 
@@ -128,7 +129,7 @@ module MobyBehaviour
 					command = command_params #in qt_behaviour
 					command.object_type( :Action )
 					command.command_name( 'Trigger' )
-					command.object_id( @parent.id )
+					command.set_object_id( @parent.id )
 					command.command_params( 'id'=>id )
 
 					@sut.execute_command( command )
@@ -136,12 +137,12 @@ module MobyBehaviour
 
 				rescue Exception => e
 
-					$logger.log "behaviour" , "FAIL;Failed trigger with refresh \"#{ refresh.to_s }\".;#{ identity };trigger;"
+					$logger.behaviour "FAIL;Failed trigger with refresh \"#{ refresh.to_s }\".;#{ identity };trigger;"
 					Kernel::raise e
 
 				end
 
-				$logger.log "behaviour" , "PASS;Trigger operation executed successfully with refresh \"#{ refresh.to_s }\".;#{ identity };trigger;"
+				$logger.behaviour "PASS;Trigger operation executed successfully with refresh \"#{ refresh.to_s }\".;#{ identity };trigger;"
 				nil
 			end
 

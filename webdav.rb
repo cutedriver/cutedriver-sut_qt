@@ -27,7 +27,7 @@ begin
   $webdav_upload_disabled = true
 rescue LoadError 
   #apt-get install libopenssl-ruby
-  warn("Warning: Disabling WebDAV uploading due to net/https module not supported; install libopenssl-ruby libraries or similar depending of the OS")
+  warn("Warning: Disabling WebDAV uploading due to net/https module not available; install libopenssl-ruby libraries or similar depending of the OS")
 end
 
 require 'uri'

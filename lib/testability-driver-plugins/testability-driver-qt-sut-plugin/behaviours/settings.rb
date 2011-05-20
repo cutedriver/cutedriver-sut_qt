@@ -106,12 +106,12 @@ module MobyBehaviour
 
 		rescue Exception => e
 
-		  $logger.log "behaviour" , "FAIL;Failed set settings \"#{identifiers.to_s}\", \"#{values.to_s}\".;set_settings;"
+		  $logger.behaviour "FAIL;Failed set settings \"#{identifiers.to_s}\", \"#{values.to_s}\".;set_settings;"
 		  Kernel::raise e
 
 		end
 
-		$logger.log "behaviour" , "PASS;Operation set settings executed successfully \"#{identifiers.to_s}\", \"#{values.to_s}\".;set_settings;"
+		$logger.behaviour "PASS;Operation set settings executed successfully \"#{identifiers.to_s}\", \"#{values.to_s}\".;set_settings;"
 
 		nil
 	  end
@@ -159,12 +159,12 @@ module MobyBehaviour
 
 		rescue Exception => e
 
-		  $logger.log "behaviour" , "FAIL;Failed remove settings \"#{identifiers.to_s}\", \"#{setting_keys.to_s}\".;remove_settings;"
+		  $logger.behaviour "FAIL;Failed remove settings \"#{identifiers.to_s}\", \"#{setting_keys.to_s}\".;remove_settings;"
 		  Kernel::raise e
 
 		end
 
-		$logger.log "behaviour" , "PASS;Operation remove settings executed successfully \"#{identifiers.to_s}\", \"#{setting_keys.to_s}\".;remove_settings;"
+		$logger.behaviour "PASS;Operation remove settings executed successfully \"#{identifiers.to_s}\", \"#{setting_keys.to_s}\".;remove_settings;"
 
 		nil
 				  
@@ -213,12 +213,12 @@ module MobyBehaviour
 		  
 		rescue Exception => e
 
-		  $logger.log "behaviour" , "FAIL;Failed read settings \"#{identifiers.to_s}\", \"#{setting_keys.to_s}\".;read_settings;"
+		  $logger.behaviour "FAIL;Failed read settings \"#{identifiers.to_s}\", \"#{setting_keys.to_s}\".;read_settings;"
 		  Kernel::raise e
 
 		end
 
-		$logger.log "behaviour" , "PASS;Operation read settings executed successfully \"#{identifiers.to_s}\", \"#{setting_keys.to_s}\".;read_settings;"
+		$logger.behaviour "PASS;Operation read settings executed successfully \"#{identifiers.to_s}\", \"#{setting_keys.to_s}\".;read_settings;"
 
 		hash
 
@@ -260,12 +260,12 @@ module MobyBehaviour
 		  
 		rescue Exception => e
 
-		  $logger.log "behaviour" , "FAIL;Failed read all settings \"#{identifiers.to_s}\".;read_all_settings;"
+		  $logger.behaviour "FAIL;Failed read all settings \"#{identifiers.to_s}\".;read_all_settings;"
 		  Kernel::raise e
 
 		end
 
-		$logger.log "behaviour" , "PASS;Operation read all settings executed successfully \"#{identifiers.to_s}\".;read_all_settings;"
+		$logger.behaviour "PASS;Operation read all settings executed successfully \"#{identifiers.to_s}\".;read_all_settings;"
 
 		hash
 

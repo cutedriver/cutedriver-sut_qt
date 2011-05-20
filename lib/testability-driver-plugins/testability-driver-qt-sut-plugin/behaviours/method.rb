@@ -85,13 +85,13 @@ module MobyBehaviour
 
         params.each_with_index{ |param,i|
           case param
-          when String:
+          when String
               key = "S"
-          when Fixnum:
+          when Fixnum
               key = "I"
-          when Float:
+          when Float
               key = "D"
-          when TrueClass,FalseClass:
+          when TrueClass,FalseClass
               key = "B"
           else
             Kernel::raise ArgumentError.new( "Method parameter #{i}: Only String,Fixunum,Float and Boolean types are supported" ) 

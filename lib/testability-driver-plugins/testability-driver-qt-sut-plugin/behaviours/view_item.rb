@@ -60,7 +60,7 @@ module MobyBehaviour
 
 		      button = :Left
 		      command = MobyCommand::WidgetCommand.new
-		      command.object_id(attribute('viewPort'))
+		      command.set_object_id(attribute('viewPort'))
 		      command.application_id(get_application_id)    
 		      command.object_type(:Standard)                          
 		      command.command_name('Tap')    
@@ -78,12 +78,12 @@ module MobyBehaviour
 
 		    rescue Exception => e      
 
-		      $logger.log "behaviour" , "FAIL;Failed select"#{identity};drag;"
+		      $logger.behaviour "FAIL;Failed select"#{identity};drag;"
 		      Kernel::raise e        
 
 		    end      
 
-		    $logger.log "behaviour" , "PASS;Operation select executed successfully"#{identity};drag;"
+		    $logger.behaviour "PASS;Operation select executed successfully"#{identity};drag;"
 		    ret
 
 	    end

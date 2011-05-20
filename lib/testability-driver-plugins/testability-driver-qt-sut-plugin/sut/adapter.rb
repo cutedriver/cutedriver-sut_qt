@@ -101,31 +101,33 @@ module MobyController
 
         id ||= @sut_id
 
+        sut_parameters = $parameters[ id, {} ]
+
         begin
 
-          ip = $parameters[ id ][ :qttas_server_ip, "" ]
+          # retrieve ip and verify that value is not empty or nil
+          ip = sut_parameters[ :qttas_server_ip, nil ].not_blank( 'Connection failure; QTTAS server IP not defined in SUT configuration' ).to_s
 
-          port = $parameters[ id ][ :qttas_server_port, "" ]
+          # retrieve port and verify that value is not empty or nil
+          port = sut_parameters[ :qttas_server_port, nil ].not_blank( 'Connection failure; QTTAS server port not defined in SUT configuration' ).to_i
 
           # executes the code block before openning the connection
-          execute_hook( 'before_connect', id, ip, port.to_i ) if hooked?( 'before_connect' ) 
+          execute_hook( 'before_connect', id, ip, port ) if hooked?( 'before_connect' ) 
 
-          @socket = TCPSocket.open( ip, port.to_i )
+          # open tcp/ip connection
+          @socket = TCPSocket.open( ip, port )
 
+          # set connected status to true
           @connected = true
 
           # communication authentication etc can be done here
-          execute_hook( 'after_connect', id, ip, port.to_i, @socket ) if hooked?( 'after_connect' ) 
+          execute_hook( 'after_connect', id, ip, port, @socket ) if hooked?( 'after_connect' ) 
 
         rescue
 
-          ip = "no ip" if ip.empty?
+          execute_hook( 'connection_failed', id, ip, port, $! ) if hooked?( 'connection_failed' ) 
 
-          port = "no port" if port.empty?
-
-          execute_hook( 'connection_failed', id, ip, port.to_i, $! ) if hooked?( 'connection_failed' ) 
-
-          raise IOError, "Unable to connect QTTAS server, verify that it is running properly (#{ ip }:#{ port }): .\nException: #{ $!.message }"
+          raise IOError, "Connection failure; verify that QTTAS server is up and running at #{ ip }:#{ port }.\n Nested exception: #{ $!.message }"
 
         end
 
@@ -204,8 +206,11 @@ module MobyController
         # set request message id
         message.message_id = @counter
 
+        # generate binary message to be sent to socket
+        binary_message = message.make_binary_message( @counter )
+
         # write request message to socket
-        write_socket( message.make_binary_message( @counter ) )
+        write_socket( binary_message )
 
         # read response to determine was the message handled properly and parse the header
         # header[ 0 ] = command_flag
@@ -222,12 +227,17 @@ module MobyController
 
         until read_message_id == @counter
         
+          # read message header from socket, unpack string to array
           header = read_socket( 12 ).unpack( 'CISCI' )
 
+          # read message body from socket
           body = read_socket( header[ 1 ] )
 
+          # calculate body crc16 checksum
+          crc = TDriver::Checksum.crc16_ibm( body )
+
           # read the message body and compare crc checksum
-          Kernel::raise IOError, "CRC do not match, response message body may be corrupted!" if CRC::Crc16.crc16_ibm( body, 0xffff ) != header[ 2 ]
+          raise IOError, "CRC checksum did not match, response message body is corrupted! (#{ crc } != #{ header[ 2 ] })" if crc != header[ 2 ]
           
           # validate response message; check that response message id matches the request
           # if smaller than expected try to read the next message but if bigger raise error

@@ -20,6 +20,160 @@
 module MobyUtil
 
 	module MessageComposer
+
+    class TasCommands
+
+      # TODO: document me
+      def initialize( options = {} )
+      
+        @command_attributes = options
+            
+        @targets = []
+        
+      end # initialize
+
+      # TODO: document me
+      def target( options = {} )
+       
+        @targets << { :arguments => options, :objects => [], :commands => [] }
+      
+      end # target
+      
+      # TODO: document me
+      def targets
+      
+        @targets
+      
+      end # targets
+
+      def object( *arguments )
+      
+      end
+
+      # TODO: document me
+      def command( *arguments )
+      
+        command_hash = { :parameters => [] }
+      
+        while arguments.count > 0
+        
+          value = arguments.shift
+          
+          if value.kind_of?( Hash )
+          
+            command_hash[ :arguments ] = value
+          
+          else
+
+            command_hash[ :value ] = value
+          
+          end
+        
+        end
+      
+        @targets.last[ :commands ] << command_hash
+        
+      end # command
+
+      # TODO: document me
+      def parameter( *arguments )
+
+        params_hash = {}
+
+        while arguments.count > 0
+        
+          value = arguments.shift
+          
+          if value.kind_of?( Hash )
+          
+            params_hash[ :arguments ] = value
+          
+          else
+
+            params_hash[ :value ] = value
+          
+          end
+        
+        end
+      
+        @targets.last[ :commands ][ :parameters ] << params_hash
+      
+      end # parameter
+
+      # TODO: document me
+      def to_xml
+      
+        targets = targets_to_xml 
+      
+        if targets.length > 0
+        
+          "<TasCommands #{ @command_attributes.to_attributes }>#{ targets }</TasCommands>"
+          
+        else
+
+          "<TasCommands #{ @command_attributes.to_attributes } />"
+          
+        end
+      
+        
+      end # to_xml
+
+    private
+      
+      # TODO: document me
+      def targets_to_xml
+      
+        @targets.collect do | target |
+
+          commands = target[ :commands ].collect do | command |
+
+            value = command[ :value ]
+
+            params = command[ :parameters ].collect do | parameter |
+            
+              if parameter.has_key?( :value )
+
+                "<param #{ parameters[ :arguments ].to_attributes }>#{ parameters[ :value ] }</param>"
+              
+              else
+
+                "<param #{ parameters[ :arguments ].to_attributes } />"
+              
+              end
+                          
+            end.join
+            
+            value = params if params.count > 0
+
+            unless value.nil?
+
+              "<Command #{ command[ :arguments ].to_attributes }>#{ command[ :value ] }</Command>"
+            
+            else
+
+              "<Command #{ command[ :arguments ].to_attributes } />"
+            
+            end
+          
+          end
+          
+          if commands.count > 0
+          
+            commands.unshift("<Target #{ target[ :arguments ].to_attributes }></Target>")
+          
+          else
+          
+            commands.unshift("<Target #{ target[ :arguments ].to_attributes } />")
+          
+          end
+        
+          commands.join
+        
+        end.join
+      
+      end # targets_to_xml
+
+    end # TasCommands
 	 
 	  def make_parametrized_message( service_details, command_name, params, command_params = {} )		
 		service_details[:plugin_timeout] = $parameters[ @_sut.id ][ :qttas_plugin_timeout, 10000 ] if @_sut
@@ -136,20 +290,35 @@ module MobyUtil
 	  end
 	  
 	  def state_message
+
 		  app_details = { :service => 'uiState', :name => @_application_name, :id => @_application_uid }
+
 		  app_details[ :applicationUid ] = @_refresh_args[ :applicationUid ] if @_refresh_args.include?( :applicationUid )
+
+      app_details[ :checksum ] = @_checksum unless @_checksum.nil?
+
+	    params = @_flags || {}
 		
 		  case $parameters[ @_sut.id ][ :filter_type, 'none' ]
-		  when 'none' 
-		    command_xml = make_xml_message( app_details, 'UiState', @_flags || {} )
-		  when 'dynamic'
-		    params = @_flags || {}
-		    params[ :filtered ] = 'true'
-		    command_xml = make_parametrized_message( app_details, 'UiState', params, make_filters )
+
+		    when 'none' 
+
+		      command_xml = make_xml_message( app_details, 'UiState', params )
+
+		    when 'dynamic'
+
+		      params[ :filtered ] = 'true'
+
+		      command_xml = make_parametrized_message( app_details, 'UiState', params, make_filters )
+
 		  else
-		    command_xml = make_parametrized_message( app_details, 'UiState', @_flags || {}, make_filters )
+
+		    command_xml = make_parametrized_message( app_details, 'UiState', params, make_filters )
+
 		  end
+
 		  command_xml		
+
 	  end
 
 	  def run_message

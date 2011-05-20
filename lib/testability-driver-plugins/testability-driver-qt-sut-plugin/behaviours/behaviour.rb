@@ -71,11 +71,11 @@ module MobyBehaviour
         #for components with object visible on screen but not actual widgets or graphicsitems
         if attribute( 'objectType' ) == 'Embedded'
           command.application_id( get_application_id )
-          command.object_id( parent.id )
+          command.set_object_id( parent.id )
           command.object_type( parent.attribute( 'objectType' ).intern )
         else
           command.application_id( get_application_id )
-          command.object_id( @id )
+          command.set_object_id( @id )
           command.object_type( attribute( 'objectType' ).intern )
         end
 
@@ -83,18 +83,18 @@ module MobyBehaviour
 
       end
 
+    private   
+
       # == nodoc
       # should this method be private?
       def plugin_command( require_response = false, command = MobyCommand::WidgetCommand.new )
         command.set_event_type(sut_parameters[ :event_type, "0" ])
         command.application_id( get_application_id )
-        command.object_id( @id )
+        command.set_object_id( @id )
         command.object_type( attribute('objectType' ).intern)
         command.transitions_off    
         command
       end
-
-    private   
 
       def do_sleep(time)
 
