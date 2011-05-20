@@ -348,7 +348,7 @@ task :gem_install do
   puts "### Installing GEM  #{GEM_NAME}       ###"
   puts "#########################################################"
   tdriver_gem = "testability-driver-#{@__gem_version}.gem"
-  if /win/ =~ RUBY_PLATFORM
+  if /win/ =~ RUBY_PLATFORM || /mingw32/ =~ RUBY_PLATFORM
      cmd = "gem install pkg\\testability-driver*.gem --LOCAL"
   else
      cmd = "sudo gem install pkg/testability-driver*.gem --LOCAL"
@@ -368,7 +368,7 @@ task :gem_uninstall do
   tdriver_gem = "testability-driver-#{@__gem_version}.gem"
      
   FileUtils.rm(Dir.glob('pkg/*gem'))
-  if /win/ =~ RUBY_PLATFORM
+  if /win/ =~ RUBY_PLATFORM || /mingw32/ =~ RUBY_PLATFORM
     cmd = "gem uninstall -a -x #{GEM_NAME}"
   else
     cmd = "sudo gem uninstall -a -x #{GEM_NAME}"
