@@ -152,7 +152,7 @@ module MobyPlugin
 
             case agent_version
 
-              when "1.2"
+              when "1.3"
 
                 # use optimized XML format; if adapter is not found we're going through rescue block
                 adapter = TDriver::OptimizedXML::TestObjectAdapter
