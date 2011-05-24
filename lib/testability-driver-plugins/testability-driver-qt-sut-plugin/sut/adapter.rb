@@ -79,14 +79,6 @@ module MobyController
 
       end
 
-      def add_hook( id, &block )
-
-        raise ArgumentError, 'Unable to add hook due to no block was given' unless block_given?
-
-        @hooks[ id ] = block
-
-      end
-  
       # TODO: document me
       def disconnect
 
@@ -288,20 +280,6 @@ module MobyController
       end
 
     private
-
-      # TODO: document me
-      def execute_hook( id, *arguments )
-
-        @hooks[ id ].call( *arguments )
-
-      end
-
-      # TODO: document me
-      def hooked? ( id )
-
-        @hooks.has_key?( id )
-
-      end
 
       # TODO: document me
       def read_socket( bytes_count )
