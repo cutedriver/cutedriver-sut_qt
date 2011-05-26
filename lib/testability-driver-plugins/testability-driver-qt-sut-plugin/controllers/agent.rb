@@ -25,19 +25,23 @@ module MobyController
       
       include MobyController::Abstraction
 
-      include MobyUtil::MessageComposer
-
+      # TODO: document me
+      # overloads default MobyController::Abstraction#make_message
       def make_message
       
-        case @parameters[:command]
+        command = @parameters[ :command ]
+      
+        case command
         
           when :version
           
+            # query agent version from versionService
             MobyController::QT::Comms::MessageGenerator.generate( '<TasCommands service="versionService" />' )
         
         else
         
-          raise NotImplementedError, "command #{ @parameters[:command].inspect } not implemented in #{ self.class.name }"
+          # raise exception if command not implemented
+          raise NotImplementedError, "command #{ command.inspect } not implemented in #{ self.class.name }"
         
         end
       
