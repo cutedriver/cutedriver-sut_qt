@@ -517,7 +517,7 @@ module MobyBehaviour
       #
       # duration
       #  Numeric
-      #   description: Duration of the gesture in seconds. The value may be an interger or a fractional value as a floating point number.
+      #   description: Duration of the gesture in seconds. The value may be an integer or a fractional value as a floating point number.
       #   example: 1
       #
       # mouse_details
@@ -540,59 +540,88 @@ module MobyBehaviour
       # == exceptions
       # ArgumentError
       #  description: One of the arguments is not valid
-      def gesture_points( points, duration, mouse_details = { :press => true, :release => true, :button => :Left, :isDrag => true}, optional_params = {} )
+      #def gesture_points( points, duration, mouse_details = { :press => true, :release => true, :button => :Left, :isDrag => true}, optional_params = {} )
+      def gesture_points( points, duration, mouse_details = {}, optional_params = {} )
 
         begin
 
-          if optional_params[:use_tap_screen].nil?
-            use_tap_screen = sut_parameters[:use_tap_screen, 'false']
-          else
-            use_tap_screen = optional_params[:use_tap_screen].to_s
-          end
+          # verify that "duration" argument type is correct 
+          duration.check_type [ Fixnum, Float ], 'wrong argument type $1 for duration value (expected $2)'
 
-          optional_params[:useTapScreen] = use_tap_screen
+          # verify that "points" argument type is correct 
+          points.check_type Array, 'wrong argument type $1 for gesture points array (expected $2)'
 
-          mouse_details[:press] = true  unless mouse_details.has_value?(:press)
-          mouse_details[:release] = true  unless mouse_details.has_value?(:release)
-          mouse_details[:button] = :Left  unless mouse_details.has_value?(:button)
-          mouse_details[:isDrag] = true  unless mouse_details.has_value?(:isDrag)
+          # verify that "mouse_details" argument type is correct 
+          mouse_details.check_type Hash, 'wrong argument type $1 for mouse details hash (expected $2)'
 
-          raise ArgumentError.new( "Invalid button." ) unless @@_valid_buttons.include?(mouse_details[:button])
+          # verify that "optional_params" argument type is correct 
+          optional_params.check_type Hash, 'wrong argument type $1 for optional parameters hash (expected $2)'
 
-          command = command_params #in qt_behaviour           
-          command.command_name('MouseGesturePoints')
-          params = {'mouseMove'=>'true'}
+          # set default values unless given by caller
+          mouse_details.default_values(
+          
+            :press => true, 
+            :release => true, 
+            :button => :Left, 
+            :isDrag => true
+          
+          )
 
-          params['button'] = @@_buttons_map[mouse_details[:button]]
-          params['press'] = 'false' unless mouse_details[:press]
-          params['release'] = 'false' unless mouse_details[:release]
-          params['isDrag'] = 'true' if mouse_details[:isDrag]
-          params.merge!(optional_params)
+          # verify that given button is valid
+          mouse_details[ :button ].validate @@_valid_buttons, 'unsupported button $3 for gesture points (expected $2)'
+          
+          # initialize command parameters class
+          command = command_params # in qt_behaviour
+          
+          # set command name
+          command.command_name( 'MouseGesturePoints' )
+          
+          # set command parameters
+          command.command_params(
+
+            {
+          
+              'mouseMove'    => true,    
+              'button'       => @@_buttons_map[ mouse_details[ :button ] ],
+              'press'        => mouse_details[ :press ].true?,
+              'release'      => mouse_details[ :release ].true?,
+              'isDrag'       => mouse_details[ :isDrag ].true?,
+              'speed'        => ( duration.to_f * 1000 ).to_i,
+              'useTapScreen' => ( optional_params.delete( :use_tap_screen ) || sut_parameters[ :use_tap_screen, false ] ).true?
+
+            }.merge!( optional_params )
+
+          )
+          
+          # collect points as string
+          command.command_value(
+          
+             points.inject(""){ | result, point | 
+             
+              result << "#{ point['x'].to_s },#{ point['y'].to_s },#{ (point['interval']*1000).to_i.to_s };"
               
+            }
+            
+          )
+          
+          # execute the command
+          @sut.execute_command command
 
-          millis = duration.to_f
-          millis = millis*1000
-          speed = millis.to_i
-          params['speed'] = speed.to_s
-          command.command_params(params)
-          point_string = ""
-          points.each { |point| point_string << point["x"].to_s << "," << point["y"].to_s << "," << (point["interval"]*1000).to_i.to_s << ";"}
-          command.command_value(point_string)
+          # wait until duration is exceeded
+          do_sleep duration.to_f
 
-          @sut.execute_command(command)
-
-          do_sleep(duration)
-
-        rescue Exception => e
+        rescue
 
           $logger.behaviour "FAIL;Failed drag_to_object with points \"#{points.to_s}\", duration \"#{duration.to_s}\", mouse_details \"#{mouse_details.to_s}\".;#{identity};gesture_points;"
-          Kernel::raise e        
+          
+          raise        
 
         end      
 
         $logger.behaviour "PASS;Operation drag_to_object executed successfully with points \"#{points.to_s}\", duration \"#{duration.to_s}\", mouse_details \"#{mouse_details.to_s}\".;#{identity};gesture_points;"
 
         self
+        
       end
 
       # == description
