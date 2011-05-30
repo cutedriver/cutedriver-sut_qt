@@ -540,7 +540,6 @@ module MobyBehaviour
       # == exceptions
       # ArgumentError
       #  description: One of the arguments is not valid
-      #def gesture_points( points, duration, mouse_details = { :press => true, :release => true, :button => :Left, :isDrag => true}, optional_params = {} )
       def gesture_points( points, duration, mouse_details = {}, optional_params = {} )
 
         begin
@@ -612,13 +611,13 @@ module MobyBehaviour
 
         rescue
 
-          $logger.behaviour "FAIL;Failed drag_to_object with points \"#{points.to_s}\", duration \"#{duration.to_s}\", mouse_details \"#{mouse_details.to_s}\".;#{identity};gesture_points;"
+          $logger.behaviour "FAIL;Failed gesture_points with points #{ points.inspect }, duration #{ duration.inspect }, mouse_details #{ mouse_details.inspect }.;#{ identity };gesture_points;"
           
           raise        
 
         end      
 
-        $logger.behaviour "PASS;Operation drag_to_object executed successfully with points \"#{points.to_s}\", duration \"#{duration.to_s}\", mouse_details \"#{mouse_details.to_s}\".;#{identity};gesture_points;"
+        $logger.behaviour "PASS;Operation gesture_points executed successfully with points #{ points.inspect }, duration #{ duration.inspect }, mouse_details #{ mouse_details.inspect }.;#{ identity };gesture_points;"
 
         self
         
@@ -884,8 +883,7 @@ module MobyBehaviour
         self
 
       end
-       
-
+      
       # == nodoc
       # utility function for getting the x coordinate of the center of the object, should this be private method?
       def object_center_x
@@ -905,62 +903,87 @@ module MobyBehaviour
       # to the sut. 
       # gesture_type: :MouseGesture, :MouseGestureTo, :MouseGestureToCoordinates
       # params = {:direction => :Up, duration => 2, :distance =>100, :isDrag =>false, :isMove =>false }
-      def do_gesture(params)
+      def do_gesture( params )
 
-        validate_gesture_params!(params)
+        validate_gesture_params!( params )
 
-        if attribute('objectType') == 'Embedded' or attribute('objectType') == 'Web'
+        object_type = attribute('objectType')
+        
+        if object_type == 'Embedded' or object_type == 'Web'
           params['obj_x'] = center_x
           params['obj_y'] = center_y
           params['useCoordinates'] = 'true'
         end
 
         command = command_params #in qt_behaviour           
-        command.command_name(params[:gesture_type].to_s)
+
+        command.command_name( params[:gesture_type].to_s )
+
         command.command_params( params )
+
         @sut.execute_command( command )
+
       end
 
-      def validate_gesture_params!(params)
+      def validate_gesture_params!( params )
+
         #direction    
         if params[:gesture_type] == :MouseGesture or params[:gesture_type] == :MouseGestureFromCoordinates
+
           if params[:direction].kind_of?(Integer)
-          raise ArgumentError.new( "Invalid direction." ) unless 0 <= params[:direction].to_i and params[:direction].to_i <= 360 
+
+            raise ArgumentError.new( "Invalid direction." ) unless 0 <= params[:direction].to_i and params[:direction].to_i <= 360 
+
           else
-          raise ArgumentError.new( "Invalid direction." ) unless @@_valid_directions.include?(params[:direction])  
-          params[:direction] = @@_direction_map[params[:direction]]
+
+            raise ArgumentError.new( "Invalid direction." ) unless @@_valid_directions.include?(params[:direction])
+
+            params[:direction] = @@_direction_map[params[:direction]]
+            
           end
+
           #distance
           params[:distance] = params[:distance].to_i unless params[:distance].kind_of?(Integer)
+
           raise ArgumentError.new( "Distance must be an integer and greater than zero." ) unless  params[:distance] > 0
+
         elsif params[:gesture_type] == :MouseGestureToCoordinates or params[:gesture_type] == :MouseGestureFromCoordinates
+
           raise ArgumentError.new("X and Y must be integers.") unless params[:x].kind_of?(Integer) and params[:y].kind_of?(Integer)
+
         elsif params[:gesture_type] == :MouseGestureTo
-          raise ArgumentError.new("targetId and targetType must be defined.") unless params[:targetId] and params[:targetType]
+
+          raise ArgumentError.new("targetId and targetType must be defined.") unless params.has_key?(:targetId) and params.has_key?(:targetType)
+
         end        
 
         #duration/speed 
-        params[:speed] = params[:speed].to_f unless params[:speed].kind_of?(Numeric)
+        params[:speed] = params[:speed].to_f unless params[:speed].kind_of?( Numeric )
+
         raise ArgumentError.new( "Duration must be a number and greated than zero, was:" + params[:speed].to_s) unless params[:speed] > 0
-        duration_secs = params[:speed].to_f
-        duration_secs = duration_secs*1000
-        params[:speed] = duration_secs.to_i
+
+        params[:speed] = ( params[ :speed ].to_f * 1000 ).to_i
 
         #mouseMove true always
         params[:mouseMove] = true
 
         params[:button] = :Left unless params[:button]
+
         raise ArgumentError.new( "Invalid button." ) unless @@_valid_buttons.include?(params[:button])
+
         params[:button] = @@_buttons_map[params[:button]]
 
         if params[:isMove] == true
+
           params[:press] = 'false'
+
           params[:release] = 'false'
+
         end
 
       end
 
-      def do_sleep(time)
+      def do_sleep( time )
 
         if sut_parameters[ :sleep_disabled, nil ] != true
 
@@ -974,32 +997,34 @@ module MobyBehaviour
 
         else
 
-          # store the biggest value which will then be used in multitouch situations to sleep
+          # store the biggest value which will be used in multitouch situations to sleep
           sut_parameters[ :skipped_sleep_time ] = time if time > sut_parameters[ :skipped_sleep_time, 0 ]
 
         end
 
       end
 
-      def calculate_speed(distance, speed)
+      def calculate_speed( distance, speed )
 
-        distance = distance.to_f
-        speed = speed.to_f
-        duration = distance/speed
-        duration
+        distance.to_f / speed.to_f
 
       end
 
-      def distance_to_point(x, y)
+      def distance_to_point( x, y )
 
-        x = x.to_i
-        y = y.to_i
-        dist_x = x - center_x.to_i
-        dist_y = y - center_y.to_i
+        dist_x = x.to_i - center_x.to_i
 
-        return 0 if dist_y == 0 and dist_x == 0     
-        distance = Math.hypot( dist_x, dist_y )
-        distance
+        dist_y = y.to_i - center_y.to_i
+
+        unless dist_y == 0 && dist_x == 0     
+
+          Math.hypot( dist_x, dist_y )
+
+        else
+        
+          0 
+          
+        end
 
       end
 
