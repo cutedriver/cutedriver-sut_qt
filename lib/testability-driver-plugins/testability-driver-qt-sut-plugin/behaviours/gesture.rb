@@ -932,7 +932,7 @@ module MobyBehaviour
 
           if params[:direction].kind_of?(Integer)
 
-            raise ArgumentError.new( "Invalid direction." ) unless 0 <= params[:direction].to_i and params[:direction].to_i <= 360 
+            raise ArgumentError.new( "Invalid direction." ) unless 0 <= params[:direction] and params[:direction] <= 360 
 
           else
 
@@ -947,15 +947,17 @@ module MobyBehaviour
 
           raise ArgumentError.new( "Distance must be an integer and greater than zero." ) unless  params[:distance] > 0
 
-        elsif params[:gesture_type] == :MouseGestureToCoordinates or params[:gesture_type] == :MouseGestureFromCoordinates
-
-          raise ArgumentError.new("X and Y must be integers.") unless params[:x].kind_of?(Integer) and params[:y].kind_of?(Integer)
-
         elsif params[:gesture_type] == :MouseGestureTo
 
           raise ArgumentError.new("targetId and targetType must be defined.") unless params.has_key?(:targetId) and params.has_key?(:targetType)
 
         end        
+
+        if params[:gesture_type] == :MouseGestureToCoordinates or params[:gesture_type] == :MouseGestureFromCoordinates
+
+          raise ArgumentError.new("X and Y must be integers.") unless params[:x].kind_of?(Integer) and params[:y].kind_of?(Integer)
+  
+        end
 
         #duration/speed 
         params[:speed] = params[:speed].to_f unless params[:speed].kind_of?( Numeric )
@@ -982,6 +984,379 @@ module MobyBehaviour
         end
 
       end
+
+
+=begin
+      def validate_gesture_params!( params )
+
+        gesture_type = params[ :gesture_type ]
+
+        # mouseMove true always
+        params[ :mouseMove ] = true
+
+        if params[ :isMove ] == true
+
+          params[ :press ] = false
+
+          params[ :release ] = false
+
+        end
+
+        button = params[ :button ] || :Left
+
+        raise ArgumentError, "Invalid button." unless @@_valid_buttons.include?( button )
+
+        params[ :button ] = @@_buttons_map[ button ]
+
+        # duration/speed 
+        speed = params[ :speed ]
+
+        speed = speed.to_f unless speed.kind_of?( Numeric )
+
+        raise ArgumentError, "Duration must be a number and greated than zero, was: #{ params[ :speed ].to_s }" unless speed > 0
+
+        params[ :speed ] = ( speed.to_f * 1000 ).to_i
+
+        # direction
+        if [ :MouseGesture, :MouseGestureFromCoordinates, :MouseGestureToCoordinates ].include?( gesture_type )
+
+          # validate direction only when gesture type is MouseGesture or MouseGestureFromCoordinates
+          if [ :MouseGesture, :MouseGestureFromCoordinates ].include?( gesture_type )
+
+            direction = params[ :direction ]
+
+            if direction.kind_of?( Integer )
+
+              raise ArgumentError, "Invalid direction #{ direction.inspect } for gesture." unless 0 <= direction and direction <= 360 
+
+            else
+
+              raise ArgumentError, "Invalid direction #{ direction.inspect } for gesture." unless @@_valid_directions.include?( direction )
+
+              params[ :direction ] = @@_direction_map[ direction ]
+              
+            end
+
+          end
+
+          # X and Y must be given only when gesture type is MouseGestureFromCoordinates or MouseGestureToCoordinates
+          unless gesture_type == :MouseGesture
+
+            # raise exception if X and Y are not given or not in correct format
+            raise ArgumentError, "X and Y must be integers." unless params[ :x ].kind_of?( Integer ) and params[ :y ].kind_of?( Integer )
+
+          end
+
+          # distance
+          distance = params[ :distance ].to_i
+
+          raise ArgumentError, "Distance must be an integer and greater than zero." unless distance > 0
+
+          params[ :distance ] = distance
+
+        elsif gesture_type == :MouseGestureTo
+
+          raise ArgumentError, "targetId and targetType must be defined." unless params.has_key?( :targetId ) and params.has_key?( :targetType )
+
+        end
+
+      end
+
+     def validate_gesture_params!( params )
+
+        p params
+
+        gesture_type = params[ :gesture_type ]
+
+        # mouseMove true always
+        params[ :mouseMove ] = true
+
+        if params[ :isMove ] == true
+
+          params[ :press ] = false
+
+          params[ :release ] = false
+
+        end
+
+        button = params[ :button ] || :Left
+
+        raise ArgumentError, "Invalid button." unless @@_valid_buttons.include?( button )
+
+        params[ :button ] = @@_buttons_map[ button ]
+
+        # duration/speed 
+        speed = params[ :speed ]
+
+        speed = speed.to_f unless speed.kind_of?( Numeric )
+
+        raise ArgumentError, "Duration must be a number and greated than zero, was: #{ params[ :speed ].to_s }" unless speed > 0
+
+        params[ :speed ] = ( speed.to_f * 1000 ).to_i
+
+
+        #direction    
+        if params[:gesture_type] == :MouseGesture or params[:gesture_type] == :MouseGestureFromCoordinates #or params[:gesture_type] == :MouseGestureToCoordinates
+
+          direction = params[ :direction ]
+
+          # X and Y must be given only when gesture type is MouseGestureFromCoordinates or MouseGestureToCoordinates
+  #        unless gesture_type == :MouseGesture
+        
+            # raise exception if X and Y are not given or not in correct format
+ #           raise ArgumentError, "X and Y must be integers." unless params[ :x ].kind_of?( Integer ) and params[ :y ].kind_of?( Integer )
+
+#          end
+
+          if direction.kind_of?( Integer )
+
+            raise ArgumentError, "Invalid direction #{ direction.inspect } for gesture." unless 0 <= direction and direction <= 360 
+
+          else
+
+            raise ArgumentError, "Invalid direction #{ direction.inspect } for gesture." unless @@_valid_directions.include?( direction )
+
+            params[ :direction ] = @@_direction_map[ direction ]
+            
+          end
+
+          # distance
+          distance = params[ :distance ].to_i
+
+          raise ArgumentError, "Distance must be an integer and greater than zero." unless distance > 0
+
+          params[ :distance ] = distance
+
+        elsif params[:gesture_type] == :MouseGestureToCoordinates or params[:gesture_type] == :MouseGestureFromCoordinates
+
+          raise ArgumentError.new("X and Y must be integers.") unless params[:x].kind_of?(Integer) and params[:y].kind_of?(Integer)
+
+        elsif params[:gesture_type] == :MouseGestureTo
+
+          raise ArgumentError.new("targetId and targetType must be defined.") unless params.has_key?(:targetId) and params.has_key?(:targetType)
+
+        end        
+=end
+
+=begin
+        #duration/speed 
+        params[:speed] = params[:speed].to_f unless params[:speed].kind_of?( Numeric )
+
+        raise ArgumentError.new( "Duration must be a number and greated than zero, was:" + params[:speed].to_s) unless params[:speed] > 0
+
+        params[:speed] = ( params[ :speed ].to_f * 1000 ).to_i
+
+        #mouseMove true always
+        params[:mouseMove] = true
+
+        params[:button] = :Left unless params[:button]
+
+        raise ArgumentError.new( "Invalid button." ) unless @@_valid_buttons.include?(params[:button])
+
+        params[:button] = @@_buttons_map[params[:button]]
+
+        if params[:isMove] == true
+
+          params[:press] = 'false'
+
+          params[:release] = 'false'
+
+        end
+
+      end
+=end
+
+
+=begin
+
+      def validate_gesture_params!( params )
+
+        gesture_type = params[ :gesture_type ]
+
+        # mouseMove true always
+        params[ :mouseMove ] = true
+
+        if params[ :isMove ] == true
+
+          params[ :press ] = false
+
+          params[ :release ] = false
+
+        end
+
+        button = params[ :button ] || :Left
+
+        raise ArgumentError, "Invalid button." unless @@_valid_buttons.include?( button )
+
+        params[ :button ] = @@_buttons_map[ button ]
+
+        # duration/speed 
+        speed = params[ :speed ]
+
+        speed = speed.to_f unless speed.kind_of?( Numeric )
+
+        raise ArgumentError, "Duration must be a number and greated than zero, was: #{ params[ :speed ].to_s }" unless speed > 0
+
+        params[ :speed ] = ( speed.to_f * 1000 ).to_i
+
+        # direction    
+        if gesture_type == :MouseGesture or gesture_type == :MouseGestureFromCoordinates
+
+          if params[ :direction ].kind_of?( Integer )
+
+            raise ArgumentError, "Invalid direction." unless 0 <= params[ :direction ].to_i and params[ :direction ].to_i <= 360 
+
+          else
+
+            raise ArgumentError, "Invalid direction." unless @@_valid_directions.include?( params[ :direction ] )
+
+            params[ :direction ] = @@_direction_map[ params[ :direction ] ]
+            
+          end
+
+          # distance
+          params[ :distance ] = params[ :distance ].to_i unless params[ :distance ].kind_of?( Integer )
+
+          raise ArgumentError, "Distance must be an integer and greater than zero." unless  params[ :distance ] > 0
+
+        elsif gesture_type == :MouseGestureToCoordinates or gesture_type == :MouseGestureFromCoordinates
+
+          raise ArgumentError, "X and Y must be integers." unless params[ :x ].kind_of?( Integer ) and params[ :y ].kind_of?( Integer )
+
+        elsif gesture_type == :MouseGestureTo
+
+          raise ArgumentError, "targetId and targetType must be defined." unless params.has_key?( :targetId ) and params.has_key?( :targetType )
+
+        end
+
+      end
+
+
+      def validate_gesture_params!( params )
+
+        gesture_type = params[ :gesture_type ]
+
+        # direction    
+        if gesture_type == :MouseGesture or gesture_type == :MouseGestureFromCoordinates
+
+          if params[ :direction ].kind_of?( Integer )
+
+            raise ArgumentError, "Invalid direction." unless 0 <= params[ :direction ].to_i and params[ :direction ].to_i <= 360 
+
+          else
+
+            raise ArgumentError, "Invalid direction." unless @@_valid_directions.include?( params[ :direction ] )
+
+            params[ :direction ] = @@_direction_map[ params[ :direction ] ]
+            
+          end
+
+          # distance
+          params[ :distance ] = params[ :distance ].to_i unless params[ :distance ].kind_of?( Integer )
+
+          raise ArgumentError, "Distance must be an integer and greater than zero." unless  params[ :distance ] > 0
+
+        elsif gesture_type == :MouseGestureToCoordinates or gesture_type == :MouseGestureFromCoordinates
+
+          raise ArgumentError, "X and Y must be integers." unless params[ :x ].kind_of?( Integer ) and params[ :y ].kind_of?( Integer )
+
+        elsif gesture_type == :MouseGestureTo
+
+          raise ArgumentError, "targetId and targetType must be defined." unless params.has_key?( :targetId ) and params.has_key?( :targetType )
+
+        end
+
+        # duration/speed 
+        params[ :speed ] = params[ :speed ].to_f unless params[ :speed ].kind_of?( Numeric )
+
+        raise ArgumentError, "Duration must be a number and greated than zero, was: #{ params[ :speed ].to_s }" unless params[ :speed ] > 0
+
+        params[ :speed ] = ( params[ :speed ].to_f * 1000 ).to_i
+
+        # mouseMove true always
+        params[ :mouseMove ] = true
+
+        params[ :button ] = :Left unless params[ :button ]
+
+        raise ArgumentError, "Invalid button." unless @@_valid_buttons.include?( params[ :button ] )
+
+        params[ :button ] = @@_buttons_map[params[ :button ]]
+
+        if params[:isMove] == true
+
+          params[ :press ] = 'false'
+
+          params[ :release ] = 'false'
+
+        end
+
+      end
+
+      def validate_gesture_params!( params )
+
+        gesture_type = params[ :gesture_type ]
+
+        direction = params[ :direction ]
+
+        speed = params[ :speed ]
+
+        button = params[ :button ] || :Left
+
+        # direction    
+        if gesture_type == :MouseGesture or gesture_type == :MouseGestureFromCoordinates
+
+          if direction.kind_of?( Integer )
+
+            raise ArgumentError, "Invalid direction" unless 0 <= direction and direction <= 360
+
+          else
+
+            raise ArgumentError, "Invalid direction" unless @@_valid_directions.include?( direction )
+
+            direction = @@_direction_map[ direction ].to_i
+            
+          end
+
+          raise ArgumentError, "Direction must be an integer and greater than zero" unless direction > 0
+
+          params[ :direction ] = direction
+
+        elsif gesture_type == :MouseGestureToCoordinates or gesture_type == :MouseGestureFromCoordinates
+
+          raise ArgumentError, "X and Y must be integers" unless params[ :x ].kind_of?( Integer ) and params[ :y ].kind_of?( Integer )
+
+        elsif gesture_type == :MouseGestureTo
+
+          raise ArgumentError, "targetId and targetType must be defined" unless params.has_key?( :targetId ) && params.has_key?( :targetType )
+
+        end        
+
+        # verify speed type
+        speed.check_type [ Fixnum, Float ], 'wrong argument type $1 for gesture duration/speed (expected $2)'
+
+        speed = ( speed.to_f * 1000 ).to_i
+
+        raise ArgumentError, "Duration must be greated than zero, was: #{ speed.to_s }" unless speed > 0
+
+        params[ :speed ] = speed
+        
+        # mouseMove true always
+        params[ :mouseMove ] = true
+
+        raise ArgumentError, "Invalid button #{ button.inspect }" unless @@_valid_buttons.include?( button )
+
+        params[ :button ] = @@_buttons_map[ button ]
+
+        if params[ :isMove ] == true
+
+          params[ :press ] = false
+
+          params[ :release ] = false
+
+        end
+
+      end
+=end
 
       def do_sleep( time )
 
