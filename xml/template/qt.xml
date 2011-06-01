@@ -29,6 +29,11 @@
 		<!-- move the pointer before a tap if true -->
 		<parameter name="in_tap_move_pointer"  value="false" />
     
+		<!-- will try to ensure that the item is visible before an operation -->
+   	    <parameter name="ensure_visible" value="false" />
+	    <parameter name="ensure_qml_visible" value="false" />
+
+
     <!-- use tap_screen operation in tap command. Sends the tap to the system (e.g. via X calls) and
     does not use Qt Events-->
 		<parameter name="use_tap_screen"  value="false" />

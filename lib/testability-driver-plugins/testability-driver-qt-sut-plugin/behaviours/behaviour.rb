@@ -59,6 +59,10 @@ module MobyBehaviour
 
         if attribute( 'objectType' ) == 'Graphics' and attribute( 'visibleOnScreen' ) == 'false' and self.creation_attributes[:visibleOnScreen] != 'false'
           begin
+            #try to make the item visible if so wanted
+            self.fixture('qt','ensureVisible') if sut_parameters[ :ensure_visible, false ] == 'true'
+            self.fixture('qt','ensureQmlVisible') if sut_parameters[ :ensure_qml_visible, false ] == 'true' 
+
             self.creation_attributes.merge!({'visibleOnScreen' => 'true'})
             self.parent.child(self.creation_attributes)
           rescue
