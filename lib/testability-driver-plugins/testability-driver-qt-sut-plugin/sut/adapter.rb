@@ -286,16 +286,21 @@ module MobyController
       # TODO: document me
       def read_socket( bytes_count )
 
+        # use local variables, performing less ATS (Abstract Syntax Tree) calls
+        _socket_read_timeout = @socket_read_timeout
+
+        _socket = @socket
+
         # store time before start receving data
         start_time = Time.now
 
         # verify that there is data available to be read 
-        raise IOError, "Socket reading timeout (#{ @socket_read_timeout.to_i }) exceeded for #{ bytes_count.to_i } bytes" if TCPSocket::select( [ @socket ], nil, nil, @socket_read_timeout ).nil?
+        raise IOError, "Socket reading timeout (#{ _socket_read_timeout.to_i }) exceeded for #{ bytes_count.to_i } bytes" if TCPSocket::select( [ _socket ], nil, nil, _socket_read_timeout ).nil?
 
         # read data from socket
-        read_buffer = @socket.read( bytes_count ){
+        read_buffer = _socket.read( bytes_count ){
 
-          raise IOError, "Socket reading timeout (#{ @socket_read_timeout.to_i }) exceeded for #{ bytes_count.to_i } bytes" if ( Time.now - start_time ) > @socket_read_timeout
+          raise IOError, "Socket reading timeout (#{ _socket_read_timeout.to_i }) exceeded for #{ bytes_count.to_i } bytes" if ( Time.now - start_time ) > _socket_read_timeout
 
         }
 
@@ -367,15 +372,19 @@ module MobyController
       # TODO: document me
       def write_socket( data )
 
+        # use local variables, performing less ATS (Abstract Syntax Tree) calls
+        _socket_write_timeout = @socket_write_timeout 
+
+        _socket = @socket
+
+        _socket.write( data )
+
+        # verify that there is no data in writing buffer 
+        raise IOError, "Socket writing timeout (#{ _socket_write_timeout.to_i }) exceeded for #{ data.length.to_i } bytes" if TCPSocket::select( nil, [ _socket ], nil, _socket_write_timeout ).nil?
+ 
         @socket_sent_bytes += data.size
 
         @socket_sent_packets += 1
-
-        @socket.write( data )
-
-        # verify that there is no data in writing buffer 
-        raise IOError, "Socket writing timeout (#{ @socket_write_timeout.to_i }) exceeded for #{ data.length.to_i } bytes" if TCPSocket::select( nil, [ @socket ], nil, @socket_write_timeout ).nil?
- 
 =begin
 
         begin
@@ -415,13 +424,15 @@ module MobyController
       # inflate to be used in native windows env.
       def inflate_windows_native( body )
 
-        unless body.empty?
+        tmp = body
 
-          Zlib::Inflate.new( -Zlib::MAX_WBITS ).inflate( body )
+        unless tmp.empty?
+
+          Zlib::Inflate.new( -Zlib::MAX_WBITS ).inflate( tmp )
 
         else  
 
-          body
+          tmp
 
         end 
 
