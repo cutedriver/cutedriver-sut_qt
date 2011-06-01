@@ -217,6 +217,8 @@ module MobyController
 
         body = nil
 
+        crc = nil
+
         until read_message_id == @counter
         
           # read message header from socket, unpack string to array
