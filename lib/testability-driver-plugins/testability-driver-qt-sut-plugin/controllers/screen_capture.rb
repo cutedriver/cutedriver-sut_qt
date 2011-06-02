@@ -19,36 +19,35 @@
 
 module MobyController
 
-	module QT
+  module QT
 
-		module ScreenCapture 
+    module ScreenCapture 
 
-			def set_adapter( adapter )      
-				@sut_adapter = adapter
-			end
+      include MobyController::Abstraction
 
-			def execute
+      # Creates service command message which will be sent to @sut_adapter by execute method
+      # == params         
+      # == returns
+      # == raises
+      def make_message
 
-				@sut_adapter.send_service_request(
-					Comms::MessageGenerator.generate(
-						Nokogiri::XML::Builder.new{
-							TasCommands( :id=> 1, :service => "screenShot" ) {
-								Target( :TasId => 1, :type => "Application" ) {
-									Command( :name => "Screenshot", :format => @context.image_mime_type, :draw => @context.redraw.to_s )
-								}
-							}
-						}.to_xml
-					)
-				)
+        Comms::MessageGenerator.generate(
+          Nokogiri::XML::Builder.new{
+            TasCommands( :id=> 1, :service => "screenShot" ) {
+              Target( :TasId => 1, :type => "Application" ) {
+                Command( :name => "Screenshot", :format => @context.image_mime_type, :draw => @context.redraw.to_s )
+              }
+            }
+          }.to_xml
+        )
 
-			end
+      end
 
-			# enable hooking for performance measurement & debug logging
-			TDriver::Hooking.hook_methods( self ) if defined?( TDriver::Hooking )
+      # enable hooking for performance measurement & debug logging
+      TDriver::Hooking.hook_methods( self ) if defined?( TDriver::Hooking )
 
+    end # ScreenCapture
 
-		end # ScreenCapture
-
-	end # QT
+  end # QT
 
 end # MobyController
