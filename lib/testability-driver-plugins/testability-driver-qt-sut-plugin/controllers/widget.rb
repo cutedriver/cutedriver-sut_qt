@@ -17,72 +17,69 @@
 ## 
 ############################################################################
 
-
-
 module MobyController
 
-	module QT
+  module QT
 
-		module WidgetCommand 
+    module WidgetCommand 
 
-			# Execute the command). 
-			# Sends the message to the device using the @sut_adapter (see base class)     
-			# == params         
-			# == returns
-			# == raises
-			# NotImplementedError: raised if unsupported command type       
-			def execute
+      # Execute the command). 
+      # Sends the message to the device using the @sut_adapter (see base class)     
+      # == params         
+      # == returns
+      # == raises
+      # NotImplementedError: raised if unsupported command type       
+      def execute
 
-			  command_params = { :eventType => get_event_type, :name => get_command_name }
+        command_params = { :eventType => get_event_type, :name => get_command_name }
 
-			  command_params.merge!( get_command_params ) if get_command_params
+        command_params.merge!( get_command_params ) if get_command_params
 
-			  builder = Nokogiri::XML::Builder.new{
+        builder = Nokogiri::XML::Builder.new{
 
-				  TasCommands( :id => get_application_id, :transitions => get_transitions, :service => get_service || 'uiCommand' ) {
+          TasCommands( :id => get_application_id, :transitions => get_transitions, :service => get_service || 'uiCommand' ) {
 
-				    Target( :TasId => get_object_id, :type => get_object_type ) {
+            Target( :TasId => get_object_id, :type => get_object_type ) {
 
-					  if get_command_value.kind_of?( Array )
+            if get_command_value.kind_of?( Array )
 
-					    get_command_value.each do | command_part |
-						    Command( command_part[ :value ], command_part[ :params ] )
-					    end
+              get_command_value.each do | command_part |
+                Command( command_part[ :value ], command_part[ :params ] )
+              end
 
             elsif get_command_value
 
-  					    Command( get_command_value, command_params )
+                Command( get_command_value, command_params )
 
-					  else
+            else
 
-  					    Command( command_params )
+                Command( command_params )
 
-					  end
+            end
 
-				    }
-				  }
-			  }						  
+            }
+          }
+        }              
 
-			  if @sut_adapter.group?
-  				@sut_adapter.append_command( builder.doc.root.children )
-			  else
-	  			@sut_adapter.send_service_request( Comms::MessageGenerator.generate( builder.to_xml ) )
-			  end
+        if @sut_adapter.group?
+          @sut_adapter.append_command( builder.doc.root.children )
+        else
+          @sut_adapter.send_service_request( Comms::MessageGenerator.generate( builder.to_xml ) )
+        end
 
-			end
+      end
 
-			def set_adapter( adapter )
+      def set_adapter( adapter )
 
-				@sut_adapter = adapter
+        @sut_adapter = adapter
 
-			end
+      end
 
-			# enable hooking for performance measurement & debug logging
-			TDriver::Hooking.hook_methods( self ) if defined?( TDriver::Hooking )
+      # enable hooking for performance measurement & debug logging
+      TDriver::Hooking.hook_methods( self ) if defined?( TDriver::Hooking )
 
+    end # WidgetCommand 
 
-		end #module Action
+  end # QT
 
-	end #module QT
-
-end #module MobyController
+end # MobyController

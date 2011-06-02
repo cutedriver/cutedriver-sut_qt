@@ -19,34 +19,34 @@
 
 module MobyController
 
-	module QT
+  module QT
 
-		module Group
+    module Group
 
-			# Execute the command). 
-			# Sends the message to the device using the @sut_adapter (see base class)     
-			# == params         
-			# == returns
-			# == raises
-			# NotImplementedError: raised if unsupported command type       
-			def execute
-			  builder = Nokogiri::XML::Builder.new{
-				TasCommands( :id=> application.id.to_s, :transitions => 'true', :service => 'uiCommand', :interval => interval.to_s, :multitouch => multitouch.to_s)
-			  }
-			  @sut_adapter.set_message_builder(builder)
-			  block.call
-			  @sut_adapter.send_grouped_request
-			end
+      # Execute the command). 
+      # Sends the message to the device using the @sut_adapter (see base class)     
+      # == params         
+      # == returns
+      # == raises
+      # NotImplementedError: raised if unsupported command type       
+      def execute
+        builder = Nokogiri::XML::Builder.new{
+        TasCommands( :id=> application.id.to_s, :transitions => 'true', :service => 'uiCommand', :interval => interval.to_s, :multitouch => multitouch.to_s)
+        }
+        @sut_adapter.set_message_builder(builder)
+        block.call
+        @sut_adapter.send_grouped_request
+      end
 
-			def set_adapter( adapter )
-				@sut_adapter = adapter
-			end
+      def set_adapter( adapter )
+        @sut_adapter = adapter
+      end
 
-			# enable hooking for performance measurement & debug logging
-			TDriver::Hooking.hook_methods( self ) if defined?( TDriver::Hooking )
+      # enable hooking for performance measurement & debug logging
+      TDriver::Hooking.hook_methods( self ) if defined?( TDriver::Hooking )
 
-		end #module Group
+    end #module Group
 
-	end #module QT
+  end #module QT
 
 end #module MobyController

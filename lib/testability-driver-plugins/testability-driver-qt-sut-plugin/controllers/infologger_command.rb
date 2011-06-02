@@ -19,44 +19,35 @@
 
 module MobyController
 
-	module QT
+  module QT
 
-		module InfoLoggerCommand
+    module InfoLoggerCommand
 
-			# Execute the command
-			# Sends the message to the device using the @sut_adapter (see base class)     
-			# == params         
-			# == returns
-			# == raises
-			# NotImplementedError: raised if unsupported command type       
-			def execute
+      include MobyController::Abstraction
 
-				@sut_adapter.send_service_request(
-					Comms::MessageGenerator.generate(
-						Nokogiri::XML::Builder.new{
-							TasCommands( :service => "infoService", :id=> application_id, :interval => params[:interval] ) {
-								Target( :TasId => "Application" ) {
-									Command( value || "", ( params || {} ).merge( :name => name ) )
-								}
-							}
-						}.to_xml
-					)
-				)
+      # Creates service command message which will be sent to @sut_adapter by execute method
+      # == params         
+      # == returns
+      # == raises
+      def make_message
 
-			end
+        Comms::MessageGenerator.generate(
+          Nokogiri::XML::Builder.new{
+            TasCommands( :service => "infoService", :id=> application_id, :interval => params[:interval] ) {
+              Target( :TasId => "Application" ){
+                Command( value || "", ( params || {} ).merge( :name => name ) )
+              }
+            }
+          }.to_xml
+        )
 
-			def set_adapter( adapter )
+      end
 
-				@sut_adapter = adapter
+      # enable hooking for performance measurement & debug logging
+      TDriver::Hooking.hook_methods( self ) if defined?( TDriver::Hooking )
 
-			end
+    end # InfoLoggerCommand
 
-			# enable hooking for performance measurement & debug logging
-			TDriver::Hooking.hook_methods( self ) if defined?( TDriver::Hooking )
+  end # QT
 
-
-		end # InfoLoggerCommand
-
-	end #module QT
-
-end #module MobyController
+end # MobyController

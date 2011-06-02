@@ -25,27 +25,17 @@ module MobyController
 
       include MobyUtil::FindObjectGenerator
 
-      # Execute the command
-      # Sends the message to the device using the @sut_adapter (see base class)     
+      include MobyController::Abstraction
+
+      # Creates service command message which will be sent to @sut_adapter by execute method
       # == params         
       # == returns
       # == raises
-      # NotImplementedError: raised if unsupported command type       
-      def execute
-
-        @sut_adapter.send_service_request( 
-
-          # *[ message, return_crc ]
-          MobyController::QT::Comms::MessageGenerator.generate( generate_message ), true 
-
-        )
-
-      end
-
-      def set_adapter( adapter )
-
-        @sut_adapter = adapter
-
+      def make_message
+      
+        # *[ message, return_crc ]
+        [ Comms::MessageGenerator.generate( generate_message ), true ]
+            
       end
 
       # enable hooking for performance measurement & debug logging
@@ -56,4 +46,3 @@ module MobyController
   end # QT
 
 end # MobyController
-

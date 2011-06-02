@@ -19,92 +19,75 @@
 
 module MobyController
 
-	module QT
+  module QT
 
-		module KeySequence
+    module KeySequence
 
-			def set_adapter( adapter )
+      include MobyController::Abstraction
 
-				@sut_adapter = adapter
+      # Creates service command message which will be sent to @sut_adapter by execute method
+      # == params         
+      # == returns
+      # == raises
+      def make_message
 
-			end
+        press_types = { :KeyDown => 'KeyPress', :KeyUp => 'KeyRelease' }
 
-			# Execute the command(s). Iterated trough the @message_array and sends all
-			# message to the device using the @sut_adapter (see base class)     
-			# == params      
-			# == returns
-			# == raises
-			# RuntimeError: No service request to be sent due to key sequence is empty
-			def execute
+        sut = @_sut
 
-				@sut_adapter.send_service_request( 
+        keymap = $parameters[ sut.id ][ :keymap ]
 
-          Comms::MessageGenerator.generate( make_message ) 
+        sequence = @sequence
+        
+        message = Nokogiri::XML::Builder.new{
 
-        )
+          TasCommands( :id => sut.application.id, :transitions => 'true', :service => 'uiCommand' ){
 
-			end
+            Target( :TasId => 'FOCUSWIDGET', :type => 'Standard' ){
 
-			private
-			#
-			# Internal message generation method. Makes xml messages from the command_data     
-			# == params      
-			# none
-			def make_message
+              sequence.each{ | key_press |
 
-				press_types = { :KeyDown => 'KeyPress', :KeyUp => 'KeyRelease' }
+                key_press[ :value ].tap{ | key |
 
-				sut = @_sut
+                  # raise exception if value type other than Fixnum or Symbol
+                  raise ArgumentError, "Wrong argument type #{ key.class } for key (expected: Symbol or Fixnum)" unless [ Fixnum, Symbol ].include?( key.class ) 
 
-				sequence = @sequence
-
-				message = Nokogiri::XML::Builder.new{
-
-					TasCommands( :id => sut.application.id, :transitions => 'true', :service => 'uiCommand' ){
-
-						Target( :TasId => 'FOCUSWIDGET', :type => 'Standard' ){
-
-							sequence.each{ | key_press |
-
-								key_press[ :value ].tap{ | key |
-
-									# raise exception if value type other than Fixnum or Symbol
-									Kernel::raise ArgumentError.new( "Wrong argument type %s for key (Expected: %s)" % [ key.class, "Symbol/Fixnum" ] ) unless [ Fixnum, Symbol ].include?( key.class ) 
-
-									# verify that keymap is defined for sut if symbol used. 
-									Kernel::raise ArgumentError.new("Symbol #{ key.inspect } cannot be used due to no keymap defined for #{ sut.id } in TDriver configuration file.") if key.kind_of?( Symbol ) && $parameters[ sut.id ][ :keymap ].nil?
+                  # verify that keymap is defined for sut if symbol used. 
+                  raise ArgumentError, "Symbol #{ key.inspect } cannot be used due to no keymap defined for #{ sut.id } in TDriver configuration file." if key.kind_of?( Symbol ) && keymap.nil?
 
                   # fetch keycode from keymap
-      					  key = TDriver::KeymapUtilities.fetch_keycode( key, $parameters[ sut.id ][ :keymap ] )
+                  key = TDriver::KeymapUtilities.fetch_keycode( key, keymap )
 
-									# retrieve corresponding scan code (type of string, convert to fixnum) for symbol from keymap if available 
-									key = key.hex if key.kind_of?( String )
+                  # retrieve corresponding scan code (type of string, convert to fixnum) for symbol from keymap if available 
+                  key = key.hex if key.kind_of?( String )
 
-									# raise exception if value is other than fixnum
-									Kernel::raise ArgumentError.new( "Scan code for :%s not defined in keymap" % key ) unless key.kind_of?( Fixnum )
-		
-									# determine keypress type
-									press_type = press_types.fetch( key_press[ :type ], 'KeyClick' )
+                  # raise exception if value is other than fixnum
+                  raise ArgumentError, "Scan code for #{ key.inspect } not defined in keymap" unless key.kind_of?( Fixnum )
+    
+                  # determine keypress type
+                  press_type = press_types.fetch( key_press[ :type ], 'KeyClick' )
 
-									Command( key.to_s, "name" => press_type.to_s, "modifiers" => "0", "delay" => "0")
+                  Command( key.to_s, "name" => press_type.to_s, "modifiers" => "0", "delay" => "0")
 
-								}
+                }
 
-							}
+              }
 
-						}
-					}
-				}.to_xml
+            }
+            
+          }
+          
+        }.to_xml
 
-				message
+        Comms::MessageGenerator.generate( message )
 
-			end
+      end
 
-			# enable hooking for performance measurement & debug logging
-			TDriver::Hooking.hook_methods( self ) if defined?( TDriver::Hooking )
+      # enable hooking for performance measurement & debug logging
+      TDriver::Hooking.hook_methods( self ) if defined?( TDriver::Hooking )
 
-		end # KeySequence
+    end # KeySequence
 
-	end # QT
+  end # QT
 
 end # MobyController

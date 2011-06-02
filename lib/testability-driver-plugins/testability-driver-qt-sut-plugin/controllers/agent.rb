@@ -36,7 +36,7 @@ module MobyController
           when :version
           
             # query agent version from versionService
-            MobyController::QT::Comms::MessageGenerator.generate( '<TasCommands service="versionService" />' )
+            Comms::MessageGenerator.generate( '<TasCommands service="versionService" />' )
         
         else
         

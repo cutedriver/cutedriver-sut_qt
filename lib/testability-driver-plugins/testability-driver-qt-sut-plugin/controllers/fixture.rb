@@ -19,34 +19,39 @@
 
 module MobyController
 
-	module QT
+  module QT
 
-		module Fixture 
-		  include MobyUtil::MessageComposer
+    module Fixture 
 
-			# Execute the command
-			# Sends the message to the device using the @sut_adapter (see base class)     
-			# == params         
-			# == returns
-			# == raises
-			# NotImplementedError: raised if unsupported command type       
-			def execute
-				Kernel::raise ArgumentError.new( "Fixture '%s' not found for sut id '%s'" % [ @name, @sut_adapter.sut_id ] ) if ( plugin_params =  $parameters[ @sut_adapter.sut_id.to_sym ][ :fixtures ][ @params[:name].to_sym, nil ] ).nil?
+      include MobyUtil::MessageComposer
 
-        fixture_plugin = plugin_params.kind_of?(String) ? plugin_params : plugin_params[:plugin] 
-				@sut_adapter.send_service_request(Comms::MessageGenerator.generate(make_fixture_message(fixture_plugin, @params)))
+      include MobyController::Abstraction
 
-			end
+      # Creates service command message which will be sent to @sut_adapter by execute method
+      # == params         
+      # == returns
+      # == raises
+      def make_message
+      
+        plugin_params = $parameters[ @sut_adapter.sut_id.to_sym ][ :fixtures ][ @params[:name].to_sym, nil ]
+      
+        raise ArgumentError, "Fixture #{ @name.inspect } not found for #{ @sut_adapter.sut_id.inspect }" if plugin_params.nil?
 
-			def set_adapter( adapter )
-				@sut_adapter = adapter
-			end
+        fixture_plugin = plugin_params.kind_of?( String ) ? plugin_params : plugin_params[ :plugin ] 
 
-			# enable hooking for performance measurement & debug logging
-			TDriver::Hooking.hook_methods( self ) if defined?( TDriver::Hooking )
+        Comms::MessageGenerator.generate(
+          make_fixture_message(
+            fixture_plugin, @params
+          )
+        )
+            
+      end
 
-		end # Fixture
+      # enable hooking for performance measurement & debug logging
+      TDriver::Hooking.hook_methods( self ) if defined?( TDriver::Hooking )
 
-	end #module QT
+    end # Fixture
 
-end #module MobyController
+  end # QT
+
+end # MobyController
