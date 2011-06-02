@@ -19,33 +19,44 @@
 
 module MobyController
 
-	module QT
+  module QT
 
-		module Tap 
+    module Tap 
 
-			def set_adapter( adapter )      
-				@sut_adapter = adapter
-			end
+      include MobyController::Abstraction
 
-			def execute
+      # Creates service command message which will be sent to @sut_adapter by execute method
+      # == params         
+      # == returns
+      # == raises
+      def make_message
 
-				command_xml = Nokogiri::XML::Builder.new{
-				  TasCommands( :service => "uiCommand" ) {
-				    Target( :TasId => 1, :type => "Application" ) {
-				      Command( :name => "TapScreen", :x => get_x, :y => get_y, :button => 1, :count => 1, :mouseMove => true, :useCoordinates => true, :time_to_hold => get_hold )
-				    }
-				  }
-				}.to_xml
+        Comms::MessageGenerator.generate(
+          Nokogiri::XML::Builder.new{
+            TasCommands( :service => "uiCommand" ) {
+              Target( :TasId => 1, :type => "Application" ) {
+                Command( 
+                  :name => "TapScreen", 
+                  :x => get_x, 
+                  :y => get_y, 
+                  :button => 1, 
+                  :count => 1, 
+                  :mouseMove => true, 
+                  :useCoordinates => true, 
+                  :time_to_hold => get_hold 
+                )
+              }
+            }
+          }.to_xml
+        )
 
-				@sut_adapter.send_service_request(Comms::MessageGenerator.generate(command_xml))
+      end
 
-			end
+      # enable hooking for performance measurement & debug logging
+      TDriver::Hooking.hook_methods( self ) if defined?( TDriver::Hooking )
 
-			# enable hooking for performance measurement & debug logging
-			TDriver::Hooking.hook_methods( self ) if defined?( TDriver::Hooking )
+    end # Tap
 
-		end # Tap
-
-	end # QT
+  end # QT
 
 end # MobyController
