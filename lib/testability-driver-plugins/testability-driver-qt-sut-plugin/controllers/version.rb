@@ -21,36 +21,26 @@ module MobyController
 
   module QT
 
-	  module VersionCommand
+    module VersionCommand
 
-	    # Execute the command
-	    # Sends the message to the device using the @sut_adapter (see base class)     
-	    # == params         
-	    # == returns
-	    # == raises
-	    # NotImplementedError: raised if unsupported command type       
-	    def execute
+      include MobyController::Abstraction
 
-        # TODO: message contructed with builder 
-		    @sut_adapter.send_service_request(
+      # Creates service command message which will be sent to @sut_adapter by execute method
+      # == params         
+      # == returns
+      # == raises
+      def make_message
 
-          MobyController::QT::Comms::MessageGenerator.generate( "<TasCommands service=\"versionService\" />" ), false
+        # *[ message, return_crc ]
+        [ Comms::MessageGenerator.generate( "<TasCommands service=\"versionService\" />" ), false ]
 
-        )
+      end
 
-	    end
+      # enable hooking for performance measurement & debug logging
+      TDriver::Hooking.hook_methods( self ) if defined?( TDriver::Hooking )
 
-	    def set_adapter( adapter )
-
-  		  @sut_adapter = adapter
-
-	    end
-
-	    # enable hooking for performance measurement & debug logging
-	    TDriver::Hooking.hook_methods( self ) if defined?( TDriver::Hooking )
-
-	  end # VersionCommand
-	
+    end # VersionCommand
+  
   end # QT
 
 end # MobyController
