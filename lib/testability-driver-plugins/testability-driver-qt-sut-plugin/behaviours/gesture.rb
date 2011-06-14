@@ -604,7 +604,7 @@ module MobyBehaviour
           )
           
           # execute the command
-          @sut.execute_command command
+          execute_behavior(optional_params, command)
 
           # wait until duration is exceeded
           do_sleep duration.to_f
@@ -921,7 +921,7 @@ module MobyBehaviour
 
         command.command_params( params )
 
-        @sut.execute_command( command )
+        execute_behavior(params, command)
 
       end
 

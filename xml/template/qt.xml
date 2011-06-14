@@ -38,6 +38,9 @@
     does not use Qt Events-->
 		<parameter name="use_tap_screen"  value="false" />
 
+    <!-- Ensure that the event is received by the receiving object for a behavior -->
+    <parameter name="ensure_event" value="false"/>
+
 	    <!-- 
 		  The event type to use when interacting with the ui. Possible values are Mouse = 0, Touch = 1, Both =2.
 		  When set to 0 (mouse) only mouse events are sent (e.g. tap will result in mousepress and mouserelease events)

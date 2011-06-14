@@ -89,7 +89,7 @@ module MobyBehaviour
           end
           command.command_params(params)
 
-          @sut.execute_command(command)
+          execute_behavior(move_params, command)
 
         rescue Exception => e
 
@@ -178,6 +178,7 @@ module MobyBehaviour
 
             tap_count = tap_params[:tap_count].nil? ? 1 : tap_params[:tap_count]
             use_tap_screen = tap_params[:use_tap_screen].nil? ? sut_parameters[ :use_tap_screen, 'false'] : tap_params[:use_tap_screen].to_s
+            
           else
             tap_count = tap_params
 
@@ -254,7 +255,7 @@ module MobyBehaviour
           command.command_params(params)
 
           # puts "tap: " + (Time.now - tapMeasure).to_s + " s - tap about to execute "
-          @sut.execute_command( command )
+          execute_behavior(tap_params, command)
 
           # puts "tap: " + (Time.now - tapMeasure).to_s + " s - executed"
           #do not allow operations to continue untill taps done
@@ -358,7 +359,7 @@ module MobyBehaviour
                                  
                                  )
 
-          @sut.execute_command(command)
+          execute_behavior(tap_params, command)
 
         rescue # Exception => e
 
@@ -610,7 +611,7 @@ module MobyBehaviour
           params.merge!(tap_params)
 
           command.command_params(params)
-          @sut.execute_command(command)
+          execute_behavior(tap_params, command)
 
           self.force_refresh( :id => get_application_id ) if refresh
 
@@ -679,8 +680,7 @@ module MobyBehaviour
 
           command.command_params(params)
 
-
-          @sut.execute_command(command)
+          execute_behavior(tap_params, command)
           self.force_refresh({:id => get_application_id}) if refresh
 
         rescue Exception => e

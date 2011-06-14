@@ -33,9 +33,11 @@ module MobyController
         builder = Nokogiri::XML::Builder.new{
         TasCommands( :id=> application.id.to_s, :transitions => 'true', :service => 'uiCommand', :interval => interval.to_s, :multitouch => multitouch.to_s)
         }
+
         @sut_adapter.set_message_builder(builder)
         block.call
         @sut_adapter.send_grouped_request
+
       end
 
       def set_adapter( adapter )

@@ -52,6 +52,7 @@ module MobyBehaviour
       @@_direction_map = { :Up => '0', :Down => '180', :Left => '270', :Right => '90' }
       @@_pinch_directions = { :Horizontal => '90', :Vertical => '0'}
       @@_rotate_direction = [ :Clockwise, :CounterClockwise ]
+      @@_events_enabled = false
 
       # == nodoc
       # should this method be private?
@@ -62,7 +63,7 @@ module MobyBehaviour
             #try to make the item visible if so wanted
             self.fixture('qt','ensureVisible') if sut_parameters[ :ensure_visible, false ] == 'true'
             self.fixture('qt','ensureQmlVisible') if sut_parameters[ :ensure_qml_visible, false ] == 'true' 
-
+            
             self.creation_attributes.merge!({'visibleOnScreen' => 'true'})
             self.parent.child(self.creation_attributes)
           rescue
@@ -132,6 +133,26 @@ module MobyBehaviour
         ( ( attribute( 'y_absolute' ).to_i ) + ( attribute( 'height' ).to_i / 2 ) ).to_s
 
       end  
+
+      def param_set_configured?(params, key)
+        if params.kind_of?(Hash) && params.has_key?(key)
+          return (params[key].nil? ? sut_parameters[key, 'false'] : params[key].to_s).to_s == "true"
+        else
+          return sut_parameters[key, 'false'] == "true"
+        end
+      end
+
+      def execute_behavior(params, command)
+        if !get_application.multitouch_ongoing? && !@@_events_enabled && param_set_configured?(params, :ensure_event) 
+          ensure_event(:retry_timeout => 5, :retry_interval => 0.5) {
+            @sut.execute_command( command )
+          }
+        else
+          @sut.execute_command( command )
+        end
+      end
+        
+
 
       # enable hooking for performance measurement & debug logging
       TDriver::Hooking.hook_methods( self ) if defined?( TDriver::Hooking )

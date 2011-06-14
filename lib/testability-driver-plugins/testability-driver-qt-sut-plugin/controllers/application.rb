@@ -30,6 +30,7 @@ module MobyController
         @sut_adapter = adapter
     
       end           
+
       
       # Execute the command 
       # Sends the message to the device using the @sut_adapter (see base class)     

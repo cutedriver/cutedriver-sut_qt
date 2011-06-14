@@ -69,17 +69,18 @@ module MobyBehaviour
       # Exception
       #  description: In case of an error
       #    
-      def enable_events(filter_array = nil)
+      def enable_events(filter_array = nil, params = {})
 
         begin
           command = plugin_command #in qt_behaviour 
           command.command_name( 'EnableEvents' )
           params_str = ''
           filter_array.each {|value| params_str << value << ','} if filter_array
-          command.command_params( 'EventsToListen' => params_str)
+          params['EventsToListen'] = params_str
+          command.command_params( params )
           command.service( 'collectEvents' ) 
           @sut.execute_command( command)
-
+          @@_events_enabled = true
         rescue Exception => e
 
           $logger.behaviour "FAIL;Failed enable_events with refresh \"#{filter_array.to_s}\".;#{ identity };enable_events;"
@@ -110,6 +111,7 @@ module MobyBehaviour
           command.command_name( 'DisableEvents' )
           command.service( 'collectEvents' )
           @sut.execute_command( command)
+          @@_events_enabled = false
         rescue Exception => e
           $logger.behaviour "FAIL;Failed disable_events.;#{ identity };disable_events;"
           Kernel::raise e 

@@ -47,6 +47,13 @@ module MobyBehaviour
     #
 	  module Application
 
+
+      @@__multitouch_operation = false
+
+      def multitouch_ongoing?
+        @@__multitouch_operation
+      end
+
 	    # == description
 	    # Start to track a popup that may appear on the screen. Tracking is done based on the class name of the 
 	    # widget implementing popup functionality. Base class name can also be used in case framework level 
@@ -217,9 +224,12 @@ module MobyBehaviour
 	    #
 	    #
 	    def multi_touch(&block)
-
-    		multitouch_operation( &block )
-
+        begin 
+          @@__multitouch_operation = true
+          multitouch_operation( &block )
+        ensure
+          @@__multitouch_operation = false
+        end
 	    end
 
 	    # == description
@@ -242,7 +252,7 @@ module MobyBehaviour
 	    end
 
     private
-	    
+
 	    def multitouch_operation( &block )
 
 		    # make sure the situation is ok before freeze
