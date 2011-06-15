@@ -185,8 +185,9 @@ module MobyBehaviour
             block.call if block_given?
             sleep sleep_time
             ev = app.get_events
-            events = Nokogiri::XML(ev) unless ev == 0
-            if events.xpath("//*[@name = 'trackedFound'] = 'true'") != true 
+            begin
+              @sut.state_object(ev).events.attribute('trackedFound')
+            rescue MobyBase::AttributeNotFoundError
               $stderr.puts "Warning: Operation not received by object #{self.id} : #{self.name}. Retrying"
               Kernel::raise EventNotReceivedException.new("No event received during call") 
             end
