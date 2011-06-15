@@ -72,7 +72,11 @@ module MobyBehaviour
       #  String
       #   description: Name of the signal that is to be emitted.
       #   example: "clicked()"
-      #
+      # 
+      # params
+      #  Hash 
+      #   description: Optional parameters for wait for signal
+      #   example: "{:retry_timeout => 10, :retry_interval => 0.1}"
       # &block
       #  Proc
       #   description: Optional code block to be executed while listening signals
@@ -131,6 +135,8 @@ module MobyBehaviour
       # params
       #  Hash
       #    description: Arguments hash, see below
+      #    example: Optional paramaters, see table params below.
+      #   
       #
       # &block
       #  Proc
@@ -139,7 +145,7 @@ module MobyBehaviour
       #
       # == tables
       # params
-      #  title: Hash argument tap_params
+      #  title: Hash argument params
       #  description: Valid keys for argument tap_params as hash
       #  |Key|Description|Type|Example|Default|
       #  |:retry_interval|Time between retries if the event is not received|Float|2|1|

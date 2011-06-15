@@ -130,12 +130,15 @@ module MobyBehaviour
       #  |:interval|This method sleeps tap_count times interval|Integer|2|1|
       #  |:tap_count|Number of taps to do|Integer|2|1|
       #  |:use_tap_screen|Should tapping be done on screen or as mouse event to the object|Boolean|true|see TDriver parameters table below|
+      #  |:ensure_event|Verify that an event is sent to the target object. Retry if not received by target|Boolean|true|false|
+      #
       # tdriver_params_table
       #  title: Default values read from tdriver parameters
       #  description: These setting values are read from tdriver_parameters.xml
       #  |Name|Description|Default if missing from parameters|
       #  |use_tap_screen|See :use_tap_screen above|false|
       #  |in_tap_move_pointer|Wether to actually move mouse pointer to tap coordinates|false|
+      #  |:ensure_event|Verify that an event is sent to the target object. Retry if not received by target|false|
       #
       # == returns
       # NilClass
