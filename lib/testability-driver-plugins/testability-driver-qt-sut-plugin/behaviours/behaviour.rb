@@ -73,6 +73,8 @@ module MobyBehaviour
 
         command.set_event_type(sut_parameters[ :event_type, "0" ])
 
+         
+
         #for components with object visible on screen but not actual widgets or graphicsitems
         if attribute( 'objectType' ) == 'Embedded'
           command.application_id( get_application_id )
@@ -83,6 +85,12 @@ module MobyBehaviour
           command.set_object_id( @id )
           command.object_type( attribute( 'objectType' ).intern )
         end
+
+        #set app id as vkb if the attribute exists as the command needs to go to the vkb app
+        begin
+          command.application_id( attribute('vkb_app_id') )
+        rescue MobyBase::AttributeNotFoundError
+        end    
 
         command
 
