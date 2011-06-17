@@ -483,13 +483,25 @@ module MobyBehaviour
 
         logging_enabled = $logger.enabled
         $logger.enabled = false
-
+          
         raise ArgumentError.new("First parameter should be time between taps or Hash") unless tap_params.kind_of? Hash or tap_params.kind_of? Fixnum
 
         begin
-          tap_down(button, false, tap_params)
-          sleep time
-          tap_up(button, false, tap_params)
+          ens = param_set_configured?(tap_params, :ensure_event)
+          tap_params[:ensure_event] = false
+          if ens
+            self.ensure_event(:retry_timeout => 5, :retry_interval => 0.5) {
+                  tap_down(button, false, tap_params)
+                  sleep time
+                  tap_up(button, false, tap_params)
+                }
+          else
+            tap_down(button, false, tap_params)
+            sleep time
+            tap_up(button, false, tap_params)
+          end
+
+            
         rescue Exception => e
           $logger.enabled = logging_enabled
           $logger.behaviour "FAIL;Failed long_tap with time \"#{time.to_s}\", button \"#{button.to_s}\".;#{identity};long_tap;"
