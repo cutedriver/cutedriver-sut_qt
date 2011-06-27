@@ -78,7 +78,7 @@ module MobyController
         @tdriver_checksum_crc16_ibm_method = TDriver::Checksum.method( :crc16_ibm )
 
         # determine which inflate method to use
-        if $parameters[ @sut_id ][ :win_native, false ].to_s == "true"
+        if $parameters[ @sut_id ][ :win_native, false ].to_s.true?
 
           @zlib_inflate_method = Zlib::Inflate.new( -Zlib::MAX_WBITS ).method( :inflate )
 
@@ -204,7 +204,7 @@ module MobyController
       # message:: message in qttas protocol format   
       # == returns    
       # the response body
-      def send_service_request( message, return_crc = false )
+      def send_service_request( message, return_checksum = false )
 
         read_message_id = 0
 
@@ -290,8 +290,8 @@ module MobyController
 
         end
 
-        # return the body ( and crc if required )
-        return_crc ? [ body, header[ 2 ] ] : body
+        # return the body and checksum if required
+        return_checksum ? [ body, body.hash ] : body
 
       end
 
