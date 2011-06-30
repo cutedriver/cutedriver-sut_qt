@@ -58,38 +58,59 @@ module MobyBehaviour
       # should this method be private?
       def command_params( command = MobyCommand::WidgetCommand.new )   
 
-        if attribute( 'objectType' ) == 'Graphics' and attribute( 'visibleOnScreen' ) == 'false' and self.creation_attributes[:visibleOnScreen] != 'false'
+        if attribute( 'objectType' ) == 'Graphics' and attribute( 'visibleOnScreen' ) == 'false' and @creation_attributes[ :visibleOnScreen ] != 'false'
+
           begin
+
             #try to make the item visible if so wanted
-            self.fixture('qt','ensureVisible') if sut_parameters[ :ensure_visible, false ] == 'true'
-            self.fixture('qt','ensureQmlVisible') if sut_parameters[ :ensure_qml_visible, false ] == 'true' 
+            fixture( 'qt', 'ensureVisible'   ) if sut_parameters[ :ensure_visible,     false ].true?
+            fixture( 'qt', 'ensureQmlVisible') if sut_parameters[ :ensure_qml_visible, false ].true?
             
-            self.creation_attributes.merge!({'visibleOnScreen' => 'true'})
-            self.parent.child(self.creation_attributes)
+            @creation_attributes.merge!( 'visibleOnScreen' => 'true' )
+
+            @parent.child( @creation_attributes )
+
           rescue
-            Kernel::raise MobyBase::TestObjectNotVisibleError
+
+            raise MobyBase::TestObjectNotVisibleError
+
           end
+
         end
+
+        _object_type = attribute( 'objectType' ).intern
+
+        #for components with object visible on screen but not actual widgets or graphicsitems
+        if _object_type == :Embedded
+
+          _object_type = @parent.attribute( 'objectType' ).intern
+
+          _object_id = @parent.id
+
+        else
+
+          _object_id = @id
+
+        end
+
+        command.application_id( get_application_id )
+
+        command.set_object_id( _object_id )
+
+        command.object_type( _object_type )
 
         command.set_event_type(sut_parameters[ :event_type, "0" ])
 
-         
-
-        #for components with object visible on screen but not actual widgets or graphicsitems
-        if attribute( 'objectType' ) == 'Embedded'
-          command.application_id( get_application_id )
-          command.set_object_id( parent.id )
-          command.object_type( parent.attribute( 'objectType' ).intern )
-        else
-          command.application_id( get_application_id )
-          command.set_object_id( @id )
-          command.object_type( attribute( 'objectType' ).intern )
-        end
-
-        #set app id as vkb if the attribute exists as the command needs to go to the vkb app
+        # set app id as vkb if the attribute exists as the command needs to go to the vkb app
         begin
-          command.application_id( attribute('vkb_app_id') )
+
+          # raises exception if value not found
+          value = attribute( 'vkb_app_id' )
+
+          command.application_id( value )
+
         rescue MobyBase::AttributeNotFoundError
+
         end    
 
         command
