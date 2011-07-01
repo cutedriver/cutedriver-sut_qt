@@ -99,7 +99,7 @@ module MobyBehaviour
 
         command.object_type( _object_type )
 
-        command.set_event_type(sut_parameters[ :event_type, "0" ])
+        command.set_event_type( sut_parameters[ :event_type, "0" ] )
 
         # set app id as vkb if the attribute exists as the command needs to go to the vkb app
         begin
@@ -130,6 +130,7 @@ module MobyBehaviour
         command
       end
 
+      # TODO: document me
       def do_sleep(time)
 
         time = time.to_f * 1.3
@@ -141,6 +142,7 @@ module MobyBehaviour
 
       end
 
+      # TODO: document me
       def center_x
 
         #x = attribute( 'x_absolute' ).to_i
@@ -152,6 +154,7 @@ module MobyBehaviour
 
       end
 
+      # TODO: document me
       def center_y
 
         #y = attribute( 'y_absolute' ).to_i
@@ -163,25 +166,42 @@ module MobyBehaviour
 
       end  
 
-      def param_set_configured?(params, key)
+      # TODO: document me
+      def param_set_configured?( params, key )
+
         if params.kind_of?(Hash) && params.has_key?(key)
-          return (params[key].nil? ? sut_parameters[key, 'false'] : params[key].to_s).to_s == "true"
+
+          #( params[ key ].nil? ? sut_parameters[ key, 'false' ] : params[ key ].to_s ).to_s == "true"
+
+          ( params[ key ] || sut_parameters[ key, false ] ).true?
+
         else
-          return sut_parameters[key, 'false'] == "true"
+
+          #sut_parameters[ key, 'false' ].true?
+
+          sut_parameters[ key, false ].true?
+
         end
       end
 
-      def execute_behavior(params, command)
-        if !get_application.multitouch_ongoing? && !@@_events_enabled && param_set_configured?(params, :ensure_event) 
+      # TODO: document me
+      def execute_behavior( params, command )
+
+        if !get_application.multitouch_ongoing? && !@@_events_enabled && param_set_configured?( params, :ensure_event ) 
+
           ensure_event(:retry_timeout => 5, :retry_interval => 0.5) {
-            @sut.execute_command( command )
-          }
-        else
-          @sut.execute_command( command )
-        end
-      end
-        
 
+            @sut.execute_command( command )
+
+          }
+
+        else
+
+          @sut.execute_command( command )
+
+        end
+
+      end
 
       # enable hooking for performance measurement & debug logging
       TDriver::Hooking.hook_methods( self ) if defined?( TDriver::Hooking )
