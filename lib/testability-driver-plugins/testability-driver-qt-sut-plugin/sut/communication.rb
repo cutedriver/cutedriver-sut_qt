@@ -124,7 +124,7 @@ module MobyController
           @size = @data.size
 
           # compress message body if size is greater than 1000 bytes
-          deflate if @size > 1000
+          # deflate if @size > 1000 taken out for now as will only work with qt, Tuukka
 
           # calculate outgoing message crc; sent in message header to receiver for data validation
           @crc = TDriver::Checksum.crc16_ibm( @data )

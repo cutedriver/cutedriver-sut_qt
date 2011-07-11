@@ -134,4 +134,12 @@
         <parameter name="switchbox_commands_after_flash" value="" /> <!-- commands you want to be executed after flash, commands are sparated with |  -->
     </template>
 
+	<template name="win" inherits="qt"> 
+	    <parameter name="qttas_server_port" value="11000" />
+	    <parameter name="win_native" value="true" />
+	    <parameter name="use_find_object" value="true" />
+	    <keymap xml_file="keymaps/win.xml" env="qt" />
+    </template>
+
+
 </templates>
