@@ -658,7 +658,7 @@ module MobyBehaviour
       # [b]NOTE:[/b] Currently only supported on Symbian platform.
       #
       # == arguments
-      # load
+      # cpu_load
       #  Integer
       #   description: Requested CPU load in percentage.
       #   example: 50
