@@ -356,9 +356,9 @@ module MobyBehaviour
       # launches application in symbian device based on UID and return launched application if succesfull.
       #
       # == arguments
-      # hash_application
+      # target_application_hash
       #  Hash
-      #   description: Hash defining required expected attributes of the application
+      #   description: Hash defining expected attributes of the application
       #   example: { :UID => '' }
       #
       # == returns
@@ -370,30 +370,33 @@ module MobyBehaviour
       # TypeError
       #  description: Wrong argument type %s for attributes (expected Hash)
       #
-      def launch_with_uid( hash_uid = {} )
+      def launch_with_uid( target_application_hash = {} )
 
         begin
 
-          raise TypeError.new( "Input parameter not of Type: Hash.\nIt is: #{ hash_uid.class }" ) unless hash_uid.kind_of?( Hash )
-          the_uid =  "failed with uid:" + hash_uid[:UID].to_s
-          fullname = @sut.fixture("launch","launch_with_uid",hash_uid)
+          target_application_hash.check_type Hash, 'wrong argument type $1 for application attributes (expected: $2)'
+  
+          the_uid =  "failed with uid:" + target_application_hash[ :UID ].to_s
+
+          fullname = @sut.fixture( "launch", "launch_with_uid", target_application_hash )
           
-          if(fullname == the_uid)
-            raise fullname
-          end
-          full_shortname = fullname.rpartition('\\')[-1]
-          shortname = full_shortname.rpartition('.')[0]
-          app_child = @sut.application(:name=>shortname)
+          raise fullname if fullname == the_uid
+          
+          full_shortname = fullname.rpartition( '\\' )[ -1 ]
+          
+          shortname = full_shortname.rpartition( '.' )[ 0 ]
+          
+          app_child = @sut.application( :name => shortname )
 
-        rescue Exception
+        rescue
 
-          $logger.behaviour "FAIL;Failed to find application.;#{id.to_s};sut;{};application;" << (hash_uid.kind_of?( Hash ) ? hash_uid.inspect : hash_uid.class.to_s)
+          $logger.behaviour "FAIL;Failed to find application.;#{ id.to_s };sut;{};application;#{ target_application_hash.inspect }"
 
           raise
 
         end
 
-        $logger.behaviour "PASS;Application found.;#{id.to_s};sut;{};application;" << hash_uid.inspect
+        $logger.behaviour "PASS;Application found.;#{ id.to_s };sut;{};application;#{ target_application_hash.inspect }"
 
         app_child
 
