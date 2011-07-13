@@ -275,7 +275,7 @@ module MobyUtil
 		    
 		  when 'dynamic'
 
-		    white_list = MobyUtil::DynamicAttributeFilter.instance.filter_string
+		    white_list = TDriver::AttributeFilter.filter_string
 		    params['attributeWhiteList'] = white_list if white_list
 		    
 		  when 'static'

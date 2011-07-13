@@ -40,7 +40,7 @@ module MobyUtil
 		
 	        when 'dynamic'
 		
-            value = MobyUtil::DynamicAttributeFilter.instance.filter_string
+            value = TDriver::AttributeFilter.filter_string
 
 		        filters[ 'attributeWhiteList' ] = value unless value.blank?
 
@@ -131,7 +131,7 @@ module MobyUtil
 		
 	        when 'dynamic'
 
-		        filters[ 'attributeWhiteList' ] = value if ( value = MobyUtil::DynamicAttributeFilter.instance.filter_string ) 
+		        filters[ 'attributeWhiteList' ] = value if ( value = TDriver::AttributeFilter.filter_string ) 
 		
 	        when 'static'
 
@@ -261,7 +261,7 @@ module MobyUtil
 		
 	      when 'dynamic'
 
-		      white_list = MobyUtil::DynamicAttributeFilter.instance.filter_string
+		      white_list = TDriver::AttributeFilter.filter_string
 		      
 		      params['attributeWhiteList'] = white_list if white_list
 		
