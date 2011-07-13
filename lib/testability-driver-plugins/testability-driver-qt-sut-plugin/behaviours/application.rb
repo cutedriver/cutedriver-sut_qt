@@ -236,8 +236,8 @@ module MobyBehaviour
 	    # Resizes the application window so that width becomes height and vice versa.
 	    # 
       # == arguments
-	    # Symbol
-	    #  direction
+	    # direction
+	    #  Symbol
 	    #   description: For future support
 	    #
 	    # == returns
