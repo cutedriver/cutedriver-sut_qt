@@ -50,7 +50,7 @@ module MobyBehaviour
 
       # == description
       # Enabled the logging on the target for the given application or sut (qttasserver). 
-      # Logs are written to the target in (\logs\testability)
+      # Logs are written to the target in (/logs/testability)
       #
       # == returns
       # NilClass
