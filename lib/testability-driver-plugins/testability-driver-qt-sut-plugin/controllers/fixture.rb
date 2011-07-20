@@ -32,11 +32,19 @@ module MobyController
       # == returns
       # == raises
       def make_message
-      
-        plugin_params = $parameters[ @sut_adapter.sut_id.to_sym ][ :fixtures ][ @params[:name].to_sym, nil ]
-      
-        raise ArgumentError, "Fixture #{ @name.inspect } not found for #{ @sut_adapter.sut_id.inspect }" if plugin_params.nil?
 
+        # use local variable for less AST lookups
+        sut_id = @sut_adapter.sut_id.to_sym
+
+        plugin_name = @params[ :name ].to_s
+
+        # retrieve plugin details from fixtures configuration
+        plugin_params = $parameters[ sut_id ][ :fixtures ][ plugin_name.to_sym, nil ]
+
+        # verify that plugin is configured
+        plugin_params.not_nil "Fixture #{ plugin_name.inspect } not found for #{ sut_id.inspect }"
+
+        # retrieve plugin name
         fixture_plugin = plugin_params.kind_of?( String ) ? plugin_params : plugin_params[ :plugin ] 
 
         Comms::MessageGenerator.generate(
