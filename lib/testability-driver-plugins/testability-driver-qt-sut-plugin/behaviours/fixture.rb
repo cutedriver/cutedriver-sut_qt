@@ -196,6 +196,14 @@ module MobyBehaviour
 
 	    end
 
+      # == nodoc
+      def fixtures
+
+        # pass call to fixtures service object          
+        TDriver::FixtureService.new( :target => self )
+
+      end
+
 	    # enable hooking for performance measurement & debug logging
 	    TDriver::Hooking.hook_methods( self ) if defined?( TDriver::Hooking )
 
