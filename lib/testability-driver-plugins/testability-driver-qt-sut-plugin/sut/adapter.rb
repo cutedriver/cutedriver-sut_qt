@@ -321,21 +321,34 @@ module MobyController
     private
 
       # TODO: document me
+      def wait_for_data_available( bytes_count )
+
+        # verify that there is data available to be read 
+        raise IOError, "Socket reading timeout (#{ @socket_read_timeout.to_i }) exceeded for #{ bytes_count.to_i } bytes" if @tcp_socket_select_method.call( [ @socket ], nil, nil, @socket_read_timeout ).nil?
+
+      end
+
+      def wait_for_data_sent( bytes_count )
+
+        # verify that there is no data in writing buffer 
+        raise IOError, "Socket writing timeout (#{ @socket_write_timeout.to_i }) exceeded for #{ bytes_count.to_i } bytes" if @tcp_socket_select_method.call( nil, [ @socket ], nil, @socket_write_timeout ).nil?
+
+      end
+
+      # TODO: document me
       def read_socket( bytes_count )
 
         # use local variables, performing less ATS (Abstract Syntax Tree) calls
         _socket_read_timeout = @socket_read_timeout
 
-        _socket = @socket
-
         # store time before start receving data
         start_time = Time.now
 
         # verify that there is data available to be read 
-        raise IOError, "Socket reading timeout (#{ _socket_read_timeout.to_i }) exceeded for #{ bytes_count.to_i } bytes" if @tcp_socket_select_method.call( [ _socket ], nil, nil, _socket_read_timeout ).nil?
+        wait_for_data_available( bytes_count )
 
         # read data from socket
-        read_buffer = _socket.read( bytes_count ){
+        read_buffer = @socket.read( bytes_count ){
 
           raise IOError, "Socket reading timeout (#{ _socket_read_timeout.to_i }) exceeded for #{ bytes_count.to_i } bytes" if ( Time.now - start_time ) > _socket_read_timeout
 
@@ -355,15 +368,10 @@ module MobyController
       # TODO: document me
       def write_socket( data )
 
-        # use local variables, performing less ATS (Abstract Syntax Tree) calls
-        _socket_write_timeout = @socket_write_timeout 
-
-        _socket = @socket
-
-        _socket.write( data )
+        @socket.write( data )
 
         # verify that there is no data in writing buffer 
-        raise IOError, "Socket writing timeout (#{ _socket_write_timeout.to_i }) exceeded for #{ data.length.to_i } bytes" if @tcp_socket_select_method.call( nil, [ _socket ], nil, _socket_write_timeout ).nil?
+        wait_for_data_sent( data.length )
  
         @socket_sent_bytes += data.size
 
