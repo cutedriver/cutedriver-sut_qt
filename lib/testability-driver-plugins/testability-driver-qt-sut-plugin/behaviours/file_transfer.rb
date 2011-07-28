@@ -311,6 +311,7 @@ module MobyBehaviour
       end
 
       def read_file(source_file)
+=begin
         file_data=''
         if File.file?(source_file)
           open_file = File.open(source_file, 'r')
@@ -319,6 +320,20 @@ module MobyBehaviour
           end
         end
         return file_data.to_s
+=end
+
+        begin
+
+          # return file content as string
+          File.open( source_file, 'rb:binary' ).read
+
+        rescue
+
+          # return empty string in case of exception raised
+          ''
+
+        end
+
       end
 
 
