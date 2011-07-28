@@ -109,7 +109,7 @@ module MobyController
 
       class QtMessage
 
-        attr_reader :flag, :data, :crc, :compression, :size
+        attr_reader :flag, :data, :compression, :size
 
         attr_accessor :message_id 
 
@@ -125,33 +125,51 @@ module MobyController
 
           @size = @data.size
 
-          # compress message body if size is greater than 1000 bytes
-          # deflate if @size > 1000 taken out for now as will only work with qt, Tuukka
+          # calculate crc only when requested
+          @crc = nil
 
-          # note that crc is calculated during creating binary message!
+        end
 
+        def crc
+
+          if @crc.nil?
+
+            # calculate outgoing message crc; sent in message header to receiver for data validation
+            @crc = TDriver::Checksum.crc16_ibm( @data ) 
+
+          else
+
+            @crc
+
+          end
+          
         end
 
         def make_binary_message( message_id )
 
-          # calculate outgoing message crc; sent in message header to receiver for data validation
-          @crc = TDriver::Checksum.crc16_ibm( @data )
 
-          [ @flag, @size, @crc, @compression, message_id, @data ].pack( 'CISCIa*' )
+          [ @flag, @size, crc, @compression, message_id, @data ].pack( 'CISCIa*' )
 
         end
 
         def deflate( level = 9 )
 
-          @compression = 2
+          unless @compression == 2
 
-          data_size = @data.size
+            @compression = 2
 
-          # qUncompress required the data length at the beginning so append it - the bytes need to be arranged in the below method (see QByteArray::qUncompress)
-          @data = [ ( data_size & 0xff000000 ) >> 24, ( data_size & 0x00ff0000 ) >> 16, ( data_size & 0x0000ff00 ) >> 8, ( data_size & 0x000000ff ), Zlib::Deflate.deflate( @data, level ) ].pack('C4a*')
+            data_size = @data.size
 
-          # update data size
-          @size = @data.size
+            # qUncompress required the data length at the beginning so append it - the bytes need to be arranged in the below method (see QByteArray::qUncompress)
+            @data = [ ( data_size & 0xff000000 ) >> 24, ( data_size & 0x00ff0000 ) >> 16, ( data_size & 0x0000ff00 ) >> 8, ( data_size & 0x000000ff ), Zlib::Deflate.deflate( @data, level ) ].pack('C4a*')
+
+            # update data size
+            @size = @data.size
+
+            # recalculate crc
+            @crc = nil
+
+          end
           
         end      
 
