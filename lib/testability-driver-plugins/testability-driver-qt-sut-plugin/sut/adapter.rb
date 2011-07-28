@@ -34,7 +34,9 @@ module MobyController
 
       attr_accessor(
         :socket_read_timeout,
-        :socket_write_timeout
+        :socket_write_timeout,
+        :deflate_service_request,
+        :defalte_minimum_size
       )
       
       # TODO: better way to set the host and port parameters   
@@ -64,8 +66,10 @@ module MobyController
 
         @counter = rand( 1000 )
 
+        _sut_parameters = $parameters[ @sut_id ]
+
         # determine which inflate method to use
-        if $parameters[ @sut_id ][ :win_native, false ].to_s == "true"
+        if _sut_parameters[ :win_native, false ].true?
 
           @inflate_method = method( :inflate_windows_native )
 
@@ -74,6 +78,15 @@ module MobyController
           @inflate_method = method( :inflate )
 
         end
+
+        # default size 1kb
+        @defalte_minimum_size = _sut_parameters[ :io_deflate_minimum_size_in_bytes, 1024 ].to_i
+
+        # enabled by default - deflate outgoing service request if size > deflate_minimum_size
+        @deflate_service_request = _sut_parameters[ :io_deflate_service_request, true ].true? 
+
+        # retrieve default compression level - best compression by default
+        @deflate_compression_level = _sut_parameters[ :io_deflate_compression_level, 9 ].to_i
 
         @hooks = {}
 
@@ -197,6 +210,13 @@ module MobyController
 
         # set request message id
         message.message_id = @counter
+
+        if @deflate_service_request == true
+
+          # do not deflate messages below 1kb
+          message.deflate( @deflate_compression_level ) unless message.size < @defalte_minimum_size
+
+        end
 
         # generate binary message to be sent to socket
         binary_message = message.make_binary_message( @counter )

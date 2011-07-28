@@ -1,145 +1,140 @@
-
-
 <templates>
 
-	<template name="qt" inherits="sut_generic;qttas_server;qt_fixtures;switchbox;flash"> <!-- qt ("qt sut abstraction") inherits sut_generic and qttas_server template values -->
+  <template name="qt" inherits="sut_generic;qttas_server;qt_fixtures;switchbox;flash"> <!-- qt ("qt sut abstraction") inherits sut_generic and qttas_server template values -->
 
-		<!-- mapping for qt sut plugin & implementation, value can be either gem name or absolute path to plugin/sut.rb -->
-		<parameter name="sut_plugin" value="testability-driver-qt-sut-plugin" />
+    <!-- mapping for qt sut plugin & implementation, value can be either gem name or absolute path to plugin/sut.rb -->
+    <parameter name="sut_plugin" value="testability-driver-qt-sut-plugin" />
 
-		<!-- default parameters for each qt sut -->
-		<parameter name="type" value="QT" /> <!-- overwrites default value -->
-		<parameter name="product" value="qt_windows" /> <!-- overwrites default value -->
-		<parameter name="version" value="200839" /> <!-- overwrites default value -->
-		<parameter name="env" value="qt" /> <!-- overwrites default value -->
+    <!-- default parameters for each qt sut -->
+    <parameter name="type" value="QT" /> <!-- overwrites default value -->
+    <parameter name="product" value="qt_windows" /> <!-- overwrites default value -->
+    <parameter name="version" value="200839" /> <!-- overwrites default value -->
+    <parameter name="env" value="qt" /> <!-- overwrites default value -->
 
-		<!-- device input type (e.g. key, touch) -->
-		<parameter name="input_type" value="touch" /> <!-- overwrites default value -->
+    <!-- device input type (e.g. key, touch) -->
+    <parameter name="input_type" value="touch" /> <!-- overwrites default value -->
 
-		<!-- keymap definitions -->
-		<keymap xml_file="keymaps/qt.xml" env="qt" />
+    <!-- keymap definitions -->
+    <keymap xml_file="keymaps/qt.xml" env="qt" />
 
-		<!-- gesture defaults -->
-		<parameter name="gesture_flick_distance" value="150" />
+    <!-- gesture defaults -->
+    <parameter name="gesture_flick_distance" value="150" />
 
-		<!-- pixels per second -->
-		<parameter name="gesture_flick_speed" value="700" /> 
-		<parameter name="gesture_drag_speed"  value="300" />
+    <!-- pixels per second -->
+    <parameter name="gesture_flick_speed" value="700" /> 
+    <parameter name="gesture_drag_speed"  value="300" />
 
-		<!-- move the pointer before a tap if true -->
-		<parameter name="in_tap_move_pointer"  value="false" />
+    <!-- move the pointer before a tap if true -->
+    <parameter name="in_tap_move_pointer"  value="false" />
     
-		<!-- will try to ensure that the item is visible before an operation -->
-   	    <parameter name="ensure_visible" value="false" />
-	    <parameter name="ensure_qml_visible" value="false" />
+    <!-- will try to ensure that the item is visible before an operation -->
+    <parameter name="ensure_visible" value="false" />
+    <parameter name="ensure_qml_visible" value="false" />
 
 
-    <!-- use tap_screen operation in tap command. Sends the tap to the system (e.g. via X calls) and
-    does not use Qt Events-->
-		<parameter name="use_tap_screen"  value="false" />
+    <!-- use tap_screen operation in tap command. Sends the tap to the system (e.g. via X calls) and does not use Qt Events-->
+    <parameter name="use_tap_screen"  value="false" />
 
     <!-- Ensure that the event is received by the receiving object for a behavior -->
     <parameter name="ensure_event" value="false"/>
 
-	    <!-- 
-		  The event type to use when interacting with the ui. Possible values are Mouse = 0, Touch = 1, Both =2.
-		  When set to 0 (mouse) only mouse events are sent (e.g. tap will result in mousepress and mouserelease events)
-		  When set to 1 (touch) only touch events are sent (e.g. tap will result in touchbegin and touchend events)	
-	      When set to 2 both mouse and touch events are sent.
-		  Note: When using multitouch behaviours this setting has no affect. Only touch events are sent.
-		  Default is set to two so both events will be sent. Note that if set to 0 or 1 then only the 
-		  specified events is sent. e.g. Some components may not handle touch events so setting to 1 maybe be dangerous.
-		-->
-		<parameter name="event_type"  value="2" />	
+    <!-- 
+      The event type to use when interacting with the ui. Possible values are Mouse = 0, Touch = 1, Both =2.
+      When set to 0 (mouse) only mouse events are sent (e.g. tap will result in mousepress and mouserelease events)
+      When set to 1 (touch) only touch events are sent (e.g. tap will result in touchbegin and touchend events)  
+      When set to 2 both mouse and touch events are sent.
 
-		<parameter name="localisation_server_database_tablename" value="tr_qt_default" /> <!-- overwrites default value -->
+      Note: When using multitouch behaviours this setting has no affect. Only touch events are sent.
+      Default is set to two so both events will be sent. Note that if set to 0 or 1 then only the 
+      specified events is sent. e.g. Some components may not handle touch events so setting to 1 maybe be dangerous.
+    -->
+    <parameter name="event_type"  value="2" />  
 
-		<!-- recording will detect movements together with tap up and down as taps if the movement is smaller -->
-		<parameter name="record_move_treshold" value="5" />
-		<!-- tap which are longer than this will be set as long taps (tap down, wait, tap up)-->
-		<parameter name="record_tap_time_treshold" value="1" />
-	
-	    <!-- possible values none, static, dynamic -->
-      <parameter name="filter_type" value="dynamic"/>
+    <parameter name="localisation_server_database_tablename" value="tr_qt_default" /> <!-- overwrites default value -->
 
-	    <!-- 
-			Filtering settings, use them to make the xml smaller. Do not use whitelists and blacklists combined as it may cause
-		    unwanted results. Taken out from default settings. Attribute lists are only valid when filter_type is static
-		-->
+    <!-- recording will detect movements together with tap up and down as taps if the movement is smaller -->
+    <parameter name="record_move_treshold" value="5" />
+    <!-- tap which are longer than this will be set as long taps (tap down, wait, tap up)-->
+    <parameter name="record_tap_time_treshold" value="1" />
+  
+    <!-- possible values none, static, dynamic -->
+    <parameter name="filter_type" value="dynamic"/>
 
-<!--
-	    <parameter name="attribute_blacklist" value="droppable,hoverable,obscured,under-mouse,acceptDrops,accessibleDescription,accessibleName,cursor,autoFillBackground,bold,capitalization,focusPolicy,inputMethodHints,italic,kerning,letterSpacing,locale,mouseTracking,overline,palette,sizeHint,sizeIncrement,sizePolicy,strikeOut,statusTip,styleSheet,updatesEnabled,whatsThis,windowFilePath,windowModality,windowModified,windowOpacity,wordSpacing,transformOriginPoint,windowFlags,maximumSize,minimumSize,opacity,pixelSize,pointSize,parent,contextMenuPolicy,baseSize,childrenRect,childrenRegion,minimumSize,maximumSize,minimumHeight,maximumHeight,maximumWidth,layoutDirection,minimumSizeHint,normalGeometry"/>  
+    <!-- 
+      Filtering settings, use them to make the xml smaller. Do not use whitelists and blacklists combined as it may cause
+      unwanted results. Taken out from default settings. Attribute lists are only valid when filter_type is static
+    -->
 
-	    <parameter name="attribute_whitelist" value="text"/>  
-	    <parameter name="filter_properties" value="true"/> 
-		<parameter name="plugin_blacklist" value="layouttraverse,webkittraverse,viewitemtraverse"/> 
-		<parameter name="plugin_whitelist" value="qttraverse,webkittraverse"/> 
--->
+    <!--
+      <parameter name="attribute_blacklist" value="droppable,hoverable,obscured,under-mouse,acceptDrops,accessibleDescription,accessibleName,cursor,autoFillBackground,bold,capitalization,focusPolicy,inputMethodHints,italic,kerning,letterSpacing,locale,mouseTracking,overline,palette,sizeHint,sizeIncrement,sizePolicy,strikeOut,statusTip,styleSheet,updatesEnabled,whatsThis,windowFilePath,windowModality,windowModified,windowOpacity,wordSpacing,transformOriginPoint,windowFlags,maximumSize,minimumSize,opacity,pixelSize,pointSize,parent,contextMenuPolicy,baseSize,childrenRect,childrenRegion,minimumSize,maximumSize,minimumHeight,maximumHeight,maximumWidth,layoutDirection,minimumSizeHint,normalGeometry"/>  
 
+      <parameter name="attribute_whitelist" value="text"/>  
+      <parameter name="filter_properties" value="true"/> 
+      <parameter name="plugin_blacklist" value="layouttraverse,webkittraverse,viewitemtraverse"/> 
+      <parameter name="plugin_whitelist" value="qttraverse,webkittraverse"/> 
+    -->
 
-	</template>
+  </template>
 
-	<template name="qt_fixtures">
-	    	<fixtures>
-           		<fixture name="signal" plugin="tassignal" env="qt"/>
-           		<fixture name="qt" plugin="tasfixture" env="qt"/>
-                <fixture name="dialog" plugin="dialogfixture" env="qt"/>
-                <fixture name="file" plugin="filefixture" env="qt"/>
-           		<fixture name="fps" plugin="fpsfixture" env="qt"/>
-          		<fixture name="popup" plugin="popupfixture" env="qt"/>	
-          		<fixture name="tap_object" plugin="tapfixture" env="qt"/>
-          		<fixture name="mobilitysysinfo" plugin="mobilitysysinfofixture" env="qt"/>
-          		<fixture name="contact" plugin="contactfixture" env="qt"/>
-                <fixture name="launch" plugin="launchfixture" env="qt"/>
-                <fixture name="setting" plugin="settingfixture" env="qt"/>
-        	</fixtures>
-	</template>
+  <template name="qttas_server">
+    <!-- Assume that QtTAS server is running at localhost:55535 -->
+    <parameter name="qttas_server_ip" value="127.0.0.1" />
+    <parameter name="qttas_server_port" value="55535" />
+    <!-- Timeout between plugin and qttasserver -->
+    <parameter name="qttas_plugin_timeout" value="10000" />
+    <!-- QT Server port -->  
+    <parameter name="qt_tcp_server_port" value="1514" /> <!-- JKo: what is this?? is it actually used anywhere? -->
+  </template>
 
-	<template name="qttas_server">
+  <template name="qt_fixtures">
+    <fixtures>
+      <fixture name="signal" plugin="tassignal" env="qt"/>
+      <fixture name="qt" plugin="tasfixture" env="qt"/>
+      <fixture name="dialog" plugin="dialogfixture" env="qt"/>
+      <fixture name="file" plugin="filefixture" env="qt"/>
+      <fixture name="fps" plugin="fpsfixture" env="qt"/>
+      <fixture name="popup" plugin="popupfixture" env="qt"/>  
+      <fixture name="tap_object" plugin="tapfixture" env="qt"/>
+      <fixture name="mobilitysysinfo" plugin="mobilitysysinfofixture" env="qt"/>
+      <fixture name="contact" plugin="contactfixture" env="qt"/>
+      <fixture name="launch" plugin="launchfixture" env="qt"/>
+      <fixture name="setting" plugin="settingfixture" env="qt"/>
+    </fixtures>
+  </template>
 
-		<!-- Assume that QtTAS server is running at localhost:55535 -->
-		<parameter name="qttas_server_ip" value="127.0.0.1" />
-		<parameter name="qttas_server_port" value="55535" />
-  		<!-- Timeout between plugin and qttasserver -->
-	    <parameter name="qttas_plugin_timeout" value="10000" />
+  <template name="switchbox">
+    <!-- switchbox control commands default is for windows environments using foobox -->
+    <parameter name="switchbox_timeout_between_command_sequence" value="5" /> <!-- timeout in seconds between the switchbox commands -->
+    <parameter name="switchbox_powerdown_command_sequence" value="foobox USB0|foobox -VBAT1" /> <!-- if the device is connected to other than port 1 then change accordingly -->
+    <parameter name="switchbox_powerdown_command_success_string" value="" /> <!-- If no error then no string is displayed -->
+    <parameter name="switchbox_powerup_command_sequence" value="foobox +VBAT1|foobox USB1" /> <!-- if the device is connected to other than port 1 then change accordingly -->
+    <parameter name="switchbox_powerup_command_success_string" value="" /> <!-- If no error then no string is displayed -->
+    <parameter name="switchbox_sleep_before_powerup_in_reboot" value="5" /> <!-- need to wait for a couple of seconds before powerup after powerdown -->
+    <parameter name="switchbox_sleep_after_powerup_in_reboot" value="60" /> <!-- need to wait for the device to come up after poweup -->
+    <parameter name="switchbox_commands_after_powerup_in_reboot" value="" /> <!-- commands you want to be executed when polling for a device during powerup -->
+  </template>
 
-		<!-- QT Server port -->	
-		<parameter name="qt_tcp_server_port" value="1514" /> <!-- JKo: what is this?? is it actually used anywhere? -->
+  <template name="flash">
+    <!-- flash control commands default is for windows environments using  -->
+    <parameter name="flash_attempts" value="1" /> <!-- how many times  will attempt to flash the device -->
+    <parameter name="timeout_between_command_sequence" value="25" /> <!-- timeout in seconds between the switchbox and  commands before and after flash -->
+    <parameter name="switchbox_commands_before_flash" value="" /> <!-- commands you want to be executed before flash, commands are sparated with | -->
+    <parameter name="commands_before_flash" value="" /> <!-- flash commands for  before flash, commands are sparated with | -->
+    <parameter name="flash_command" value="" /> <!-- intial flash command for  -->
+    <parameter name="optional_parameters_after_flashing" value="/nm" /> <!-- optional flash parameters -->
+    <parameter name="flash_images" value="/tmp/image.bin /tmp/image2.bin" /> <!-- images to flash  -->
+    <parameter name="switchbox_commands_after_failed_flash" value="" /> <!-- commands for switchbox after failed flash, commands are sparated with |  -->
+    <parameter name="commands_after_failed_flash" value="" /> <!-- commands for  after failed flash, commands are sparated with |  -->
+    <parameter name="command_after_flash" value="" /> <!-- flash command for  after flash, commands are sparated with |  -->
+    <parameter name="switchbox_commands_after_flash" value="" /> <!-- commands you want to be executed after flash, commands are sparated with |  -->
+  </template>
 
-	</template>
-
-    <template name="switchbox">
-        <!-- switchbox control commands default is for windows environments using foobox -->
-        <parameter name="switchbox_timeout_between_command_sequence" value="5" /> <!-- timeout in seconds between the switchbox commands -->
-        <parameter name="switchbox_powerdown_command_sequence" value="foobox USB0|foobox -VBAT1" /> <!-- if the device is connected to other than port 1 then change accordingly -->
-        <parameter name="switchbox_powerdown_command_success_string" value="" /> <!-- If no error then no string is displayed -->
-        <parameter name="switchbox_powerup_command_sequence" value="foobox +VBAT1|foobox USB1" /> <!-- if the device is connected to other than port 1 then change accordingly -->
-        <parameter name="switchbox_powerup_command_success_string" value="" /> <!-- If no error then no string is displayed -->
-        <parameter name="switchbox_sleep_before_powerup_in_reboot" value="5" /> <!-- need to wait for a couple of seconds before powerup after powerdown -->
-        <parameter name="switchbox_sleep_after_powerup_in_reboot" value="60" /> <!-- need to wait for the device to come up after poweup -->
-        <parameter name="switchbox_commands_after_powerup_in_reboot" value="" /> <!-- commands you want to be executed when polling for a device during powerup -->
-    </template>
-    <template name="flash">
-        <!-- flash control commands default is for windows environments using  -->
-        <parameter name="flash_attempts" value="1" /> <!-- how many times  will attempt to flash the device -->
-        <parameter name="timeout_between_command_sequence" value="25" /> <!-- timeout in seconds between the switchbox and  commands before and after flash -->
-        <parameter name="switchbox_commands_before_flash" value="" /> <!-- commands you want to be executed before flash, commands are sparated with | -->
-        <parameter name="commands_before_flash" value="" /> <!-- flash commands for  before flash, commands are sparated with | -->
-        <parameter name="flash_command" value="" /> <!-- intial flash command for  -->
-        <parameter name="optional_parameters_after_flashing" value="/nm" /> <!-- optional flash parameters -->
-        <parameter name="flash_images" value="/tmp/image.bin /tmp/image2.bin" /> <!-- images to flash  -->
-        <parameter name="switchbox_commands_after_failed_flash" value="" /> <!-- commands for switchbox after failed flash, commands are sparated with |  -->
-	<parameter name="commands_after_failed_flash" value="" /> <!-- commands for  after failed flash, commands are sparated with |  -->
-        <parameter name="command_after_flash" value="" /> <!-- flash command for  after flash, commands are sparated with |  -->
-        <parameter name="switchbox_commands_after_flash" value="" /> <!-- commands you want to be executed after flash, commands are sparated with |  -->
-    </template>
-
-	<template name="win" inherits="qt"> 
-	    <parameter name="qttas_server_port" value="11000" />
-	    <parameter name="win_native" value="true" />
-	    <parameter name="use_find_object" value="true" />
-	    <keymap xml_file="keymaps/win.xml" env="qt" />
-    </template>
-
+  <template name="win" inherits="qt"> 
+    <parameter name="qttas_server_port" value="11000" />
+    <parameter name="win_native" value="true" />
+    <parameter name="use_find_object" value="true" />
+    <parameter name="io_deflate_service_request" value="false" />
+    <keymap xml_file="keymaps/win.xml" env="qt" />
+  </template>
 
 </templates>
