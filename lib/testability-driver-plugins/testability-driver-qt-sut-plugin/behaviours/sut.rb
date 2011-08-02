@@ -323,9 +323,11 @@ module MobyBehaviour
 
         if param[ :kill ].nil?
 
-          data = {}
 
           object_xml_data, unused_rule = @test_object_adapter.get_objects( MobyUtil::XML.parse_string( xml_source ), { :type => 'Response' }, true )
+
+=begin
+          data = {}
 
           object_xml_data.collect{ | element |
           
@@ -336,13 +338,17 @@ module MobyBehaviour
             )
 
           }
+=end
+          object_xml_data.inject( {} ){ | result, element |
 
-          data
+            result.merge!( @test_object_adapter.test_object_attributes( element ) )
+
+          }
 
         else
 
           # Killed processes have no relevant data.
-          data = {
+          {
             :status => "KILLED",
             :output => xml_source
           }
