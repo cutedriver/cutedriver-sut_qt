@@ -96,34 +96,48 @@ module MobyBehaviour
       #
       def wait_for_signal( signal_timeout, signal_name, params = nil, &block )
     
-        Kernel::raise ArgumentError.new("The timeout argument was of wrong type: expected 'Integer' was '%s'" % signal_timeout.class ) unless signal_timeout.kind_of?( Integer )
+        signal_timeout.check_type Integer, 'wrong argument type $1 for signal timeout (expected $2)'
+        #raise ArgumentError.new("The timeout argument was of wrong type: expected 'Integer' was '%s'" % signal_timeout.class ) unless signal_timeout.kind_of?( Integer )
+    
+        signal_timeout.not_negative 'signal timeout value $1 cannot be negative'
+        #raise ArgumentError.new("The timeout argument had a value of '%s', it must be a non negative Integer.'" % signal_timeout ) unless signal_timeout >= 0
 
-        Kernel::raise ArgumentError.new("The timeout argument had a value of '%s', it must be a non negative Integer.'" % signal_timeout ) unless signal_timeout >= 0
       
-        Kernel::raise ArgumentError.new("The signal name argument was of wrong type: expected 'String' was '%s'" % signal_name.class ) unless signal_name.kind_of?( String )
+        signal_name.check_type String, 'wrong argument type $1 for signal name (expected $2)'
+        #raise ArgumentError.new("The signal name argument was of wrong type: expected 'String' was '%s'" % signal_name.class ) unless signal_name.kind_of?( String )
+      
+        signal_name.not_empty 'signal name cannot be empty'
+        #raise ArgumentError.new("The signal name argument must not be an empty String.") unless !signal_name.empty?
 
-        Kernel::raise ArgumentError.new("The signal name argument must not be an empty String.") unless !signal_name.empty?
-            
         # enable signal listening 
         self.fixture( 'signal', 'enable_signal', :signal => signal_name )
 
         # execute code block if any given     
         begin
-          if params.kind_of?(Hash) && params.has_key?(:retry_timeout)
-            MobyUtil::Retryable.until(:timeout => params[:retry_timeout],:interval => params[:retry_interval], :exception => SignalNotEmittedException) {
+
+          if params.kind_of?( Hash ) && params.has_key?( :retry_timeout )
+
+            MobyUtil::Retryable.until( :timeout => params[:retry_timeout], :interval => params[:retry_interval], :exception => SignalNotEmittedException) {
+
               do_wait_signal(signal_timeout, signal_name, &block)
-          } 
+
+            } 
+
           else
+          
             do_wait_signal(signal_timeout, signal_name, &block)
+            
           end
+            
         ensure
+
           self.fixture( "signal", "remove_signals" )
+
         end
 
         nil
 
       end # wait_for_signal
-
 
       # == description
       # Ensure that an event is fired into the target element
@@ -164,14 +178,14 @@ module MobyBehaviour
       # EventNotReceivedException
       #  description: Target object did not received any events defined 
       #
-      def ensure_event(params = nil, &block) 
-        Kernel::raise EventsEnabledException.new("enable_events is used - ensure_events can not be Used at the same time.") if @@_events_enabled
-        Kernel::raise ArgumentError.new("Must be called to TestObject" ) unless self.kind_of? MobyBase::TestObject
+      def ensure_event(params = nil, &block)
+      
+        raise EventsEnabledException.new("enable_events is used - ensure_events can not be Used at the same time.") if @@_events_enabled
+        raise ArgumentError.new("Must be called to TestObject" ) unless self.kind_of? MobyBase::TestObject
 
         retry_timeout = (params.nil? || params[:retry_timeout].nil?) ? 30 : params[:retry_timeout]
         retry_interval = (params.nil? || params[:retry_interval].nil?) ? 1 : params[:retry_interval]
         sleep_time = (params.nil? || params[:sleep_time].nil?) ? 0.2 : params[:sleep_time]
-
 
         events = ['MouseButtonPress,TouchBegin,GraphicsSceneMousePress,KeyPress']
         if params && params[:events]
@@ -189,7 +203,7 @@ module MobyBehaviour
               @sut.state_object(ev).events.attribute('trackedFound')
             rescue MobyBase::AttributeNotFoundError
               $stderr.puts "Warning: Operation not received by object #{self.id} : #{self.name}. Retrying"
-              Kernel::raise EventNotReceivedException.new("No event received during call") 
+              raise EventNotReceivedException.new("No event received during call") 
             end
           }
         ensure
@@ -197,8 +211,10 @@ module MobyBehaviour
         end
       end
 
-private
+    private
+    
       def do_wait_signal(signal_timeout, signal_name, &block)
+
         timeout_deadline = ( Time.now + signal_timeout )
         
         signal_found = false
@@ -209,24 +225,26 @@ private
 
           begin
             
-            signals_xml = MobyUtil::XML.parse_string( self.fixture( 'signal', 'get_signal' ) )
-            _signal_found_xml, unused_rule = @test_object_adapter.get_objects( signals_xml, { :type => 'QtSignal', :name => signal_name}, true )
+            result = self.fixture( 'signal', 'get_signal' )
+            
+            signals_xml = MobyUtil::XML.parse_string( result )
+            
+            _signal_found_xml, unused_rule = @test_object_adapter.get_objects( signals_xml, { :type => 'QtSignal', :name => signal_name }, true )
+
             signal_found = true unless _signal_found_xml.empty? 
             
           end # begin
           
         end # while
 
-        Kernel::raise SignalNotEmittedException.new("The signal %s was not emitted within %s seconds." % [ signal_name, signal_timeout ] ) unless signal_found
+        raise SignalNotEmittedException, "The signal #{ signal_name } was not emitted within #{ signal_timeout } seconds." unless signal_found
 
       end
 
-    # enable hooking for performance measurement & debug logging
-    TDriver::Hooking.hook_methods( self ) if defined?( TDriver::Hooking )
-
+      # enable hooking for performance measurement & debug logging
+      TDriver::Hooking.hook_methods( self ) if defined?( TDriver::Hooking )
 
     end  # Synchronization
-
 
   end # QT
 
