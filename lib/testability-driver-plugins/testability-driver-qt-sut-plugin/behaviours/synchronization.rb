@@ -109,6 +109,8 @@ module MobyBehaviour
         signal_name.not_empty 'signal name cannot be empty'
         #raise ArgumentError.new("The signal name argument must not be an empty String.") unless !signal_name.empty?
 
+        params.check_type [ Hash, NilClass ], 'wrong argument type $1 for signal parameters (expected $2)'
+
         # enable signal listening 
         self.fixture( 'signal', 'enable_signal', :signal => signal_name )
 
