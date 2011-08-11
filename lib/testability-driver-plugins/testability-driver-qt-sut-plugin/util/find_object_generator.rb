@@ -62,11 +62,9 @@ module MobyUtil
       xml = "<TasCommands service=\"findObject\" #{ @_app_details.to_attributes }"
 
       # pass checksum value if known from previous service request result
-      unless @_checksum.nil?
-
-        xml << " checksum=\"#{ @_checksum.to_s }\" "
-
-      end
+      #unless @_checksum.nil?
+      #  xml << " checksum=\"#{ @_checksum.to_s }\" "
+      #end
 
       unless @_params.empty?
 
