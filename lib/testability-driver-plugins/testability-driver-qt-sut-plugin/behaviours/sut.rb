@@ -164,26 +164,11 @@ module MobyBehaviour
 
       end
       
-      # == description
-      # Returns list of crashed applications running on SUT known to qttasserver
-      # == returns
-      # String
-      #  description: XML string containing crashed applications, their names, process ids and crash times
-      #  example: "<tasMessage dateTime="2010.11.02 14:48:11.056" version="0.9.1" ><tasInfo id="1" name="Qt4.6.2" type="qt" ><object id="" name="QApplications" type="applications" ></object></tasInfo></tasMessage>"
+      # NOT SUPPORTED ANYMORE
       def list_crashed_apps
     
-        apps = nil
+        raise ArgumentError, 'Behaviour "list_crashed_apps" is no longer supported.'
 
-        begin
-          # execute the application control service request
-          apps = execute_command( MobyCommand::Application.new( :ListCrashedApps ) )
-          $logger.behaviour "PASS;Successfully listed crashed applications.;#{ id };sut;{};list_crashed_apps;"
-        rescue Exception => e
-          $logger.behaviour "FAIL;Failed to list crashed applications.;#{ id };sut;{};list_crashed_apps;"
-          raise RuntimeError, "Unable to list crashed applications: Exception: #{ e.message } (#{ e.class })"
-        end
-
-        apps     
       end
 
       # == description

@@ -104,17 +104,6 @@ module MobyController
 
             command_xml = make_xml_message( service_details, 'startedApps', nil )
 
-          # list crashed applications
-          when :ListCrashedApps
-
-            service_details = { 
-              :service => 'listCrashedApps', 
-              :name => @_application_name, 
-              :id => @_application_uid 
-            }
-
-            command_xml = make_xml_message( service_details, 'listCrashedApps', nil )
-
           # shell command
           when :Shell
 
