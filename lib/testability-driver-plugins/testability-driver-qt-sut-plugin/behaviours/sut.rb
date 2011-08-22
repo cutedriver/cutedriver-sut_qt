@@ -164,6 +164,7 @@ module MobyBehaviour
 
       end
       
+      # == nodoc
       # NOT SUPPORTED ANYMORE
       def list_crashed_apps
     
