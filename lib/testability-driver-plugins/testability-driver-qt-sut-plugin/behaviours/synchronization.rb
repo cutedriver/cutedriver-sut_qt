@@ -133,7 +133,11 @@ module MobyBehaviour
             
         ensure
 
-          self.fixture( "signal", "remove_signals" )
+          begin
+            self.fixture( "signal", "remove_signals" )
+          rescue Exception => e  
+            $logger.warning "Fixture removal failed. Message received: #{e.message}"
+          end
 
         end
 
