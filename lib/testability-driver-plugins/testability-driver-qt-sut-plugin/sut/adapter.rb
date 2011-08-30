@@ -36,7 +36,8 @@ module MobyController
         :socket_read_timeout,
         :socket_write_timeout,
         :deflate_service_request,
-        :defalte_minimum_size
+        :deflate_minimum_size,
+        :deflate_compression_level
       )
       
       # TODO: better way to set the host and port parameters   
