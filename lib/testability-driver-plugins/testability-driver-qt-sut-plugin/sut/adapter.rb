@@ -86,13 +86,9 @@ module MobyController
         # determine which inflate method to use
         if _sut_parameters[ :win_native, false ].to_s.true?
 
-          @zlib_inflate_method = Zlib::Inflate.new( -Zlib::MAX_WBITS ).method( :inflate )
-
           @inflate_method = method( :inflate_windows_native )
 
         else
-
-          @zlib_inflate_method = Zlib::Inflate.method( :inflate )
 
           @inflate_method = method( :inflate )
 
@@ -384,17 +380,16 @@ module MobyController
       # inflate to be used in native windows env.
       def inflate_windows_native( body )
 
-        tmp = body
-
-        unless tmp.empty?
-
-          @zlib_inflate_method.call( tmp )
-
-        else  
-
-          tmp
+        unless body.empty?
+		
+          zstream = Zlib::Inflate.new( -Zlib::MAX_WBITS )
+          body = zstream.inflate( body )
+          zstream.finish
+          zstream.close
 
         end 
+
+        body
 
       end
 
@@ -405,14 +400,12 @@ module MobyController
         tmp = body[ 4 .. -1 ]
 
         unless tmp.empty?
-
-          @zlib_inflate_method.call( tmp )
-
-        else
-
-          tmp
-
+		
+          tmp = Zlib::Inflate.inflate( tmp )
+          
         end
+
+        tmp
 
       end
 
