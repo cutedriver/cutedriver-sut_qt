@@ -274,7 +274,7 @@ module MobyBehaviour
         #  description:  In case the given parameters are not valid.
         #    
         # == info
-        # See method rotate
+        # See [link="#QtMultitouch:rotate"]rotate[/link] method for more details
         #
 	      def one_point_rotate(radius, start_angle, rotate_direction, distance, speed, center_point = nil)
 		      params = {:type => :one_point, :radius => radius, :rotate_direction => rotate_direction, :distance => distance, :speed => speed, :direction => start_angle}

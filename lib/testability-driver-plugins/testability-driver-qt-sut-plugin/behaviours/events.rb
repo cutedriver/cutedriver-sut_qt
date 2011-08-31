@@ -72,6 +72,7 @@ module MobyBehaviour
       def enable_events(filter_array = nil, params = {})
 
         begin
+
           command = plugin_command #in qt_behaviour 
           command.command_name( 'EnableEvents' )
           params_str = ''
@@ -81,15 +82,18 @@ module MobyBehaviour
           command.service( 'collectEvents' ) 
           @sut.execute_command( command)
           @@_events_enabled = true
-        rescue Exception => e
+
+        rescue
 
           $logger.behaviour "FAIL;Failed enable_events with refresh \"#{filter_array.to_s}\".;#{ identity };enable_events;"
-          Kernel::raise e
+          raise $!
 
         end
 
         $logger.behaviour "PASS;Operation enable_events executed successfully with refresh \"#{ filter_array.to_s }\".;#{ identity };enable_events;"
+
         nil
+
       end
 
       # == description
@@ -104,37 +108,46 @@ module MobyBehaviour
       # Exception
       #  description: In case of an error
       #    
-      def disable_events()
+      def disable_events
 
         begin
+        
           command = plugin_command #in qt_behaviour
           command.command_name( 'DisableEvents' )
           command.service( 'collectEvents' )
           @sut.execute_command( command)
           @@_events_enabled = false
-        rescue Exception => e
+          
+        rescue
+        
           $logger.behaviour "FAIL;Failed disable_events.;#{ identity };disable_events;"
-          Kernel::raise e 
+          
+          raise $!
+          
         end 
 
         $logger.behaviour "PASS;Operation disable_events executed successfully.;#{ identity };disable_events;"
+
         nil
 
       end
 
       # == description
-      # Gets event list occured since the enabling of events. The format of the XML string is the same as with the UI state.
+      # Gets event list occured since the enabling of events. The format of the XML string is the same as with the UI state.\n
+      # [b]NOTE:[/b] It is highly recommended to create a StateObject with result XML and access the data through appropriate API.\n
+      # \n
+      # See [link="#GenericSut:state_object"]state_object[/link] method for more details.
       #
       # == returns
       # String
-      #  description: Xml listing containing the details of the events logger since enable_events
+      #  description: XML containing the details of the events logger since enable_events
       #  example: -
       #
       # == exceptions
       # Exception
       #  description: In case of an error
       #    
-      def get_events()
+      def get_events
       
         ret = nil
 
@@ -146,10 +159,11 @@ module MobyBehaviour
           ret = @sut.execute_command( command)
           # TODO: how to parse the output?
 
-        rescue Exception => e
+        rescue
 
           $logger.behaviour "FAIL;Failed get_events.;#{ identity };get_events;"
-          Kernel::raise e
+          
+          raise $!
     
         end
 
