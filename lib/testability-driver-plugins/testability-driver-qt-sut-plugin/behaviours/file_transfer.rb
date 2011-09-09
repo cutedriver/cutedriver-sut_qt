@@ -144,7 +144,7 @@ module MobyBehaviour
 
         if arguments[ :file ]!=nil
           file=arguments[ :file ].gsub('\\','/')
-        else file='*.*'
+        else
           file='*.*'
         end
 
@@ -165,13 +165,13 @@ module MobyBehaviour
             end_index=(name.index File.basename(name))-1
             start_index=(name.index device_path)+device_path.length
             file_folder=name[start_index..end_index]
-            write_file("#{tmp_path}#{file_folder}",name)
+            receive_file_from_device(name,File.join("#{tmp_path}#{file_folder}",File.basename(name)))
           end
           return list_of_files
         else
           Kernel::raise ArgumentError.new( "Argument :file not found") unless arguments.include?( :file )
-          new_file=write_file(tmp_path,file)
-          return new_file
+          return receive_file_from_device(File.join(tmp_path,name),File.join(tmp_path,name))
+
         end
       end
 
@@ -223,10 +223,10 @@ module MobyBehaviour
           Kernel::raise ArgumentError.new( "Argument :from not found") unless arguments.include?( :from )
           local_dir.entries.each do | local_file_or_subdir |
             if !File.directory?( File.join( arguments[ :from ], local_file_or_subdir ) )
-              fixture("file","write_file",
-                {:file_name=>arguments[ :to ]+'/'+File.basename(local_file_or_subdir),
-                  :file_data=>Base64.encode64(read_file(File.join( arguments[ :from ],
-                        local_file_or_subdir )))})
+              send_file_to_device(
+                      File.join( arguments[ :from ], local_file_or_subdir ),
+                      File.join( arguments[ :to ], File.basename(local_file_or_subdir))
+              )
               transfered_files << "#{arguments[ :to ]}/#{File.basename(local_file_or_subdir)}"
             elsif local_file_or_subdir != "." && local_file_or_subdir != ".."
               fixture("file","mk_dir",{:file_name=>"#{arguments[ :to ]}/#{local_file_or_subdir}"})
@@ -237,10 +237,10 @@ module MobyBehaviour
         elsif  arguments.include?( :file ) &&  arguments.include?( :from )
           local_dir.entries.each do | local_file_or_subdir |
             if !File.directory?( File.join( arguments[ :from ], local_file_or_subdir ) )
-              fixture("file","write_file",
-                {:file_name=>arguments[ :to ]+'/'+File.basename(local_file_or_subdir),
-                  :file_data=>Base64.encode64(read_file(File.join( arguments[ :from ],
-                        local_file_or_subdir )))}) if local_file_or_subdir.include?(file)
+              send_file_to_device(
+                      File.join( arguments[ :from ],local_file_or_subdir ),
+                      File.join( arguments[ :to ], File.basename(local_file_or_subdir))
+              ) if local_file_or_subdir.include?(file)
               transfered_files << "#{arguments[ :to ]}/#{File.basename(local_file_or_subdir)}"
             elsif local_file_or_subdir != "." && local_file_or_subdir != ".."
               fixture("file","mk_dir",{:file_name=>"#{arguments[ :to ]}/#{local_file_or_subdir}"})
@@ -251,9 +251,10 @@ module MobyBehaviour
         else
           Kernel::raise ArgumentError.new( "Argument :file not found") unless arguments.include?( :file )
           fixture("file","mk_dir",{:file_name=>{:file_name=>arguments[ :to ]}})
-          fixture("file","write_file",
-            {:file_name=>arguments[ :to ]+'/'+File.basename(file),
-              :file_data=>Base64.encode64(read_file(file))})
+          send_file_to_device(
+                  File.join(Dir.pwd,file),
+                  File.join(arguments[ :to ],File.basename(file))
+          )
           transfered_files << "#{arguments[ :to ]}/#{File.basename(file)}"
         end
         return transfered_files
@@ -300,40 +301,52 @@ module MobyBehaviour
 
       private
 
-      def write_file(target_folder,source_file)
-        if File::directory?(target_folder)==false
-          FileUtils.mkdir_p target_folder
+      def receive_file_from_device(device_file,local_file)
+        if File::directory?(File.dirname(local_file))==false
+          FileUtils.mkdir_p File.dirname(local_file)
         end
-        new_file = File.open(target_folder + "/" + File.basename(source_file), 'w')
-        new_file << Base64.decode64( fixture("file", "read_file", {:file_name => source_file}) )
+        new_file = File.new(local_file, 'wb')
+        block_size = 100000
+        temp_size = block_size
+        offset = 0
+        while( temp_size == block_size )
+          temp_data = Base64.decode64( fixture("file", "read_file_part", 
+                                               {:file_name => device_file,
+                                                :file_offset => offset,
+                                                :data_lenght => block_size
+                                                }) ) 
+          temp_size = temp_data.size
+          offset = offset + temp_size
+          new_file.write(temp_data)
+        end
         new_file.close
-        return target_folder + "/" + File.basename(source_file)
+        return local_file
       end
 
-      def read_file(source_file)
-=begin
-        file_data=''
-        if File.file?(source_file)
-          open_file = File.open(source_file, 'r')
-          open_file.each_line do |line|
-            file_data += line
+      def send_file_to_device(local_file, device_file)
+          fixture("file", "delete_file", {:file_name => device_file})
+          block_max_size = 100000
+          offset = 0
+          file_size = File.stat(local_file).size
+          
+          file_to_be_sent = File.open(local_file,"rb")
+          while(offset < file_size)
+            block_size = file_size - offset
+            if(block_size > block_max_size)
+              block_size = block_max_size
+            end
+            buff = file_to_be_sent.readpartial(block_size)
+            if(buff != nil)
+              file_data = Base64.encode64(buff)
+              fixture("file","write_file_append",
+              { :file_name=>device_file,
+                :file_data=>file_data,
+                :file_offset=>offset,
+                :data_lenght=>buff.size} )
+              offset = offset + buff.size
+            end
           end
-        end
-        return file_data.to_s
-=end
-
-        begin
-
-          # return file content as string
-          File.open( source_file, 'rb:binary' ).read
-
-        rescue
-
-          # return empty string in case of exception raised
-          ''
-
-        end
-
+          file_to_be_sent.close
       end
 
 
