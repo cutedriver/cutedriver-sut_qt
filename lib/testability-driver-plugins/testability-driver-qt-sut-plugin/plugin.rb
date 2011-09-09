@@ -18,7 +18,9 @@
 ############################################################################
 
 # verify that TDriver is loaded
-Kernel::raise RuntimeError.new( "This SUT plugin requires Testability Driver and cannot be launched in standalone mode" ) unless (defined?( MATTI ) || defined?( TDriver ))
+raise RuntimeError, 'This SUT plugin requires Testability Driver and cannot be launched in standalone mode' unless (defined?( MATTI ) || defined?( TDriver ))
+
+raise RuntimeError, 'Installed Testability Driver is too old; please update to later version' unless defined?( TDriver::TestObjectFactory ) || defined?( TDriver::SUTFactory )
 
 include TDriverVerify
 
@@ -97,7 +99,7 @@ module MobyPlugin
 
 			end
 
-			# returns SUT object - this method will be called from MobyBase::SUTFactory
+			# returns SUT object - this method will be called from TDriver::SUTFactory
 			def self.make_sut( sut_id )
 
         # retrieve sut specific parameters
@@ -133,7 +135,7 @@ module MobyPlugin
           sut_controller,
 
           # pass test object factory class
-					MobyBase::TestObjectFactory.instance,
+					TDriver::TestObjectFactory,
 
           # pass sut id
 					sut_id 
