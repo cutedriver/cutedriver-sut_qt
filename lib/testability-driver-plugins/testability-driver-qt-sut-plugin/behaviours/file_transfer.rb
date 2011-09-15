@@ -170,7 +170,7 @@ module MobyBehaviour
           return list_of_files
         else
           Kernel::raise ArgumentError.new( "Argument :file not found") unless arguments.include?( :file )
-          return receive_file_from_device(File.join(tmp_path,name),File.join(tmp_path,name))
+          return receive_file_from_device(file,File.join(tmp_path,File.basename(file)))
 
         end
       end
