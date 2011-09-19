@@ -27,7 +27,7 @@ begin
 
 rescue LoadError => exception
 
-	Kernel::raise LoadError.new( "SUT plugin requires TDriver" )
+	raise LoadError, 'SUT plugin requires TDriver'
 
 end
 

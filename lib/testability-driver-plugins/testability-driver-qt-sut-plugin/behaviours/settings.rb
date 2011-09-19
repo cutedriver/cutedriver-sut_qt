@@ -107,7 +107,7 @@ module MobyBehaviour
 		rescue Exception => e
 
 		  $logger.behaviour "FAIL;Failed set settings \"#{identifiers.to_s}\", \"#{values.to_s}\".;set_settings;"
-		  Kernel::raise e
+		  raise e
 
 		end
 
@@ -160,7 +160,7 @@ module MobyBehaviour
 		rescue Exception => e
 
 		  $logger.behaviour "FAIL;Failed remove settings \"#{identifiers.to_s}\", \"#{setting_keys.to_s}\".;remove_settings;"
-		  Kernel::raise e
+		  raise e
 
 		end
 
@@ -214,7 +214,7 @@ module MobyBehaviour
 		rescue Exception => e
 
 		  $logger.behaviour "FAIL;Failed read settings \"#{identifiers.to_s}\", \"#{setting_keys.to_s}\".;read_settings;"
-		  Kernel::raise e
+		  raise e
 
 		end
 
@@ -261,7 +261,7 @@ module MobyBehaviour
 		rescue Exception => e
 
 		  $logger.behaviour "FAIL;Failed read all settings \"#{identifiers.to_s}\".;read_all_settings;"
-		  Kernel::raise e
+		  raise e
 
 		end
 

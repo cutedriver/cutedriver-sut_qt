@@ -75,7 +75,7 @@ module MobyBehaviour
 			#   description: invoking the method failed
 			def call_method( method_name, *params )
 
-				Kernel::raise ArgumentError.new( "Method name was empty" ) if method_name.empty?
+				raise ArgumentError.new( "Method name was empty" ) if method_name.empty?
 				command = command_params #in qt_behaviour      
 				command.transitions_off     
 				command.command_name( 'CallMethod' )
@@ -94,7 +94,7 @@ module MobyBehaviour
           when TrueClass,FalseClass
               key = "B"
           else
-            Kernel::raise ArgumentError.new( "Method parameter #{i}: Only String,Fixunum,Float and Boolean types are supported" ) 
+            raise ArgumentError.new( "Method parameter #{i}: Only String,Fixunum,Float and Boolean types are supported" ) 
           end
          pars["method_param#{i}"] = key+param.to_s
         }

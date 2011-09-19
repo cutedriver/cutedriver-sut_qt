@@ -741,7 +741,7 @@ module MobyBehaviour
 
         rescue Exception => e
           $logger.behaviour "FAIL;Failed infologger \"#{params.to_s}\".;#{service};"
-          Kernel::raise e
+          raise e
         end
         $logger.behaviour "PASS;Operation infologger succeeded with params \"#{params.to_s}\".;#{service};"
         ret

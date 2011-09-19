@@ -228,7 +228,7 @@ module MobyBehaviour
 		    rescue Exception => e
 		      
 		      $logger.behaviour "FAIL;Failed to enable event logging. With event_list \"#{event_list};log_events"
-		      Kernel::raise e        
+		      raise e        
 
 		    end      
 
@@ -253,7 +253,7 @@ module MobyBehaviour
 		    rescue Exception => e
 		      
 		      $logger.behaviour "FAIL;Failed to stop event logging.;stop_event_logging"
-		      Kernel::raise e        
+		      raise e        
 
 		    end      
 
@@ -288,7 +288,7 @@ module MobyBehaviour
 		    rescue Exception => e
 		      
 		      $logger.behaviour "FAIL;Failed to configure logger. With params \"#{params_hash.to_s};configure_logger"
-		      Kernel::raise e        
+		      raise e        
 
 		    end      
 

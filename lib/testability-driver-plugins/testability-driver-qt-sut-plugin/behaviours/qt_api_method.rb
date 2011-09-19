@@ -28,8 +28,8 @@ module MobyBehaviour
 				attr_reader :value, :type
 
 				def initialize( type, value )
-					Kernel::raise ArgumentError.new("Invalid argument type for type. (Actual: %s, Expected: String)" % [ type.class.to_s ] ) unless type.kind_of?( String )
-					Kernel::raise ArgumentError.new("Invalid argument type for value. (Actual: %s, Expected: String)" % [ value.class.to_s ] ) unless value.kind_of?( String )
+					raise ArgumentError.new("Invalid argument type for type. (Actual: %s, Expected: String)" % [ type.class.to_s ] ) unless type.kind_of?( String )
+					raise ArgumentError.new("Invalid argument type for value. (Actual: %s, Expected: String)" % [ value.class.to_s ] ) unless value.kind_of?( String )
 					@type, @value = type, value
 				end
 	
@@ -53,7 +53,7 @@ module MobyBehaviour
 				RETURN_RESULT_AS_XML	= 0x03
 			
 				def initialize( parent, fixture_name )
-					Kernel::raise ArgumentError.new("Invalid argument type for fixture name. (Actual: %s, Expected: String)" % [ fixture_name.class.to_s ] ) unless fixture_name.kind_of?( String )
+					raise ArgumentError.new("Invalid argument type for fixture name. (Actual: %s, Expected: String)" % [ fixture_name.class.to_s ] ) unless fixture_name.kind_of?( String )
 					@parent, @fixture_name = parent, fixture_name
 				end
 
@@ -62,7 +62,7 @@ module MobyBehaviour
 				end
 
 				def list_class_methods( class_name )
-					Kernel::raise ArgumentError.new("Invalid argument type for class name. (Actual: %s, Expected: String)" % [ class_name.class.to_s ]) unless class_name.kind_of?( String )
+					raise ArgumentError.new("Invalid argument type for class name. (Actual: %s, Expected: String)" % [ class_name.class.to_s ]) unless class_name.kind_of?( String )
 					execute( RETURN_RESULT_AS_LIST, 'list_class methods', { :class => class_name } )
 				end
 
@@ -97,7 +97,7 @@ module MobyBehaviour
 									} 
 								}
 
-								Kernel::raise RuntimeError.new("Unable to parse fixture result xml (QtApiAccessor)") if result.nil?
+								raise RuntimeError.new("Unable to parse fixture result xml (QtApiAccessor)") if result.nil?
 
 							when RETURN_RESULT_AS_LIST
 

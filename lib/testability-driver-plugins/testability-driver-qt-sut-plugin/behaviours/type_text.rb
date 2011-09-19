@@ -78,7 +78,7 @@ module MobyBehaviour
 				rescue Exception => e
 
 					$logger.behaviour "FAIL;Failed type_text with text \"#{text}\".;#{identity};type_text;"
-					Kernel::raise e
+					raise e
 
 				end      
 

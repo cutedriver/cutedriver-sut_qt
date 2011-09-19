@@ -107,8 +107,8 @@ module MobyBehaviour
 
         else
 
-          Kernel::raise ArgumentError.new( "Argument :file not found") unless arguments.include?( :file )
-          Kernel::raise ArgumentError.new( "Argument :dir not found") unless arguments.include?( :dir )
+          raise ArgumentError.new( "Argument :file not found") unless arguments.include?( :file )
+          raise ArgumentError.new( "Argument :dir not found") unless arguments.include?( :dir )
 
         end
 
@@ -169,7 +169,7 @@ module MobyBehaviour
           end
           return list_of_files
         else
-          Kernel::raise ArgumentError.new( "Argument :file not found") unless arguments.include?( :file )
+          raise ArgumentError.new( "Argument :file not found") unless arguments.include?( :file )
           return receive_file_from_device(file,File.join(tmp_path,File.basename(file)))
 
         end
@@ -201,12 +201,12 @@ module MobyBehaviour
       #
       def copy_to_sut(arguments)
         MobyBase::Error.raise( :WrongArgumentType, arguments.class, "hash" ) unless arguments.kind_of?( Hash )
-        Kernel::raise ArgumentError.new( "Argument :to not found") unless arguments.include?( :to )
+        raise ArgumentError.new( "Argument :to not found") unless arguments.include?( :to )
 
         begin
           local_dir = Dir.new( arguments[ :from ] ) if arguments.include?( :from )
         rescue Errno::ENOENT => ee
-          Kernel::raise RuntimeError.new( "The source folder does not exist. Details:\n" + ee.inspect )
+          raise RuntimeError.new( "The source folder does not exist. Details:\n" + ee.inspect )
         end
 
         if arguments[ :file ]!=nil
@@ -220,7 +220,7 @@ module MobyBehaviour
         fixture("file","mk_dir",{:file_name=>"#{arguments[ :to ]}"})
         
         if arguments.include?( :file )==false
-          Kernel::raise ArgumentError.new( "Argument :from not found") unless arguments.include?( :from )
+          raise ArgumentError.new( "Argument :from not found") unless arguments.include?( :from )
           local_dir.entries.each do | local_file_or_subdir |
             if !File.directory?( File.join( arguments[ :from ], local_file_or_subdir ) )
               send_file_to_device(
@@ -249,7 +249,7 @@ module MobyBehaviour
             end
           end
         else
-          Kernel::raise ArgumentError.new( "Argument :file not found") unless arguments.include?( :file )
+          raise ArgumentError.new( "Argument :file not found") unless arguments.include?( :file )
           fixture("file","mk_dir",{:file_name=>{:file_name=>arguments[ :to ]}})
           send_file_to_device(
                   File.join(Dir.pwd,file),
@@ -284,7 +284,7 @@ module MobyBehaviour
       #
       def list_files_from_sut(arguments)
         MobyBase::Error.raise( :WrongArgumentType, arguments.class, "hash" ) unless arguments.kind_of?( Hash )
-        Kernel::raise ArgumentError.new( "Argument :from not found") unless arguments.include?( :from )
+        raise ArgumentError.new( "Argument :from not found") unless arguments.include?( :from )
         device_path=arguments[ :from ].gsub('\\','/')
 
         if arguments[ :file ]!=nil

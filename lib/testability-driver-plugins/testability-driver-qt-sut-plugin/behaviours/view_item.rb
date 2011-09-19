@@ -79,7 +79,7 @@ module MobyBehaviour
 		    rescue Exception => e      
 
 		      $logger.behaviour "FAIL;Failed select"#{identity};drag;"
-		      Kernel::raise e        
+		      raise e        
 
 		    end      
 

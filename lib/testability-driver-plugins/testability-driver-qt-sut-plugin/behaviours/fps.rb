@@ -74,7 +74,7 @@ module MobyBehaviour
 		rescue Exception => e
 
 		  $logger.behaviour "FAIL;Failed start_fps_measurement.;#{ identity };start_fps_measurement;"
-		  Kernel::raise e
+		  raise e
 
 		end
 
@@ -103,7 +103,7 @@ module MobyBehaviour
 		rescue Exception => e
 
 		  $logger.behaviour "FAIL;Failed stop_fps_measurement.;#{ identity };stop_fps_measurement;"
-		  Kernel::raise e
+		  raise e
 
 		end
 
@@ -136,7 +136,7 @@ module MobyBehaviour
 		rescue Exception => e
 
 		  $logger.behaviour "FAIL;Failed collect_fps_data.;#{ identity };collect_fps_data;"
-		  Kernel::raise e
+		  raise e
 
 		end
 

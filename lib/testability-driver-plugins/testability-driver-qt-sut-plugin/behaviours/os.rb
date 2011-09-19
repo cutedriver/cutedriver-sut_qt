@@ -63,7 +63,7 @@ module MobyBehaviour
       # self.force_refresh
       # rescue Exception => e
       # $logger.behaviour "FAIL;Failed open_file with path \"#{path}\", dialog_name \"#{dialog_name}\", button \"#{button.to_s}\".;#{identity};open_file;"
-      # Kernel::raise e
+      # raise e
       # end
       # $logger.behaviour "PASS;Operation file executed successfully with path \"#{path}\", dialog_name \"#{dialog_name}\", button \"#{button.to_s}\".;#{identity};open_file;"
       # nil
@@ -86,7 +86,7 @@ module MobyBehaviour
 				  self.execute_command( MobyCommand::WidgetCommand.new( nil, nil, nil, 'PressEnter', params, nil, 'uiCommand') )
 				rescue Exception => e
 					$logger.behaviour "FAIL;Failed to send an Enter keystroke request to the qttas server;press_enter;"
-					Kernel::raise e
+					raise e
 				end
 					$logger.behaviour "PASS;Successfuly sent an Enter keystroke request to the qttas server;press_enter;"
 				nil
