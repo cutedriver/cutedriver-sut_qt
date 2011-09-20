@@ -106,7 +106,7 @@ module MobyBehaviour
       rescue Exception => e
 
         $logger.behaviour "FAIL;Failed flick with direction \"#{direction}\", button \"#{button.to_s}\".;#{identity};flick;"
-        Kernel::raise e        
+        raise e        
       end      
 
       $logger.behaviour "PASS;Operation flick executed successfully with direction \"#{direction}\", button \"#{button.to_s}\".;#{identity};flick;"
@@ -182,7 +182,7 @@ module MobyBehaviour
       rescue Exception => e
 
         $logger.behaviour "FAIL;Failed flick_to with x \"#{x}\", y \"#{y}\", button \"#{button.to_s}\".;#{identity};drag;"
-        Kernel::raise e        
+        raise e        
 
       end      
 
@@ -275,7 +275,7 @@ module MobyBehaviour
       rescue Exception => e
 
         $logger.behaviour "FAIL;Failed gesture with direction \"#{direction}\", speed \"#{speed.to_s}\", distance \"#{distance.to_s}\".;#{identity};gesture;"
-        Kernel::raise e        
+        raise e        
       end      
 
       $logger.behaviour "PASS;Operation gesture executed successfully with direction \"#{direction}\", speed \"#{speed.to_s}\", distance \"#{distance.to_s}\".;#{identity};gesture;"
@@ -351,7 +351,7 @@ module MobyBehaviour
         rescue Exception => e
 
           $logger.behaviour "FAIL;Failed gesture_to with x \"#{x}\", y \"#{y}\", speed \"#{speed.to_s}\", button \".;#{identity};gesture;"
-          Kernel::raise e        
+          raise e        
         end
 
         $logger.behaviour "PASS;Operation gesture_to executed successfully with x \"#{x}\", y \"#{y}\", speed \"#{speed.to_s}\".;#{identity};gesture;"
@@ -424,7 +424,7 @@ module MobyBehaviour
 
         rescue Exception => e      
           $logger.behaviour "FAIL;Failed gesture_from with x \"#{x}\", y \"#{y}\", speed \"#{speed.to_s}\", distance \"#{distance.to_s}\", button \".;#{identity};gesture;"
-          Kernel::raise e        
+          raise e        
         end
         $logger.behaviour "PASS;Operation gesture_from executed successfully with x \"#{x}\", y \"#{y}\", speed \"#{speed.to_s}\", distance \"#{distance.to_s}\".;#{identity};gesture;"
         self
@@ -496,7 +496,7 @@ module MobyBehaviour
       rescue Exception => e      
 
         $logger.behaviour "FAIL;Failed gesture_to_object with button.;#{identity};drag;"
-        Kernel::raise e        
+        raise e        
 
       end      
 
@@ -684,7 +684,7 @@ module MobyBehaviour
       rescue Exception => e      
         
         $logger.behaviour "FAIL;Failed drag with direction \"#{direction}\", distance \"#{distance}\", button \"#{button.to_s}\".;#{identity};drag;"
-        Kernel::raise e        
+        raise e        
 
       end      
 
@@ -738,7 +738,7 @@ module MobyBehaviour
 
         rescue Exception => e      
           $logger.behaviour "FAIL;Failed drag_to with x \"#{x}\", y \"#{y}\", button \"#{button.to_s}\".;#{identity};drag;"
-          Kernel::raise e        
+          raise e        
         end      
 
         $logger.behaviour "PASS;Operation drag_to executed successfully with x \"#{x}\", y \"#{y}\", button \"#{button.to_s}\".;#{identity};drag;"
@@ -804,7 +804,7 @@ module MobyBehaviour
         rescue Exception => e      
 
           $logger.behaviour "FAIL;Failed drag_to_object with button \"#{button.to_s}\".;#{identity};drag;"
-          Kernel::raise e        
+          raise e        
 
         end      
 
@@ -874,7 +874,7 @@ module MobyBehaviour
         rescue Exception => e      
 
           $logger.behaviour "FAIL;Failed move with direction \"#{direction}\", distance \"#{distance}\",.;#{identity};move;"
-          Kernel::raise e        
+          raise e        
 
         end      
 

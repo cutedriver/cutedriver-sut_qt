@@ -34,7 +34,7 @@ module MobyUtil
 
 		def add_parameter( hash )
 
-			Kernel::raise ArgumentError.new("Argument :value and :type must be defined. Actual hash: #{ hash.inspect }") unless hash.has_key?( :type ) and hash.has_key?( :value )
+			raise ArgumentError.new("Argument :value and :type must be defined. Actual hash: #{ hash.inspect }") unless hash.has_key?( :type ) and hash.has_key?( :value )
 
 			@parameters.push( hash )
 

@@ -90,7 +90,7 @@ module MobyBehaviour
 				rescue Exception => e
 
 					$logger.behaviour "FAIL;Failed hover with refresh \"#{ refresh.to_s }\".;#{ identity };hover;"
-					Kernel::raise e
+					raise e
 
 				end
 
@@ -138,7 +138,7 @@ module MobyBehaviour
 				rescue Exception => e
 
 					$logger.behaviour "FAIL;Failed trigger with refresh \"#{ refresh.to_s }\".;#{ identity };trigger;"
-					Kernel::raise e
+					raise e
 
 				end
 

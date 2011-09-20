@@ -205,7 +205,7 @@ module MobyBehaviour
 							params[ 'attribute_value' ] = Time.parse( value.to_s ).to_i.to_s
 
 						else
-							Kernel::raise ArgumentError.new( "The value for QDateTime type attributes must be of type String, Integer, Time or DateTime, it was #{value.class.to_s}." )
+							raise ArgumentError.new( "The value for QDateTime type attributes must be of type String, Integer, Time or DateTime, it was #{value.class.to_s}." )
 
 						end 
 
@@ -221,7 +221,7 @@ module MobyBehaviour
 							params[ 'attribute_value' ] = temp_date
 
 						else
-							Kernel::raise ArgumentError.new( "The value for QDate type attributes must be of type String or Date, it was #{value.class.to_s}." )
+							raise ArgumentError.new( "The value for QDate type attributes must be of type String or Date, it was #{value.class.to_s}." )
 
 						end
 
@@ -241,7 +241,7 @@ module MobyBehaviour
 				  returnValue = @sut.execute_command( command )
 				rescue
 				  $logger.behaviour "FAIL;Failed when calling method set_attribute with values attribute:#{attribute.to_s} value:#{value.to_s}.;#{identity};set_attribute;"
-				  Kernel::raise RuntimeError.new("Setting attribute '%s' to value '%s' failed with error: %s" % [attribute, value, returnValue])
+				  raise RuntimeError.new("Setting attribute '%s' to value '%s' failed with error: %s" % [attribute, value, returnValue])
 				end
 			  
 			    $logger.behaviour "PASS;The method set_attribute was executed successfully with with values attribute:#{attribute.to_s} value:#{value.to_s}.;#{identity};set_attribute;"

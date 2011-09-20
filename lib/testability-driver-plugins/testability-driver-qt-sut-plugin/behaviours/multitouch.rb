@@ -214,7 +214,7 @@ module MobyBehaviour
 
 		      rescue Exception => e      
 		        $logger.behaviour "FAIL;Failed pinch_zoom with params \"#{ params.inspect }\".;#{ identity };pinch_zoom;"
-		        Kernel::raise e        
+		        raise e        
 		      end      
 
 		      $logger.behaviour "PASS;Operation pinch_zoom succeeded with params \"#{ params.inspect }\".;#{ identity };pinch_zoom;"
@@ -415,7 +415,7 @@ module MobyBehaviour
 		      do_sleep( time )
 		    rescue Exception => e      
 		      $logger.behaviour "FAIL;Failed rotate with params \"#{ params.inspect }\".;#{ identity };rotate;"
-		      Kernel::raise e        
+		      raise e        
 		    end      
 
 		    $logger.behaviour "PASS;Operation rotate succeeded with params \"#{ params.inspect }\".;#{ identity };rotate;"

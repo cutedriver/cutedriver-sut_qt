@@ -97,7 +97,7 @@ module MobyBehaviour
                 rescue Exception => e      
 
                     $logger.behaviour "FAIL;Failed send javascript with execute_javascript \"#{java_script}\""
-                    Kernel::raise e        
+                    raise e        
 
                 end      
 
@@ -256,7 +256,7 @@ module MobyBehaviour
         command.command_params( params )
 
         returnValue = @sut.execute_command( command )
-        Kernel::raise RuntimeError.new( "Scrollign webframe failed with error: %s" % [ returnValue ] ) if ( returnValue != "OK" )
+        raise RuntimeError.new( "Scrollign webframe failed with error: %s" % [ returnValue ] ) if ( returnValue != "OK" )
 
       end
 

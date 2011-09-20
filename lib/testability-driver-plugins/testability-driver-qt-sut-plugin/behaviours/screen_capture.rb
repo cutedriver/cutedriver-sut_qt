@@ -91,13 +91,13 @@ module MobyBehaviour
 					draw = ( draw.downcase == 'true' ? true : false ) if draw.kind_of?( String )
 
 					# verify that image format is type of string
-					Kernel::raise ArgumentError.new( "Unexpected argument type (%s) for image format, expected %s" % [ format.class, "String" ] ) unless format.kind_of?( String )
+					raise ArgumentError.new( "Unexpected argument type (%s) for image format, expected %s" % [ format.class, "String" ] ) unless format.kind_of?( String )
 
 					# verify that filename is type of string
-					Kernel::raise ArgumentError.new( "Unexpected argument type (%s) for filename, expected %s" % [ file_name.class, "String" ] ) unless file_name.nil? || file_name.kind_of?( String )
+					raise ArgumentError.new( "Unexpected argument type (%s) for filename, expected %s" % [ file_name.class, "String" ] ) unless file_name.nil? || file_name.kind_of?( String )
 
 					# verify that draw flag is type of boolean
-					Kernel::raise ArgumentError.new( "Unexpected argument type (%s) for draw flag, expected %s" % [ draw.class, "boolean (TrueClass or FalseClass)" ] ) unless [ TrueClass, FalseClass ].include?( draw.class )
+					raise ArgumentError.new( "Unexpected argument type (%s) for draw flag, expected %s" % [ draw.class, "boolean (TrueClass or FalseClass)" ] ) unless [ TrueClass, FalseClass ].include?( draw.class )
 
 					command = command_params #in qt_behaviour
 					command.command_name( 'Screenshot' )
@@ -116,7 +116,7 @@ module MobyBehaviour
 
 					$logger.behaviour "FAIL;Failed capture_screen with format \"%s\", file_name \"%s\".;%s;capture_screen;" % [ format, file_name, identity ]
 
-					Kernel::raise e
+					raise e
 
 				end
 
@@ -169,7 +169,7 @@ module MobyBehaviour
 
 					require 'RMagick'
 
-					Kernel::raise ArgumentError.new("The tolerance argument was not an Integer in the [0,100] range.") unless tolerance.kind_of? Integer and tolerance >= 0 and tolerance <= 100
+					raise ArgumentError.new("The tolerance argument was not an Integer in the [0,100] range.") unless tolerance.kind_of? Integer and tolerance >= 0 and tolerance <= 100
 
 					target = nil
 
@@ -179,7 +179,7 @@ module MobyBehaviour
 
 					elsif image_or_path.kind_of? Magick::ImageList
 
-						Kernel::raise ArgumentError.new("The supplied ImageList argument did not contain any images.") unless image_or_path.length > 0
+						raise ArgumentError.new("The supplied ImageList argument did not contain any images.") unless image_or_path.length > 0
 						target = image_or_path
 
 					elsif image_or_path.kind_of? String and !image_or_path.empty?
@@ -187,18 +187,18 @@ module MobyBehaviour
 						begin
 							target = Magick::ImageList.new(image_or_path)
 						rescue        
-							Kernel::raise RuntimeError.new("Could not load target for image comparison from path: \"#{image_or_path.to_s}\".")
+							raise RuntimeError.new("Could not load target for image comparison from path: \"#{image_or_path.to_s}\".")
 						end
 
 					else
-						Kernel::raise ArgumentError.new("The image_or_path argument was not of one of the allowed image types or a non empty String.")
+						raise ArgumentError.new("The image_or_path argument was not of one of the allowed image types or a non empty String.")
 					end
 
 					begin      
 						screen = Magick::Image.from_blob(capture_screen){ self.format = "PNG" }.first
 						screen.fuzz = tolerance.to_s + "%"
 					rescue
-						Kernel::raise RuntimeError.new("Failed to capture SUT screen for comparison. Details:\n" << $!.message)  
+						raise RuntimeError.new("Failed to capture SUT screen for comparison. Details:\n" << $!.message)  
 					end
 
 					result = screen.find_similar_region( target )
@@ -207,7 +207,7 @@ module MobyBehaviour
 
 					$logger.behaviour "FAIL;Failed when searching for image on the screen.;#{ identity };find_on_screen;#{(image_or_path.respond_to?(:filename) ? image_or_path.filename : image_or_path.to_s)},#{tolerance.to_s}"  
 
-					Kernel::raise e
+					raise e
 
 				end
 
@@ -258,7 +258,7 @@ module MobyBehaviour
 
 					$logger.behaviour	"FAIL;Failed when searching for image on the screen.;#{ identity };screen_contains?;#{(image_or_path.respond_to?(:filename) ? image_or_path.filename : image_or_path.to_s)},#{tolerance.to_s}"
 
-					Kernel::raise exc
+					raise exc
 
 
 				end      

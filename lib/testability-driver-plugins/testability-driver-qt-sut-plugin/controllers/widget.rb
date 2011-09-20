@@ -23,6 +23,49 @@ module MobyController
 
     module WidgetCommand 
 
+      include MobyController::Abstraction
+
+      # generate service request
+      def make_message
+
+        # reduce AST calls
+        _application_id = @_application_id
+        _transitions = @_transitions
+        _service = @_service
+
+        _object_id = @_object_id
+        _object_type = @_object_type
+        _command_value = @_command_value
+
+        # Object#not_nil return self if value not nil
+        _command_params = { :eventType => @_event_type.not_nil('Assert: event_type must be set!'), :name => @_command_name }.merge!( @_command_params || {} )
+
+        builder = Nokogiri::XML::Builder.new{
+
+          TasCommands( :id => _application_id, :transitions => _transitions, :service => _service || 'uiCommand' ) {
+
+            Target( :TasId => _object_id, :type => _object_type ) {
+
+            if _command_value.kind_of?( Array )
+
+              _command_value.each do | command_part | Command( command_part[ :value ], command_part[ :params ] ); end
+
+            elsif _command_value
+
+                Command( _command_value, _command_params )
+
+            else
+
+                Command( _command_params )
+
+            end
+
+            }
+          }
+        }              
+
+      end
+
       # Execute the command). 
       # Sends the message to the device using the @sut_adapter (see base class)     
       # == params         
@@ -31,47 +74,17 @@ module MobyController
       # NotImplementedError: raised if unsupported command type       
       def execute
 
-        command_params = { :eventType => get_event_type, :name => get_command_name }
-
-        command_params.merge!( get_command_params ) if get_command_params
-
-        builder = Nokogiri::XML::Builder.new{
-
-          TasCommands( :id => get_application_id, :transitions => get_transitions, :service => get_service || 'uiCommand' ) {
-
-            Target( :TasId => get_object_id, :type => get_object_type ) {
-
-            if get_command_value.kind_of?( Array )
-
-              get_command_value.each do | command_part |
-                Command( command_part[ :value ], command_part[ :params ] )
-              end
-
-            elsif get_command_value
-
-                Command( get_command_value, command_params )
-
-            else
-
-                Command( command_params )
-
-            end
-
-            }
-          }
-        }              
+        message = make_message
 
         if @sut_adapter.group?
-          @sut_adapter.append_command( builder.doc.root.children )
+
+          @sut_adapter.append_command( message.doc.root.children )
+
         else
-          @sut_adapter.send_service_request( Comms::MessageGenerator.generate( builder.to_xml ) )
+
+          @sut_adapter.send_service_request( Comms::MessageGenerator.generate( message.to_xml ) )
+
         end
-
-      end
-
-      def set_adapter( adapter )
-
-        @sut_adapter = adapter
 
       end
 

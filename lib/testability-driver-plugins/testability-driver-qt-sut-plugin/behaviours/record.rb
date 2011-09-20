@@ -63,7 +63,7 @@ module MobyBehaviour
 				rescue Exception => e
 
 					$logger.behaviour "FAIL;Failed start_recording.;#{ identity };start_recording;"
-					Kernel::raise e
+					raise e
 
 				end
 
@@ -89,7 +89,7 @@ module MobyBehaviour
 				rescue Exception => e
 
 					$logger.behaviour "FAIL;Failed stop_recording.;#{ identity };stop_recording;"
-					Kernel::raise e
+					raise e
 
 				end
 
@@ -114,7 +114,7 @@ module MobyBehaviour
 				rescue Exception => e
 
 					$logger.behaviour "FAIL;Failed print_recordings.;#{ identity };print_recordings;"
-					Kernel::raise e
+					raise e
 
 				end
 

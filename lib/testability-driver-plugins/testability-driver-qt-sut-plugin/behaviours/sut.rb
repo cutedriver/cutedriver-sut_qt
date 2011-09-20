@@ -122,7 +122,7 @@ module MobyBehaviour
         rescue Exception => e
 
           $logger.behaviour "FAIL;Failed to list processes.;#{ id };sut;{};list_processes;"
-          Kernel::raise RuntimeError.new( "Unable to list processes: Exception: #{ e.message } (#{ e.class })" )
+          raise RuntimeError.new( "Unable to list processes: Exception: #{ e.message } (#{ e.class })" )
 
         end
 

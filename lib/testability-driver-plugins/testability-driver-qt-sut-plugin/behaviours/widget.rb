@@ -91,10 +91,12 @@ module MobyBehaviour
 
           execute_behavior(move_params, command)
 
-        rescue Exception => e
+        rescue Exception
 
           $logger.behaviour "FAIL;Failed to mouse_move"
-          Kernel::raise e
+
+          raise
+
         end
 
         $logger.behaviour "PASS;Operation mouse_move executed successfully"
@@ -266,10 +268,11 @@ module MobyBehaviour
             sleep interval * tap_count
           end
 
-        rescue Exception => e
+        rescue Exception
 
           $logger.behaviour "FAIL;Failed tap with tap_count \"#{tap_count}\", button \"#{button.to_s}\".;#{identity};tap;"
-          Kernel::raise e
+
+          raise
 
         end
 
@@ -364,10 +367,11 @@ module MobyBehaviour
 
           execute_behavior(tap_params, command)
 
-        rescue # Exception => e
+        rescue Exception
 
           $logger.behaviour "FAIL;Failed #{behavior_name} with x \"#{x}\", y \"#{y}\", button \"#{button.to_s}\".;#{identity};#{behavior_name};"
-          Kernel::raise $!
+
+          raise
 
         end
 
@@ -502,10 +506,13 @@ module MobyBehaviour
           end
 
             
-        rescue Exception => e
+        rescue Exception
+
           $logger.enabled = logging_enabled
+
           $logger.behaviour "FAIL;Failed long_tap with time \"#{time.to_s}\", button \"#{button.to_s}\".;#{identity};long_tap;"
-          Kernel::raise e
+
+          raise
 
         end
         $logger.enabled = logging_enabled
@@ -556,13 +563,16 @@ module MobyBehaviour
       def long_tap_object( x, y, time = 1, button = :Left, tap_params = {} )
 
         begin
+
           tap_down_object(x, y, button, tap_params)
           sleep time
           tap_up_object(x, y, button, tap_params)
-        rescue Exception => e
+
+        rescue Exception
 
           $logger.behaviour "FAIL;Failed long_tap_object with time \"#{time.to_s}\", button \"#{button.to_s}\".;#{identity};long_tap_object;"
-          Kernel::raise e
+
+          raise
 
         end
 
@@ -630,10 +640,11 @@ module MobyBehaviour
 
           self.force_refresh( :id => get_application_id ) if refresh
 
-        rescue Exception => e
+        rescue Exception
 
           $logger.behaviour "FAIL;Failed tap_down with button \"#{button.to_s}\", refresh \"#{refresh.to_s}\".;#{identity};tap_down;"
-          Kernel::raise e
+
+          raise
 
         end
 
@@ -698,10 +709,11 @@ module MobyBehaviour
           execute_behavior(tap_params, command)
           self.force_refresh({:id => get_application_id}) if refresh
 
-        rescue Exception => e
+        rescue Exception
 
           $logger.behaviour "FAIL;Failed tap_up with button \"#{button.to_s}\", refresh \"#{refresh.to_s}\".;#{identity};tap_up;"
-          Kernel::raise e
+
+          raise
 
         end
 
@@ -741,10 +753,11 @@ module MobyBehaviour
 
           @sut.execute_command(command)
 
-        rescue Exception => e
+        rescue Exception
 
           $logger.behaviour "FAIL;Failed press with tap_count \"#{tap_count}\", button \"#{button.to_s}\".;#{identity};press;"
-          Kernel::raise e
+
+          raise
 
         end
 
@@ -764,10 +777,15 @@ module MobyBehaviour
         $stderr.puts "#{ caller(0).last.to_s } warning: TestObject#long_press is deprecated; use TestObject#long_tap"
 
         begin
+
           long_tap(time, button)
-        rescue Exception => e
+
+        rescue Exception
+
           $logger.behaviour "FAIL;Failed long_press with time \"#{time.to_s}\", button \"#{button.to_s}\".;#{identity};long_press;"
-          Kernel::raise e
+
+          raise
+
         end
 
         $logger.behaviour "PASS;Operation long_press executed successfully with time \"#{time.to_s}\", button \"#{button.to_s}\".;#{identity};long_press;"
@@ -789,10 +807,11 @@ module MobyBehaviour
 
           tap_down(button, refresh)
 
-        rescue Exception => e
+        rescue Exception
 
           $logger.behaviour "FAIL;Failed hold with button \"#{button.to_s}\", refresh \"#{refresh.to_s}\".;#{identity};hold;"
-          Kernel::raise e
+
+          raise
 
         end
 
@@ -815,10 +834,11 @@ module MobyBehaviour
 
           tap_up(button, refresh)
 
-        rescue Exception => e
+        rescue Exception
 
           $logger.behaviour "FAIL;Failed release with button \"#{button.to_s}\", refresh \"#{refresh.to_s}\".;#{identity};release;"
-          Kernel::raise e
+
+          raise
 
         end
 

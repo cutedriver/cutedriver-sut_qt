@@ -85,7 +85,7 @@ module MobyBehaviour
 
 					command.set_require_response( true )
 
-					#Kernel::raise ArgumentError.new( "Wrong argument type %s for key (Expected: %s)" % [ key.class, "Symbol/Fixnum/KeySequence" ] ) unless [ Fixnum, Symbol, MobyCommand::KeySequence ].include?( key.class )  
+					#raise ArgumentError.new( "Wrong argument type %s for key (Expected: %s)" % [ key.class, "Symbol/Fixnum/KeySequence" ] ) unless [ Fixnum, Symbol, MobyCommand::KeySequence ].include?( key.class )  
 
 					# raise exception if value type other than Fixnum or Symbol
           key.check_type [ Fixnum, Symbol, MobyCommand::KeySequence ], 'wrong argument type $1 for key (expected $2)'
@@ -131,7 +131,7 @@ module MobyBehaviour
             scancode = key.to_i
 					
 					  # raise exception if value is other than fixnum
-					  Kernel::raise ArgumentError.new( "Scan code for :%s not defined in keymap" % key ) unless scancode.kind_of?( Fixnum )
+					  raise ArgumentError.new( "Scan code for :%s not defined in keymap" % key ) unless scancode.kind_of?( Fixnum )
 
 					  # add scancode for keypress event
 					  command.command_value( scancode.to_s )
@@ -141,7 +141,7 @@ module MobyBehaviour
 					# execute command & verify that execution passed ("OK" expected as response) 
 					@sut.execute_command(command)
 
-					#Kernel::raise RuntimeError.new("Error occured during keypress (Response: %s)" % @response ) unless ( @response = @sut.execute_command(command) ) == "OK" 
+					#raise RuntimeError.new("Error occured during keypress (Response: %s)" % @response ) unless ( @response = @sut.execute_command(command) ) == "OK" 
 
 				rescue #Exception
 

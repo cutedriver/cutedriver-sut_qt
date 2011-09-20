@@ -17,32 +17,28 @@
 ## 
 ############################################################################
 
-
-
-#require File.expand_path( File.join( File.dirname( __FILE__ ), 'command_data' ) )
-
 module MobyCommand
 
   class Group < MobyCommand::CommandData
 
-	attr_reader :interval, :application, :block, :multitouch
+	  attr_reader :interval, :application, :block, :multitouch
 
-	# Constructor to Group
-	# == params
-	# interval: interval between commands
-	# application: target application
-	# block: block of commands to group
-	def initialize( interval, application, block )    
-	  @interval = interval
-	  @application = application
-	  @block = block
-	  @multitouch = false
-	end
+	  # Constructor to Group
+	  # == params
+	  # interval: interval between commands
+	  # application: target application
+	  # block: block of commands to group
+	  def initialize( interval, application, block )    
+	    @interval = interval
+	    @application = application
+	    @block = block
+	    @multitouch = false
+	  end
 
-	def set_multitouch(multitouch = true)
-	  @multitouch = multitouch
-	end
+	  def set_multitouch(multitouch = true)
+	    @multitouch = multitouch
+	  end
 
-  end
+  end # Group
 
-end #module
+end # MobyCommand

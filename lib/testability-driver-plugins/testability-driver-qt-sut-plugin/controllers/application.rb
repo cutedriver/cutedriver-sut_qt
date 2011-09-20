@@ -23,23 +23,13 @@ module MobyController
   
     module Application 
       
+      include MobyController::Abstraction
+
       include MobyUtil::MessageComposer
-
-      def set_adapter( adapter )
-    
-        @sut_adapter = adapter
-    
-      end           
-
       
-      # Execute the command 
-      # Sends the message to the device using the @sut_adapter (see base class)     
-      # == params         
-      # == returns
-      # == raises
-      # ArgumentError: raised if unsupported command type   
-      def execute
-    
+      # create message to be sent sut SUT adapter - returns [ "message_body", boolean ]
+      def make_message
+
         return_response_crc = false
 
         case @_command
@@ -176,14 +166,26 @@ module MobyController
           raise ArgumentError, "Unknown command! #{ @_command.to_s }"
           
         end
+
+        [ Comms::MessageGenerator.generate( command_xml ), return_response_crc ]
+
+      end
+
+      # Execute the command 
+      # Sends the message to the device using the @sut_adapter (see base class)     
+      # == params         
+      # == returns
+      # == raises
+      # ArgumentError: raised if unsupported command type   
+      def execute
     
-        message = Comms::MessageGenerator.generate( command_xml )
+        message, return_response_crc = make_message
 
         @sut_adapter.send_service_request( message, return_response_crc ) if message    
 
       end
 
-    end # application
+    end # Application
 
   end  # QT    
 

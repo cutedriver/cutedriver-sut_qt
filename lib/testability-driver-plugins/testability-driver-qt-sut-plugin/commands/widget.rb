@@ -17,11 +17,12 @@
 ## 
 ############################################################################
 
-
-
 module MobyCommand
 
 	class WidgetCommand < MobyCommand::CommandData
+
+    # class variable
+    VALID_OBJECT_TYPES = [ nil, :Standard, :Graphics, :Application, :Action, :Web ] unless defined?( VALID_OBJECT_TYPES )
 
 		# Constructs a new CommandParams object. CommandParams stores the details for the commands send
 		# to suts that operate using the tasCommand xml format. The controller creates an xml formatted 
@@ -37,65 +38,74 @@ module MobyCommand
 		# CommandParams:: New CommandParams object
 		# == raises
 		# ArgumentError:: When the supplied params are invalid type (initially can be nil)  
-		def initialize(application_id = nil, object_id = nil, object_type = nil, command_name = nil, params = nil, value=nil, service = nil)
+		def initialize( application_id = nil, object_id = nil, object_type = nil, command_name = nil, params = nil, value=nil, service = nil )
 
-			@@_valid_types = [ nil, :Standard, :Graphics, :Application, :Action, :Web ]
+			application_id(application_id )
 
-			self.application_id(application_id )
-			self.set_object_id( object_id )
-			self.object_type( object_type )
-			self.command_name( command_name )    
-			self.command_params( params )
-			self.command_value( value )
-			self.service( service )
+			set_object_id( object_id )
+
+			object_type( object_type )
+
+			command_name( command_name )    
+
+			command_params( params )
+
+			command_value( value )
+      
+			service( service )
 	
-			@_transitions = true
+      transitions_on
 
-			return self
+			self
 
 		end
 
-		def service(service)
+		def service( service )
+
 			@_service = service
-		end
 
-		def get_service
-			@_service
 		end
 
 		# Set transition flag on
 		# Will cause the events to be 
 		# done on a delayed mode.
 		def transitions_on
+
 			@_transitions = true
+
 		end
 
 		# Set transition flag off
 		# Will cause the events to be 
 		# done on immediately
 		def transitions_off
+
 			@_transitions = false
+
 		end
 
 		# Return the transition value  
 		# ==returns
 		# bool: true of false  
 		def get_transitions
-			@_transitions    
+			@_transitions
 		end
-
 
 		# Set true if response is expected from device side after command
 		# Has been completed.
 		# ==params
 		# bool: True if response needed
-		def set_require_response(response_required)
+		def set_require_response( response_required )
+
 			@_response_required = response_required
+
 		end
 
 		# Returns true if response required after command.
 		def require_response?
+
 			@_response_required 
+
 		end
 
 		# Application id of the currently tested application
@@ -104,17 +114,12 @@ module MobyCommand
 		# == returns  
 		# == raises
 		# ArgumentError:: When the supplied id is not of type String   
-		def application_id(id)
-			raise ArgumentError.new( "Application id must be a string." ) unless id == nil or id.kind_of?( String )
-			@_application_id = id
-		end
+		def application_id( id )
 
-		# Return application id
-		# == params  
-		# == returns
-		# String:: Application id of the command 
-		def get_application_id
-			@_application_id
+      id.check_type [ NilClass, String ], 'wrong argument type $1 for application id (expected $2)'
+
+			@_application_id = id
+
 		end
 
 		# Object id of the target object
@@ -123,17 +128,12 @@ module MobyCommand
 		# == returns  
 		# == raises
 		# ArgumentError:: When the supplied id is not of type String   
-		def set_object_id(id)
-			raise ArgumentError.new( "Object id must be a string." ) unless id == nil or id.kind_of?( String )
-			@_object_id = id
-		end
+		def set_object_id( id )
 
-		# Return object id
-		# == params  
-		# == returns
-		# String:: Object id of the command 
-		def get_object_id
-			@_object_id
+      id.check_type [ NilClass, String ], 'wrong argument type $1 for object id (expected $2)'
+
+			@_object_id = id
+
 		end
 
 		# Object type of the target object
@@ -142,18 +142,13 @@ module MobyCommand
 		# == returns  
 		# == raises
 		# ArgumentError:: When the supplied type is not :Graphics or :Standard   
-		def object_type(type)
-			raise ArgumentError.new("Given object type '#{type.to_s}' is not valid.") unless @@_valid_types.include?(type)
-			@_object_type = type
-		end
+		def object_type( type )
 
-		# Return object type
-		# == params  
-		# == returns
-		# String:: Object type of the command 
-		def get_object_type
-			@_object_type
-		end  
+			raise TypeError.new("Given object type #{ type.inspect } is not valid.") unless VALID_OBJECT_TYPES.include?( type )
+
+			@_object_type = type
+
+		end
 
 		# Name of the command
 		# == params
@@ -161,17 +156,12 @@ module MobyCommand
 		# == returns  
 		# == raises
 		# ArgumentError:: When the supplied command_name is not of type String  
-		def command_name(name)
-			raise ArgumentError.new( "Command name must be a String." ) unless name == nil or name.kind_of?( String )
-			@_command_name = name  
-		end
+		def command_name( name )
 
-		# Return name of the command
-		# == params  
-		# == returns
-		# String:: Name of the command 
-		def get_command_name
-			@_command_name
+      name.check_type [ NilClass, String ], 'wrong argument type $1 for command name (expected $2)'
+
+			@_command_name = name  
+
 		end
 
 		# Command parameters
@@ -180,17 +170,12 @@ module MobyCommand
 		# == returns  
 		# == raises
 		# ArgumentError:: When the supplied params is of type Hash   
-		def command_params(params)
-			raise ArgumentError.new( "The given params must be in a hash (name => value)." ) unless params == nil or params.kind_of?( Hash )
-			@_command_params = params
-		end
+		def command_params( params )
 
-		# Return params of the command
-		# == params  
-		# == returns
-		# Hash:: Command parameter hash 
-		def get_command_params
-			@_command_params
+      params.check_type [ NilClass, Hash ], 'wrong argument type $1 for command parameters (expected $2)'
+
+			@_command_params = params
+
 		end
 
 		# Command value which is passed on to the device as the value of the command.
@@ -201,26 +186,21 @@ module MobyCommand
 		# == returns  
 		# == raises
 		# ArgumentError:: When the supplied params not of type String or Array or nil
-		def command_value(value)
-			raise ArgumentError.new( "Command value must be a string." ) unless value == nil or value.kind_of?( String ) or value.kind_of? Array
-			@_command_value = value
-		end
-
-		# Return command value
-		# == params  
-		# == returns
-		# tring or Array:: Command value  
-		def get_command_value
-			@_command_value
-		end
-
-		def set_event_type(event_type)
-		  @_event_type = event_type
-		end
+		def command_value( value )
 		
-		def get_event_type		  
-		  Kernel::raise "Assert: event_type must be set!" unless @_event_type
-		  @_event_type
+      value.check_type [ NilClass, String, Array ], 'wrong argument type $1 for command value (expected $2)'
+
+			@_command_value = value
+
 		end
+
+		def set_event_type( event_type )
+
+      #event_type.check_type [ NilClass, String ], 'wrong argument type $1 for event type (expected $2)'
+
+		  @_event_type = event_type
+
+		end
+
 	end
 end

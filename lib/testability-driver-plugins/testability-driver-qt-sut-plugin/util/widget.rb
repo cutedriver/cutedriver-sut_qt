@@ -37,9 +37,6 @@ module MobyUtil
            use_tap_screen = $parameters[ @sut.id ][ :use_tap_screen, 'false' ]
          end
 
-
-
-
          raise ArgumentError.new( "Coordinate x:#{x} x_abs:#{x} outside object." ) unless (x <= attribute('width').to_i and x >= 0)
          raise ArgumentError.new( "Coordinate y:#{y} y_abs:#{y} outside object." ) unless (y <= attribute('height').to_i and y >= 0)
 
@@ -63,7 +60,7 @@ module MobyUtil
        rescue Exception => e
 
          $logger.behaviour "FAIL;Failed #{behavior_name} with x \"#{x}\", y \"#{y}\", button \"#{button.to_s}\".;#{identity};#{behavior_name};"
-         Kernel::raise e
+         raise e
 
        end
 
