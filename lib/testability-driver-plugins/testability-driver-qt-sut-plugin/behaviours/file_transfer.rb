@@ -70,8 +70,9 @@ module MobyBehaviour
       #
 			# == info			
       #
-      def delete_from_sut(arguments)
-        MobyBase::Error.raise( :WrongArgumentType, arguments.class, "hash" ) unless arguments.kind_of?( Hash )
+      def delete_from_sut( arguments )
+
+        arguments.check_type Hash, "wrong argument type $1 for #{ __method__.to_s } method (expected $2)"
 
         if arguments.include?( :file )
 
@@ -107,8 +108,8 @@ module MobyBehaviour
 
         else
 
-          Kernel::raise ArgumentError.new( "Argument :file not found") unless arguments.include?( :file )
-          Kernel::raise ArgumentError.new( "Argument :dir not found") unless arguments.include?( :dir )
+          arguments.require_key :file, 'Argument $1 not found'
+          arguments.require_key :dir, 'Argument $1 not found'
 
         end
 
@@ -137,8 +138,9 @@ module MobyBehaviour
       #
 			# == info			
       #
-      def copy_from_sut(arguments)
-        MobyBase::Error.raise( :WrongArgumentType, arguments.class, "hash" ) unless arguments.kind_of?( Hash )
+      def copy_from_sut( arguments )
+
+        arguments.check_type Hash, "wrong argument type $1 for #{ __method__.to_s } method (expected $2)"
 
         device_path=arguments[ :from ].gsub('\\','/') if arguments.include?( :from )
 
@@ -169,8 +171,10 @@ module MobyBehaviour
           end
           return list_of_files
         else
-          Kernel::raise ArgumentError.new( "Argument :file not found") unless arguments.include?( :file )
-          return receive_file_from_device(File.join(tmp_path,name),File.join(tmp_path,name))
+
+          arguments.require_key :file, 'Argument $1 not found'
+
+          receive_file_from_device(File.join(tmp_path,name),File.join(tmp_path,name))
 
         end
       end
@@ -200,13 +204,15 @@ module MobyBehaviour
 			# == info			
       #
       def copy_to_sut(arguments)
-        MobyBase::Error.raise( :WrongArgumentType, arguments.class, "hash" ) unless arguments.kind_of?( Hash )
-        Kernel::raise ArgumentError.new( "Argument :to not found") unless arguments.include?( :to )
+
+        arguments.check_type Hash, "wrong argument type $1 for #{ __method__.to_s } method (expected $2)"
+
+        arguments.require_key :to, 'Argument $1 not found'
 
         begin
           local_dir = Dir.new( arguments[ :from ] ) if arguments.include?( :from )
-        rescue Errno::ENOENT => ee
-          Kernel::raise RuntimeError.new( "The source folder does not exist. Details:\n" + ee.inspect )
+        rescue Errno::ENOENT
+          raise RuntimeError, "The source folder does not exist. Details:\n#{ $!.inspect }"
         end
 
         if arguments[ :file ]!=nil
@@ -220,7 +226,9 @@ module MobyBehaviour
         fixture("file","mk_dir",{:file_name=>"#{arguments[ :to ]}"})
         
         if arguments.include?( :file )==false
-          Kernel::raise ArgumentError.new( "Argument :from not found") unless arguments.include?( :from )
+
+          arguments.require_key :from, 'Argument $1 not found'
+
           local_dir.entries.each do | local_file_or_subdir |
             if !File.directory?( File.join( arguments[ :from ], local_file_or_subdir ) )
               send_file_to_device(
@@ -249,7 +257,9 @@ module MobyBehaviour
             end
           end
         else
-          Kernel::raise ArgumentError.new( "Argument :file not found") unless arguments.include?( :file )
+
+          arguments.require_key :file, 'Argument $1 not found'
+
           fixture("file","mk_dir",{:file_name=>{:file_name=>arguments[ :to ]}})
           send_file_to_device(
                   file,
@@ -282,9 +292,12 @@ module MobyBehaviour
       #
 			# == Info			
       #
-      def list_files_from_sut(arguments)
-        MobyBase::Error.raise( :WrongArgumentType, arguments.class, "hash" ) unless arguments.kind_of?( Hash )
-        Kernel::raise ArgumentError.new( "Argument :from not found") unless arguments.include?( :from )
+      def list_files_from_sut( arguments )
+
+        arguments.check_type Hash, "wrong argument type $1 for #{ __method__.to_s } method (expected $2)"
+
+        arguments.require_key :from, 'Argument $1 not found'
+
         device_path=arguments[ :from ].gsub('\\','/')
 
         if arguments[ :file ]!=nil
@@ -350,9 +363,8 @@ module MobyBehaviour
           file_to_be_sent.close
       end
 
-
-				# enable hooking for performance measurement & debug logging
-				TDriver::Hooking.hook_methods( self ) if defined?( TDriver::Hooking )
+			# enable hooking for performance measurement & debug logging
+			TDriver::Hooking.hook_methods( self ) if defined?( TDriver::Hooking )
 
 
 		end
