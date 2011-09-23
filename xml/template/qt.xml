@@ -84,6 +84,7 @@
     <parameter name="qttas_plugin_timeout" value="10000" />
     <!-- QT Server port -->  
     <parameter name="qt_tcp_server_port" value="1514" /> <!-- JKo: what is this?? is it actually used anywhere? -->
+    <parameter name="qt_file_transfer_block_size" value="4096" />
   </template>
 
   <template name="qt_fixtures">
