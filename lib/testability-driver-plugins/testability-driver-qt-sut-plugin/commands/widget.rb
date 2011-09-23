@@ -84,13 +84,6 @@ module MobyCommand
 
 		end
 
-		# Return the transition value  
-		# ==returns
-		# bool: true of false  
-		def get_transitions
-			@_transitions
-		end
-
 		# Set true if response is expected from device side after command
 		# Has been completed.
 		# ==params
