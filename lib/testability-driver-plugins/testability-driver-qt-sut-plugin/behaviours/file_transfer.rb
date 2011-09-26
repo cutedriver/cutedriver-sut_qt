@@ -174,7 +174,7 @@ module MobyBehaviour
 
           arguments.require_key :file, 'Argument $1 not found'
 
-          receive_file_from_device(File.join(tmp_path,name),File.join(tmp_path,name))
+          receive_file_from_device(file,File.join(arguments[ :to ],File.basename(file)))
 
         end
       end
@@ -319,7 +319,7 @@ module MobyBehaviour
           FileUtils.mkdir_p File.dirname(local_file)
         end
         new_file = File.new(local_file, 'wb')
-        block_size = 100000
+        block_size = sut_parameters[:qt_file_transfer_block_size].to_i
         temp_size = block_size
         offset = 0
         while( temp_size == block_size )
@@ -331,6 +331,7 @@ module MobyBehaviour
           temp_size = temp_data.size
           offset = offset + temp_size
           new_file.write(temp_data)
+          print "\r Downloaded #{offset} bytes of #{device_file}"
         end
         new_file.close
         return local_file
