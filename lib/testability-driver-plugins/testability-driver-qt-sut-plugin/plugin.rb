@@ -152,18 +152,17 @@ module MobyPlugin
             # send service request for agent version number
             agent_version = sut_controller.__send__( :execute_command, MobyCommand::VersionCommand.new )
 
-            case agent_version
-
-              when "1.3"
-
-                # use optimized XML format; if adapter is not found we're going through rescue block
-                adapter = TDriver::OptimizedXML::TestObjectAdapter
+            # agent version 1.3 or later supports new smaller xml format
+            if agent_version >= "1.3"
+            
+              # use optimized XML format; if adapter is not found we're going through rescue block
+              adapter = TDriver::OptimizedXML::TestObjectAdapter
 
             else
 
               # didn't recognize the version number use old TDriver::TestObjectAdapter
               raise
-
+            
             end
 
           rescue
