@@ -112,7 +112,7 @@ module MobyBehaviour
         params.check_type [ Hash, NilClass ], 'wrong argument type $1 for signal parameters (expected $2)'
 
         # enable signal listening 
-        self.fixture( 'signal', 'enable_signal', :signal => signal_name )
+        fixture( 'signal', 'enable_signal', :signal => signal_name )
 
         # execute code block if any given     
         begin
@@ -134,7 +134,7 @@ module MobyBehaviour
         ensure
 
           begin
-            self.fixture( "signal", "remove_signals" )
+            fixture( "signal", "remove_signals" )
           rescue Exception => e  
             $logger.warning "Fixture removal failed. Message received: #{e.message}"
           end
@@ -187,7 +187,7 @@ module MobyBehaviour
       def ensure_event(params = nil, &block)
       
         raise EventsEnabledException.new("enable_events is used - ensure_events can not be Used at the same time.") if @@_events_enabled
-        raise ArgumentError.new("Must be called to TestObject" ) unless self.kind_of? MobyBase::TestObject
+        raise ArgumentError.new("Must be called to TestObject" ) unless kind_of? MobyBase::TestObject
 
         retry_timeout = (params.nil? || params[:retry_timeout].nil?) ? 30 : params[:retry_timeout]
         retry_interval = (params.nil? || params[:retry_interval].nil?) ? 1 : params[:retry_interval]
@@ -197,9 +197,9 @@ module MobyBehaviour
         if params && params[:events]
           events = params[:events]
         end
-        app = self.get_application        
+        app = get_application        
         begin
-          app.enable_events(events, {"track_id" => self.id.to_s})
+          app.enable_events(events, {"track_id" => id.to_s})
 
           MobyUtil::Retryable.until(:timeout => retry_timeout,:interval => retry_interval, :exception => EventNotReceivedException) {
             block.call if block_given?
@@ -208,7 +208,7 @@ module MobyBehaviour
             begin
               @sut.state_object(ev).events.attribute('trackedFound')
             rescue MobyBase::AttributeNotFoundError
-              $stderr.puts "Warning: Operation not received by object #{self.id} : #{self.name}. Retrying"
+              $stderr.puts "Warning: Operation not received by object #{id} : #{self.name}. Retrying"
               raise EventNotReceivedException.new("No event received during call") 
             end
           }
@@ -231,7 +231,7 @@ module MobyBehaviour
 
           begin
             
-            result = self.fixture( 'signal', 'get_signal' )
+            result = fixture( 'signal', 'get_signal' )
             
             signals_xml = MobyUtil::XML.parse_string( result )
             

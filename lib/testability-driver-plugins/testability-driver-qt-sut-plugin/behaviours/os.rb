@@ -60,7 +60,7 @@ module MobyBehaviour
       ##open file is done without ui state update so wait for the dialog to open
       # sleep 0.2
       # @sut.execute_command(command)
-      # self.force_refresh
+      # force_refresh
       # rescue Exception => e
       # $logger.behaviour "FAIL;Failed open_file with path \"#{path}\", dialog_name \"#{dialog_name}\", button \"#{button.to_s}\".;#{identity};open_file;"
       # raise e
@@ -83,7 +83,7 @@ module MobyBehaviour
 					interval = (interval*1000).to_i
 					params = {:interval => interval}
 				  end
-				  self.execute_command( MobyCommand::WidgetCommand.new( nil, nil, nil, 'PressEnter', params, nil, 'uiCommand') )
+				  execute_command( MobyCommand::WidgetCommand.new( nil, nil, nil, 'PressEnter', params, nil, 'uiCommand') )
 				rescue Exception => e
 					$logger.behaviour "FAIL;Failed to send an Enter keystroke request to the qttas server;press_enter;"
 					raise e

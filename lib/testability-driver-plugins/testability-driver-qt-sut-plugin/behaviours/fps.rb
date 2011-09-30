@@ -70,7 +70,7 @@ module MobyBehaviour
 	  def start_fps_measurement
 
 		begin
-		  self.fixture('fps', 'startFps')
+		  fixture('fps', 'startFps')
 		rescue Exception => e
 
 		  $logger.behaviour "FAIL;Failed start_fps_measurement.;#{ identity };start_fps_measurement;"
@@ -99,7 +99,7 @@ module MobyBehaviour
 	  def stop_fps_measurement
 
 		begin
-		  results = parse_results( self.fixture('fps', 'stopFps') )
+		  results = parse_results( fixture('fps', 'stopFps') )
 		rescue Exception => e
 
 		  $logger.behaviour "FAIL;Failed stop_fps_measurement.;#{ identity };stop_fps_measurement;"
@@ -132,7 +132,7 @@ module MobyBehaviour
 	  def collect_fps_data
 
 		begin
-		  results = parse_results( self.fixture('fps', 'collectData') )
+		  results = parse_results( fixture('fps', 'collectData') )
 		rescue Exception => e
 
 		  $logger.behaviour "FAIL;Failed collect_fps_data.;#{ identity };collect_fps_data;"

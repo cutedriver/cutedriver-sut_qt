@@ -47,9 +47,10 @@ module MobyCommand
 			@@_valid_directions = [nil, :Up, :Down, :Left,:Right]
 			@@_valid_orientations = [nil,:Vertical, :Horizontal]
 
-			self.command(command_type)    
-			self.id(btn_id)
-			self
+			command(command_type)    
+			id(btn_id)
+			
+      self
 
 		end
 

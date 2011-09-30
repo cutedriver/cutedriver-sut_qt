@@ -249,10 +249,10 @@ module MobyBehaviour
                  )
                 )
                 #puts "web element scroll"
-                self.scroll(0,0,1) # enable tap centralization
+                scroll(0,0,1) # enable tap centralization
                 #puts "web element force refresh in tap"
-                self.force_refresh({:id => get_application_id})
-                self.tap(tap_params, interval, button)
+                force_refresh({:id => get_application_id})
+                tap(tap_params, interval, button)
                 return
               end
             end
@@ -494,7 +494,7 @@ module MobyBehaviour
           ens = param_set_configured?(tap_params, :ensure_event)
           tap_params[:ensure_event] = false
           if ens
-            self.ensure_event(:retry_timeout => 5, :retry_interval => 0.5) {
+            ensure_event(:retry_timeout => 5, :retry_interval => 0.5) {
                   tap_down(button, false, tap_params)
                   sleep time
                   tap_up(button, false, tap_params)
@@ -638,7 +638,7 @@ module MobyBehaviour
           command.command_params(params)
           execute_behavior(tap_params, command)
 
-          self.force_refresh( :id => get_application_id ) if refresh
+          force_refresh( :id => get_application_id ) if refresh
 
         rescue Exception
 
@@ -707,7 +707,7 @@ module MobyBehaviour
           command.command_params(params)
 
           execute_behavior(tap_params, command)
-          self.force_refresh({:id => get_application_id}) if refresh
+          force_refresh({:id => get_application_id}) if refresh
 
         rescue Exception
 

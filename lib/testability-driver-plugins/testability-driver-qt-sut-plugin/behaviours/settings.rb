@@ -102,7 +102,7 @@ module MobyBehaviour
 
 		  params = generate_fixture_params(identifiers, values)
 		  
-		  self.fixture('setting', 'set', params)		  
+		  fixture('setting', 'set', params)		  
 
 		rescue Exception => e
 
@@ -155,7 +155,7 @@ module MobyBehaviour
 		  params = generate_fixture_params(identifiers, nil)
 		  setting_keys.each{|value| params[value.to_sym] = ''}
 		  
-		  self.fixture('setting', 'remove', params)		  
+		  fixture('setting', 'remove', params)		  
 
 		rescue Exception => e
 
@@ -209,7 +209,7 @@ module MobyBehaviour
 		  params = generate_fixture_params(identifiers, nil)
 		  setting_keys.each{|value| params[value.to_sym] = ''}
 		  
-		  hash = eval(self.fixture('setting', 'read', params))		  
+		  hash = eval(fixture('setting', 'read', params))		  
 		  
 		rescue Exception => e
 
@@ -256,7 +256,7 @@ module MobyBehaviour
 		begin
 
 		  params = generate_fixture_params(identifiers, nil)
-		  hash = eval(self.fixture('setting', 'readAll', params))		  
+		  hash = eval(fixture('setting', 'readAll', params))		  
 		  
 		rescue Exception => e
 

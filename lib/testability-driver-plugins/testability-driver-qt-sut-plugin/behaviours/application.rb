@@ -47,11 +47,12 @@ module MobyBehaviour
     #
 	  module Application
 
-
       @@__multitouch_operation = false
 
       def multitouch_ongoing?
+
         @@__multitouch_operation
+
       end
 
 	    # == description
@@ -259,7 +260,8 @@ module MobyBehaviour
 		    find_object_state = @sut.parameter[ :use_find_object, false ]
 
 		    @sut.parameter[ :use_find_object ] = false 
-		    self.force_refresh
+
+		    force_refresh
 
 		    @sut.freeze
 		

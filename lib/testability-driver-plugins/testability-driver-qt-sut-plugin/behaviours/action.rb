@@ -85,7 +85,7 @@ module MobyBehaviour
 					command.command_params( 'id' => id )
 
 					@sut.execute_command( command )
-					self.force_refresh({:id => get_application_id}) if refresh
+					force_refresh(:id => get_application_id) if refresh
 
 				rescue Exception => e
 
@@ -133,7 +133,7 @@ module MobyBehaviour
 					command.command_params( 'id'=>id )
 
 					@sut.execute_command( command )
-					self.force_refresh({:id => get_application_id}) if refresh
+					force_refresh(:id => get_application_id) if refresh
 
 				rescue Exception => e
 
