@@ -1,4 +1,4 @@
-############################################################################
+cle############################################################################
 ## 
 ## Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies). 
 ## All rights reserved. 
@@ -611,7 +611,7 @@ module MobyBehaviour
 			# params
       #  Hash
       #   description: Optional params hash. If :clearLog => true given will clear the log when loading by default log will not be cleared.
-			#   example: {:clearLog = true}
+			#   example: {:clearLog => true}
 			#
       #
 			# == returns
@@ -639,7 +639,7 @@ module MobyBehaviour
 			# params
       #  Hash
       #   description: Optional params hash. If :clearLog => true given will clear the log when loading by default log will not be cleared.
-			#   example: {:clearLog = true}
+			#   example: {:clearLog => true}
 			#
       #
 			# == returns
@@ -667,7 +667,7 @@ module MobyBehaviour
 			# params
       #  Hash
       #   description: Optional params hash. If :clearLog => true given will clear the log when loading by default log will not be cleared.
-			#   example: {:clearLog = true}
+			#   example: {:clearLog => true}
 			#
       #
 			# == returns
@@ -697,7 +697,7 @@ module MobyBehaviour
       # params
       #  Hash
       #   description: Optional params hash. If :clearLog => true given will clear the log when loading by default log will not be cleared.
-      #   example: {:clearLog = true}
+      #   example: {:clearLog => true}
       #
       #
       # == returns
