@@ -19,7 +19,7 @@
 
 module MobyBehaviour
 
-	module QT
+  module QT
 
     # == description
     # Behaviours for handling attributes
@@ -42,11 +42,11 @@ module MobyBehaviour
     # == objects
     # *
     #
-		module Attribute
+    module Attribute
 
-			include MobyBehaviour::QT::Behaviour
+      include MobyBehaviour::QT::Behaviour
 
-			# == description
+      # == description
       # Sets an attribute of the target object.
       #
       # == arguments
@@ -95,8 +95,8 @@ module MobyBehaviour
       #   default: nil
       #
       # == tables
-	    # attribute_types_table
-	    #  title: Valid type argument values
+      # attribute_types_table
+      #  title: Valid type argument values
       #  |Type|Example|
       #  |QRect|'10,10,150,150'|
       #  |QPoint|'100,200'|
@@ -114,7 +114,7 @@ module MobyBehaviour
       #  description: One of the arguments is not valid   
       # RuntimeError
       #  description: Setting of the attribute failed
-			def set_attribute( attribute, value, type = nil )
+      def set_attribute( attribute, value, type = nil )
 
         # verify attribute argument variable type
         attribute.check_type [ Symbol, String ], 'wrong argument type $1 for attribute name (expected $2)'
@@ -131,131 +131,170 @@ module MobyBehaviour
         type.not_empty 'argument type must be either nil or non empty string' if type.kind_of?( String )
 
         # in qt_behaviour 
-				command = command_params 
+        command = command_params 
 
-				command.transitions_off 
+        command.transitions_off 
 
-				command.command_name( 'SetAttribute' )
+        command.command_name( 'SetAttribute' )
 
-				case type
+        case type
 
-					when nil
+          when nil
 
-						# Implicit typing
+            # Implicit typing
 
-						# by class
-						if value.kind_of? Integer
-							params = { 'attribute_name' => attribute.to_s, 'attribute_value' => value.to_s.strip, 'attribute_type' => 'int'} 
+            # by class
+            if value.kind_of? Integer
+              params = { 'attribute_name' => attribute.to_s, 'attribute_value' => value.to_s.strip, 'attribute_type' => 'int'} 
 
-						elsif value.kind_of? Date
-							temp_date = value.day.to_s << '.' << value.month.to_s << '.' << value.year.to_s
-							params = { 'attribute_name' => attribute.to_s, 'attribute_value' => temp_date, 'attribute_type' => 'QDate' }
+            elsif value.kind_of? Date
+              temp_date = value.day.to_s << '.' << value.month.to_s << '.' << value.year.to_s
+              params = { 'attribute_name' => attribute.to_s, 'attribute_value' => temp_date, 'attribute_type' => 'QDate' }
 
-						elsif value.kind_of? Time
-							params = { 'attribute_name' => attribute.to_s, 'attribute_value' => value.to_i.to_s, 'attribute_type' => 'QDateTime' }
+            elsif value.kind_of? Time
+              params = { 'attribute_name' => attribute.to_s, 'attribute_value' => value.to_i.to_s, 'attribute_type' => 'QDateTime' }
 
-						elsif value.kind_of? DateTime
-							params = { 'attribute_name' => attribute.to_s, 'attribute_value' => Time.parse(value.to_s).to_i.to_s, 'attribute_type' => 'QDateTime' }
+            elsif value.kind_of? DateTime
+              params = { 'attribute_name' => attribute.to_s, 'attribute_value' => Time.parse(value.to_s).to_i.to_s, 'attribute_type' => 'QDateTime' }
 
-						elsif value.kind_of? TrueClass
-							params = { 'attribute_name' => attribute.to_s, 'attribute_value' => value.to_s.downcase, 'attribute_type' => 'bool'}
+            elsif value.kind_of? TrueClass
+              params = { 'attribute_name' => attribute.to_s, 'attribute_value' => value.to_s.downcase, 'attribute_type' => 'bool'}
 
-						elsif value.kind_of? FalseClass
-							params = { 'attribute_name' => attribute.to_s, 'attribute_value' => value.to_s.downcase, 'attribute_type' => 'bool'}
+            elsif value.kind_of? FalseClass
+              params = { 'attribute_name' => attribute.to_s, 'attribute_value' => value.to_s.downcase, 'attribute_type' => 'bool'}
 
-						else
-							# by format
-							# if ( value.kind_of?( Integer ) || ( value.kind_of?( String ) && value.strip == value.strip.to_i.to_s ) )
-							if value.kind_of?( String ) && value.strip == value.strip.to_i.to_s
-								params = { 'attribute_name' => attribute.to_s, 'attribute_value' => value.to_s.strip, 'attribute_type' => 'int'}
+            else
+              # by format
+              # if ( value.kind_of?( Integer ) || ( value.kind_of?( String ) && value.strip == value.strip.to_i.to_s ) )
+              if value.kind_of?( String ) && value.strip == value.strip.to_i.to_s
+                params = { 'attribute_name' => attribute.to_s, 'attribute_value' => value.to_s.strip, 'attribute_type' => 'int'}
 
-							elsif (value == true || value == false || (value.kind_of?(String) && (value.strip.downcase == "true" || value.strip.downcase == "false")))
-								params = { 'attribute_name' => attribute.to_s, 'attribute_value' => value.to_s.downcase, 'attribute_type' => 'bool'}
+              elsif (value == true || value == false || (value.kind_of?(String) && (value.strip.downcase == "true" || value.strip.downcase == "false")))
+                params = { 'attribute_name' => attribute.to_s, 'attribute_value' => value.to_s.downcase, 'attribute_type' => 'bool'}
 
-							else
-								params = { 'attribute_name' => attribute.to_s, 'attribute_value' => value.to_s, 'attribute_type' => 'string'}
+              else
+                params = { 'attribute_name' => attribute.to_s, 'attribute_value' => value.to_s, 'attribute_type' => 'string'}
 
-							end 
+              end 
 
-						end
+            end
 
-					when "QRect"
-						params = { 'attribute_name' => attribute.to_s, 'attribute_value' => value.to_s, 'attribute_type' => 'QRect'}
+          when "QRect"
+            params = { 'attribute_name' => attribute.to_s, 'attribute_value' => value.to_s, 'attribute_type' => 'QRect'}
 
-					when "QPoint"
-						params = { 'attribute_name' => attribute.to_s, 'attribute_value' => value.to_s, 'attribute_type' => 'QPoint'} 
+          when "QPoint"
+            params = { 'attribute_name' => attribute.to_s, 'attribute_value' => value.to_s, 'attribute_type' => 'QPoint'} 
 
-					when "QSize"
-						params = { 'attribute_name' => attribute.to_s, 'attribute_value' => value.to_s, 'attribute_type' => 'QSize'}
+          when "QSize"
+            params = { 'attribute_name' => attribute.to_s, 'attribute_value' => value.to_s, 'attribute_type' => 'QSize'}
 
-					when "QDateTime"
+          when "QDateTime"
 
-						params = { 'attribute_name' => attribute.to_s, 'attribute_type' => 'QDateTime' }
+            params = { 'attribute_name' => attribute.to_s, 'attribute_type' => 'QDateTime' }
 
-						if value.kind_of? String
-							params[ 'attribute_value' ] = value.to_s
+            if value.kind_of? String
+              params[ 'attribute_value' ] = value.to_s
 
-						elsif value.kind_of? Integer
-							params[ 'attribute_value' ] = value.to_s
+            elsif value.kind_of? Integer
+              params[ 'attribute_value' ] = value.to_s
 
-						elsif value.kind_of? Time 
-							params[ 'attribute_value' ] = value.to_i.to_s
+            elsif value.kind_of? Time 
+              params[ 'attribute_value' ] = value.to_i.to_s
 
-						elsif value.kind_of? DateTime 
-							params[ 'attribute_value' ] = Time.parse( value.to_s ).to_i.to_s
+            elsif value.kind_of? DateTime 
+              params[ 'attribute_value' ] = Time.parse( value.to_s ).to_i.to_s
 
-						else
-							raise ArgumentError.new( "The value for QDateTime type attributes must be of type String, Integer, Time or DateTime, it was #{value.class.to_s}." )
+            else
+              raise ArgumentError.new( "The value for QDateTime type attributes must be of type String, Integer, Time or DateTime, it was #{value.class.to_s}." )
 
-						end 
+            end 
 
-					when "QDate"
+          when "QDate"
 
-						params = { 'attribute_name' => attribute.to_s, 'attribute_type' => 'QDate' }
+            params = { 'attribute_name' => attribute.to_s, 'attribute_type' => 'QDate' }
 
-						if value.kind_of? String
-							params[ 'attribute_value' ] = value.to_s
+            if value.kind_of? String
+              params[ 'attribute_value' ] = value.to_s
 
-						elsif value.kind_of? Date
-							temp_date = value.day.to_s << '.' << value.month.to_s << '.' << value.year.to_s
-							params[ 'attribute_value' ] = temp_date
+            elsif value.kind_of? Date
+              temp_date = value.day.to_s << '.' << value.month.to_s << '.' << value.year.to_s
+              params[ 'attribute_value' ] = temp_date
 
-						else
-							raise ArgumentError.new( "The value for QDate type attributes must be of type String or Date, it was #{value.class.to_s}." )
+            else
+              raise ArgumentError.new( "The value for QDate type attributes must be of type String or Date, it was #{value.class.to_s}." )
 
-						end
+            end
 
-				else
+        else
 
-					#puts "Unidentified.\nName: " << attribute.to_s << "\nValue: " << value.to_s << "\nType: " << type.to_s
-					params = { 'attribute_name' => attribute.to_s, 'attribute_value' => value.to_s, 'attribute_type' => type.to_s }
+          #puts "Unidentified.\nName: " << attribute.to_s << "\nValue: " << value.to_s << "\nType: " << type.to_s
+          params = { 'attribute_name' => attribute.to_s, 'attribute_value' => value.to_s, 'attribute_type' => type.to_s }
 
-				end 
+        end 
 
-				command.command_params( params )
-				command.service( 'objectManipulation' )
-				returnValue = @sut.execute_command( command )
-			  
-   			    returnValue = "OK"
-			    begin 
-				  returnValue = @sut.execute_command( command )
-				rescue
-				  $logger.behaviour "FAIL;Failed when calling method set_attribute with values attribute:#{attribute.to_s} value:#{value.to_s}.;#{identity};set_attribute;"
-				  raise RuntimeError.new("Setting attribute '%s' to value '%s' failed with error: %s" % [attribute, value, returnValue])
-				end
-			  
-			    $logger.behaviour "PASS;The method set_attribute was executed successfully with with values attribute:#{attribute.to_s} value:#{value.to_s}.;#{identity};set_attribute;"
-	  
-			    nil
-
-
-			end
-
-				# enable hooking for performance measurement & debug logging
-				TDriver::Hooking.hook_methods( self ) if defined?( TDriver::Hooking )
+        command.command_params( params )
+        command.service( 'objectManipulation' )
+        returnValue = @sut.execute_command( command )
+        
+             returnValue = "OK"
+          begin 
+          returnValue = @sut.execute_command( command )
+        rescue
+          $logger.behaviour "FAIL;Failed when calling method set_attribute with values attribute:#{attribute.to_s} value:#{value.to_s}.;#{identity};set_attribute;"
+          raise RuntimeError.new("Setting attribute '%s' to value '%s' failed with error: %s" % [attribute, value, returnValue])
+        end
+        
+          $logger.behaviour "PASS;The method set_attribute was executed successfully with with values attribute:#{attribute.to_s} value:#{value.to_s}.;#{identity};set_attribute;"
+    
+          nil
 
 
-		end
+      end
 
-	end
+      # == description
+      # Wrapper method to set test object's attribute value. See  [link="#QtAttribute:set_attribute"]supported value argument types[/link] and [link="#attribute_types_table"]attribute types table[/link].\n\n
+      # Minimum number of required arguments is 2; attribute name and new value. Please see examples for correct call sequence.
+      #
+      # == arguments
+      # name
+      #  String
+      #   description: Attribute name
+      #   example: "attribute_name"
+      # *arguments
+      #  Array
+      #   description: Attribute value and type
+      #   example: ["0,0", "QPoint"] 
+      #
+      # == returns
+      # NilClass
+      #   description: -
+      #   example: -
+      def []=( name, *arguments )
+
+        _argument_count = arguments.count
+
+        if _argument_count == 0 || _argument_count > 2
+
+          raise ArgumentError, "wrong number of arguments (#{ _argument_count } of 2)"
+        
+        elsif _argument_count == 2
+
+          # set_attribute( name, arguments.last, arguments.first )
+          arguments.reverse!
+        
+        end
+      
+        # do magic
+        set_attribute( name, *arguments )
+
+        nil
+    
+      end
+
+      # enable hooking for performance measurement & debug logging
+      TDriver::Hooking.hook_methods( self ) if defined?( TDriver::Hooking )
+
+    end
+
+  end
 end
