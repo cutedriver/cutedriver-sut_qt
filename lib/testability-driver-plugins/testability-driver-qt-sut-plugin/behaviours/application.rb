@@ -240,6 +240,7 @@ module MobyBehaviour
 	    # direction
 	    #  Symbol
 	    #   description: For future support
+	    #   example: -
 	    #
 	    # == returns
 	    # NilClass

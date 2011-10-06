@@ -60,6 +60,11 @@ module MobyBehaviour
       #   description: Array of the event named to listen
       #   example: ["Timer","MouseButtonPress","45677","67889"]
       #
+      # params
+      #  Hash
+      #   description: -
+      #   example: -
+      #  
       # == returns
       # NilClass
       #   description: -
