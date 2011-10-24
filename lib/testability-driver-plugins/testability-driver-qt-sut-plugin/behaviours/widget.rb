@@ -218,7 +218,7 @@ module MobyBehaviour
             #params['obj_x'] = (center_x.to_i - 1).to_s
             #params['obj_y'] = (center_y.to_i - 1).to_s
             params['x'] = (center_x.to_i - 1).to_s
-            params['y'] = (center_y.to_i - 1).to_s
+            params['y'] = (center_y.to_i - 5).to_s #make sure we do not tap between two line links
             params['useCoordinates'] = 'true'
 				end
 
