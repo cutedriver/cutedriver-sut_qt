@@ -710,6 +710,59 @@ module MobyBehaviour
         end
       end
 
+      # == nodoc
+      # == description
+      # Starts process memory logging. Information about the given application's
+      # heap memory usage will be stored in a file. In addition to application,
+      # used log file can be specified as well as the type of timestamp and
+      # interval length (in seconds).\ŋ
+      # \n
+      # [b]NOTE:[/b] Currently only supported on Symbian platform.
+      #
+      # == arguments
+      # thread_name
+      #  String
+      #   description: Name of the application process/thread.
+      #   example: 'testapp'
+      #
+      # file_name
+      #  String
+      #   description: Full name (containing path) of the used log file.
+      #   example: 'c:\Data\proc_mem.log'
+      #
+      # timestamp_type
+      #  String
+      #   description: Type of the used timestamp, either "absolute" for
+      #                current system time or "relative" or not specified for
+      #                relative timestamp from 0 in milliseconds.
+      #   example: 'absolute'
+      #
+      # interval_s
+      #  Integer
+      #   description: Logging interval in seconds.
+      #   example: 2
+      #
+      # == returns
+      # String
+      #   description: Response message
+      #   example: 'OK'
+      #
+      def dump_heap(thread_name)
+        status = nil
+        begin
+          status = execute_command(MobyCommand::Application.new(
+                                      :ThreadHeapDump,
+                                      {:application_name => thread_name}
+                                    )
+                                  )
+          $logger.behaviour "PASS;Successfully dumped thread heap.;#{ id };sut;{};dump_heap;"
+        rescue Exception => e
+          $logger.behaviour "FAIL;Failed to dump thread heap.;#{ id };sut;{};dump_heap;"
+          raise RuntimeError, "Unable to dump thread heap: Exception: #{ e.message } (#{ e.class })"
+        end
+        status
+      end
+
       # == description
       # Groups behaviours into a single message. Commands are executed in the target in sequence using the given interval as timeout between the commands. The interval is not quaranteed to be exactly the specified amount and will vary depending on the load in the target device. Therefore it is not recommended to use the interval as basis for the test results. The commands are all executed in the target device in a single roundtrip from TDriver to the target device so no verification will or can be done between the commands so do not group behaviours which change the ui in a way that the next command may fail. Best use cases for the grouping is static behaviours such as virtual keyboard button taps. Behaviours can only be qrouped for one application at a time and you need to provide the application object as parameter. Sut behaviours cannot be grouped.
       # == arguments

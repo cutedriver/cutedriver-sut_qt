@@ -73,6 +73,10 @@
                 <description>Stop generating CPU load.</description>
                 <example>cpu_load_stop</example>
             </method>
+            <method name="dump_heap">
+                <description>Capture thread heap dump.</description>
+                <example>dump_heap('akncapserver')</example>
+            </method>
             <method name="group_behaviours">
                 <description>Group behaviours into a single message.</description>
                 <example>group_behaviours(1, app){app.Node.tap;app.Node1.tap}</example>
