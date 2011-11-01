@@ -710,37 +710,17 @@ module MobyBehaviour
         end
       end
 
-      # == nodoc
       # == description
-      # Starts process memory logging. Information about the given application's
-      # heap memory usage will be stored in a file. In addition to application,
-      # used log file can be specified as well as the type of timestamp and
-      # interval length (in seconds).\ŋ
+      # Does MemSpy heap dump from the given application. The dump will be
+      # saved in a file, which need to be separately fetched from the device.\ŋ
       # \n
-      # [b]NOTE:[/b] Currently only supported on Symbian platform.
+      # [b]NOTE:[/b] Only supported on Symbian platform.
       #
       # == arguments
       # thread_name
       #  String
-      #   description: Name of the application process/thread.
-      #   example: 'testapp'
-      #
-      # file_name
-      #  String
-      #   description: Full name (containing path) of the used log file.
-      #   example: 'c:\Data\proc_mem.log'
-      #
-      # timestamp_type
-      #  String
-      #   description: Type of the used timestamp, either "absolute" for
-      #                current system time or "relative" or not specified for
-      #                relative timestamp from 0 in milliseconds.
-      #   example: 'absolute'
-      #
-      # interval_s
-      #  Integer
-      #   description: Logging interval in seconds.
-      #   example: 2
+      #   description: Name of the application thread.
+      #   example: 'phonebook2'
       #
       # == returns
       # String
