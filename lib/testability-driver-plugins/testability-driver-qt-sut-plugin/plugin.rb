@@ -115,7 +115,11 @@ module MobyPlugin
           $parameters[ sut_id ][ :socket_read_timeout,  "15" ].to_i,
 
           # tcp/ip write timeouts, default: 15 (seconds)
-          $parameters[ sut_id ][ :socket_write_timeout, "15" ].to_i
+          $parameters[ sut_id ][ :socket_write_timeout, "25" ].to_i,
+
+          # tcp/ip connection timeouts, default: 15 (seconds)
+          $parameters[ sut_id ][ :socket_connect_timeout, "15" ].to_i
+
 
         )
 

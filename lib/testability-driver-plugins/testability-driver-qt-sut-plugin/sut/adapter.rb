@@ -35,6 +35,7 @@ module MobyController
       attr_accessor(
         :socket_read_timeout,
         :socket_write_timeout,
+        :socket_connect_timeout,
         :deflate_service_request,
         :deflate_minimum_size,
         :deflate_compression_level
@@ -48,7 +49,7 @@ module MobyController
       # once usage is complete the shutdown_comms is called
       # == params
       # sut_id id for the sut so that client details can be fetched from params
-      def initialize( sut_id, receive_timeout = 25, send_timeout = 25 )
+      def initialize( sut_id, receive_timeout = 25, send_timeout = 25, connect_timeout = 25 )
 
         # reset socket
         @socket = nil
@@ -72,6 +73,7 @@ module MobyController
         # set timeouts
         @socket_read_timeout = receive_timeout
         @socket_write_timeout = send_timeout
+        @socket_connect_timeout = connect_timeout
 
         # randomized value for initial message packet counter
         @counter = rand( 1000 )
@@ -166,10 +168,9 @@ module MobyController
           # @socket = TCPSocket.open( ip, port )
 
 
-          # open tcp/ip connection
-          @socket = timeout_capable_socket_opener(ip,port,@socket_read_timeout.to_i) ## socket_read_timeut should propably not be used and there should most
-                                                                                     ## likely be a parameter in the tdriver configs which determines
-                                                                                     ## socket connection timeout ..
+          # open tcp/ip connectio
+          ## The block will actually double the time, so halve it. Actual timeout will +1 if it's an odd number
+          @socket = timeout_capable_socket_opener(ip,port,(@socket_connect_timeout.to_i / 2.0).ceil)
 
           # set connected status to true
           @connected = true
