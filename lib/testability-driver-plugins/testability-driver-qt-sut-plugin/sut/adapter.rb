@@ -116,6 +116,36 @@ module MobyController
 
       end
 
+      def timeout_capable_socket_opener(ip,port,timeout=nil)
+        addr = Socket.getaddrinfo(ip, nil)
+        sock = Socket.new(Socket.const_get(addr[0][0]), Socket::SOCK_STREAM, 0)
+        if timeout
+           secs = Integer(timeout)
+           usecs = Integer((timeout - secs) * 1_000_000)
+           optval = [secs, usecs].pack("l_2")
+           ## actual timeout gets triggered after 2 times of "timeout" value, most likely because my patch applies timeout to read AND write ..
+           sock.setsockopt Socket::SOL_SOCKET, Socket::SO_RCVTIMEO, optval
+           sock.setsockopt Socket::SOL_SOCKET, Socket::SO_SNDTIMEO, optval
+           ## also, worth checking if there's actually some Socket::SO_*  that applies the timeout to connection forming ..
+        end
+        begin
+           sock.connect_nonblock(Socket.pack_sockaddr_in(port, addr[0][3]))
+        rescue Errno::EINPROGRESS
+           resp = IO.select([sock],nil, nil, timeout.to_i)
+           if resp.nil?
+              raise Errno::ECONNREFUSED
+           end
+
+           begin
+              sock.connect_nonblock(Socket.pack_sockaddr_in(port, addr[0][3]))
+           rescue Errno::EISCONN
+           end
+        end
+        sock ## Its also worth noting that if we set RCV AND SNDTIMEOT to some value when checking for established socket,
+             ## it might make sense to set the defaults values back again so that only during the connection, timeout is
+             ## different..
+      end
+
       # TODO: document me
       def connect( id = nil )
 
@@ -135,7 +165,15 @@ module MobyController
           execute_hook( 'before_connect', id, ip, port ) if hooked?( 'before_connect' ) 
 
           # open tcp/ip connection
-          @socket = TCPSocket.open( ip, port )
+          # Using ruby TCPSocket this way will utilize the underlying kernel to do the timeout, which by default is too long (In my tests, on ubuntu 10.10, TCPSocket.open
+          # will wait for exactly 380 seconds before throwing exception which is *FAR* too long ..
+          # @socket = TCPSocket.open( ip, port )
+
+
+          # open tcp/ip connection
+          @socket = timeout_capable_socket_opener(ip,port,@socket_read_timeout.to_i) ## socket_read_timeut should propably not be used and there should most
+                                                                                     ## likely be a parameter in the tdriver configs which determines
+                                                                                     ## socket connection timeout ..
 
           # set connected status to true
           @connected = true
