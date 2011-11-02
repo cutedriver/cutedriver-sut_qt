@@ -132,10 +132,6 @@ module MobyController
            sock.connect_nonblock(Socket.pack_sockaddr_in(port, addr[0][3]))
         rescue Errno::EINPROGRESS
            resp = IO.select([sock],nil, nil, timeout.to_i)
-           if resp.nil?
-              raise Errno::ECONNREFUSED
-           end
-
            begin
               sock.connect_nonblock(Socket.pack_sockaddr_in(port, addr[0][3]))
            rescue Errno::EISCONN
