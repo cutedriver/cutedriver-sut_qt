@@ -165,12 +165,12 @@ module MobyController
           # open tcp/ip connection
           # Using ruby TCPSocket this way will utilize the underlying kernel to do the timeout, which by default is too long (In my tests, on ubuntu 10.10, TCPSocket.open
           # will wait for exactly 380 seconds before throwing exception which is *FAR* too long ..
-          # @socket = TCPSocket.open( ip, port )
+          @socket = TCPSocket.open( ip, port )
 
 
           # open tcp/ip connectio
           ## The block will actually double the time, so halve it. Actual timeout will +1 if it's an odd number
-          @socket = timeout_capable_socket_opener(ip,port,(@socket_connect_timeout.to_i / 2.0).ceil)
+#          @socket = timeout_capable_socket_opener(ip,port,(@socket_connect_timeout.to_i / 2.0).ceil)
 
           # set connected status to true
           @connected = true
