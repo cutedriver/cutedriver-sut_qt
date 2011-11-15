@@ -270,6 +270,7 @@ module MobyUtil
 		  params[ 'filterProperties' ] = $last_parameter if sut_parameters[ :filter_properties, nil ]
 		  params[ 'pluginBlackList'  ] = $last_parameter if sut_parameters[ :plugin_blacklist,  nil ]
 		  params[ 'pluginWhiteList'  ] = $last_parameter if sut_parameters[ :plugin_whitelist,  nil ]
+      params[ 'useViewCrop'      ] = "true" if sut_parameters[ :use_crop_view, nil ]
 
 		  case sut_parameters[ :filter_type, 'none' ]
 		    
@@ -277,12 +278,12 @@ module MobyUtil
 
 		    white_list = TDriver::AttributeFilter.filter_string
 		    params['attributeWhiteList'] = white_list if white_list
-		    
+
 		  when 'static'
 
 		    params['attributeBlackList'] = $last_parameter if sut_parameters[ :attribute_blacklist, nil ]
 		    params['attributeWhiteList'] = $last_parameter if sut_parameters[ :attribute_whitelist, nil ]
-		    
+
 		  end
 
 		  params		

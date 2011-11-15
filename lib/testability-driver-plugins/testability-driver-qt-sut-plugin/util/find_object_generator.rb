@@ -35,6 +35,7 @@ module MobyUtil
         sut_parameters.if_found( :filter_properties ){ | key, value | filters[ 'filterProperties' ] = value }
         sut_parameters.if_found( :plugin_blacklist  ){ | key, value | filters[ 'pluginBlackList'  ] = value }
         sut_parameters.if_found( :plugin_whitelist  ){ | key, value | filters[ 'pluginWhiteList'  ] = value }
+        sut_parameters.if_found( :use_view_crop     ){ | key, value | filters[ 'useViewCrop'      ] = value }
 
 	      case filter_type
 		
