@@ -711,6 +711,39 @@ module MobyBehaviour
       end
 
       # == description
+      # Does MemSpy heap dump from the given application. The dump will be
+      # saved in a file, which need to be separately fetched from the device.\ŋ
+      # \n
+      # [b]NOTE:[/b] Only supported on Symbian platform.
+      #
+      # == arguments
+      # thread_name
+      #  String
+      #   description: Name of the application thread.
+      #   example: 'phonebook2'
+      #
+      # == returns
+      # String
+      #   description: Response message
+      #   example: 'OK'
+      #
+      def dump_heap(thread_name)
+        status = nil
+        begin
+          status = execute_command(MobyCommand::Application.new(
+                                      :ThreadHeapDump,
+                                      {:application_name => thread_name}
+                                    )
+                                  )
+          $logger.behaviour "PASS;Successfully dumped thread heap.;#{ id };sut;{};dump_heap;"
+        rescue Exception => e
+          $logger.behaviour "FAIL;Failed to dump thread heap.;#{ id };sut;{};dump_heap;"
+          raise RuntimeError, "Unable to dump thread heap: Exception: #{ e.message } (#{ e.class })"
+        end
+        status
+      end
+
+      # == description
       # Groups behaviours into a single message. Commands are executed in the target in sequence using the given interval as timeout between the commands. The interval is not quaranteed to be exactly the specified amount and will vary depending on the load in the target device. Therefore it is not recommended to use the interval as basis for the test results. The commands are all executed in the target device in a single roundtrip from TDriver to the target device so no verification will or can be done between the commands so do not group behaviours which change the ui in a way that the next command may fail. Best use cases for the grouping is static behaviours such as virtual keyboard button taps. Behaviours can only be qrouped for one application at a time and you need to provide the application object as parameter. Sut behaviours cannot be grouped.
       # == arguments
       # interval
