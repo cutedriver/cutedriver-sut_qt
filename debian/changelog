@@ -1,3 +1,9 @@
+libtestability-driver-ruby-sut-qt (1.4.2-1) unstable; urgency=low
+
+  * new release version
+
+ -- Testability Driver Team <testabilitydriver@nokia.com>  Mon, 19 Dec 2011 14:05:00 +0200
+
 libtestability-driver-ruby-sut-qt (1.4.1-1) unstable; urgency=low
 
   * new release version
