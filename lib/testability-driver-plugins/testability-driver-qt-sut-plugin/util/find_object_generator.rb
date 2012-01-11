@@ -28,6 +28,8 @@ module MobyUtil
 
 	    filter_type = sut_parameters[ :filter_type, 'none' ]
 	
+      plugin_timeout = sut_parameters[ :qttas_plugin_timeout, 10000 ].to_i
+      
 	    if filter_type != 'none'
 
 	      filters = {}
@@ -60,7 +62,7 @@ module MobyUtil
 
       #xml = "<?xml version=\"1.0\"?>"
 
-      xml = "<TasCommands service=\"findObject\" #{ @_app_details.to_attributes }"
+      xml = "<TasCommands plugin_timeout=\"#{plugin_timeout}\" service=\"findObject\" #{ @_app_details.to_attributes }"
 
       # pass checksum value if known from previous service request result
       #unless @_checksum.nil?
