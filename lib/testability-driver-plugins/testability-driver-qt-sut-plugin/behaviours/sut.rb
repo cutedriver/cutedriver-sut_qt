@@ -712,7 +712,7 @@ module MobyBehaviour
 
       # == description
       # Does MemSpy heap dump from the given application. The dump will be
-      # saved in a file, which need to be separately fetched from the device.\ŋ
+      # saved in a file, which need to be separately fetched from the device.\n
       # \n
       # [b]NOTE:[/b] Only supported on Symbian platform.
       #

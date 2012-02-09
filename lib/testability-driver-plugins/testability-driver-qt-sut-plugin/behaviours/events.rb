@@ -138,10 +138,14 @@ module MobyBehaviour
       end
 
       # == description
-      # Gets event list occured since the enabling of events. The format of the XML string is the same as with the UI state.\n
-      # [b]NOTE:[/b] It is highly recommended to create a StateObject with result XML and access the data through appropriate API.\n
+      # Gets event list occured since the enabling of events. The format of the XML string is the same as with the UI state.
       # \n
-      # See [link="#GenericSut:state_object"]state_object[/link] method for more details.
+      # 
+      # [b]NOTE:[/b]
+      # It is highly recommended to create a StateObject with result XML and access the data through appropriate API.
+      # \n
+      # 
+      # See state_object method for more details.
       #
       # == returns
       # String
