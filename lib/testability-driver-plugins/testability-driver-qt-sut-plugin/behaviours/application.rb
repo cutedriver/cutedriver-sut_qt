@@ -48,7 +48,21 @@ module MobyBehaviour
 	  module Application
 
       @@__multitouch_operation = false
-
+      
+      # == description
+      # Method for getting the status of multitouch operation
+      #
+      # == arguments
+      #   
+      #
+		  # == returns
+		  # Boolean
+		  #   description: Returns false if multitouch operation is finished
+		  #   example: true
+      #
+      # == exceptions
+      #  
+      #
       def multitouch_ongoing?
 
         @@__multitouch_operation
