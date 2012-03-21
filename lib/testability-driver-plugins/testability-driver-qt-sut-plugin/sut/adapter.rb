@@ -181,7 +181,9 @@ module MobyController
         rescue
 
           execute_hook( 'connection_failed', id, ip, port, $! ) if hooked?( 'connection_failed' ) 
-
+          #If reporter active report connetion error
+          TDriverReportCreator.error_in_connection_detected if $tdriver_reporter!=nil
+          
           raise IOError, "Connection failure; verify that QTTAS server is up and running at #{ ip }:#{ port }.\n Nested exception: #{ $!.message }"
 
         end
