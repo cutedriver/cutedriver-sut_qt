@@ -353,20 +353,30 @@ module MobyController
 
     private
 
-      # TODO: document me
       def wait_for_data_available( bytes_count )
-
-        # verify that there is data available to be read 
-        raise IOError, "Socket reading timeout (#{ @socket_read_timeout.to_i }) exceeded for #{ bytes_count.to_i } bytes" if @tcp_socket_select_method.call( [ @socket ], nil, nil, @socket_read_timeout ).nil?
-
+        # verify that there is data available to be read, timeout is not reliable on all platforms, loop instead
+        time = 0
+        readable = nil
+        while (!readable && time < @socket_read_timeout) 
+          readable = IO.select([ @socket ], nil, nil, 0.25)
+          time = time + 0.25
+        end
+        
+        raise IOError, "Socket reading timeout (#{ @socket_read_timeout.to_s }) exceeded for #{ bytes_count.to_i } bytes" if readable.nil?
       end
 
       def wait_for_data_sent( bytes_count )
-
-        # verify that there is no data in writing buffer 
-        raise IOError, "Socket writing timeout (#{ @socket_write_timeout.to_i }) exceeded for #{ bytes_count.to_i } bytes" if @tcp_socket_select_method.call( nil, [ @socket ], nil, @socket_write_timeout ).nil?
-
+        # verify that there is no data in writing buffer, timeout is not reliable on all platforms, loop instead
+        time = 0
+        writable = nil
+        while (!writable && time < @socket_write_timeout) 
+          writable = IO.select(nil,[ @socket ], nil, 0.25)
+          time = time + 0.25
+        end
+        
+        raise IOError, "Socket writing timeout (#{ @socket_write_timeout.to_s }) exceeded for #{ bytes_count.to_i } bytes" if writable.nil?
       end
+
 
       # TODO: document me
       def read_socket( bytes_count )
