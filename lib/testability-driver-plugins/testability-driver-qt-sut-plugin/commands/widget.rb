@@ -22,7 +22,7 @@ module MobyCommand
 	class WidgetCommand < MobyCommand::CommandData
 
     # class variable
-    VALID_OBJECT_TYPES = [ nil, :Standard, :Graphics, :Application, :Action, :Web ] unless defined?( VALID_OBJECT_TYPES )
+    VALID_OBJECT_TYPES = [ nil, :Standard, :Graphics, :Application, :Action, :Web, :SceneGraph ] unless defined?( VALID_OBJECT_TYPES )
 
 		# Constructs a new CommandParams object. CommandParams stores the details for the commands send
 		# to suts that operate using the tasCommand xml format. The controller creates an xml formatted 
