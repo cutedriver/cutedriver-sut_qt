@@ -20,7 +20,7 @@
 $webdav_upload_disabled == false
 
 require 'rubygems'
-require 'rake/gempackagetask'
+require 'rubygems/package_task'
 require 'fileutils'
 require 'tmpdir'
 
@@ -81,7 +81,7 @@ spec = Gem::Specification.new{ | s |
   
 }
 
-Rake::GemPackageTask.new( spec ) do | pkg |
+Gem::PackageTask.new( spec ) do | pkg |
   pkg.gem_spec = spec
   pkg.package_dir = "pkg"
 end
