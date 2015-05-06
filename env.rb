@@ -18,9 +18,7 @@
 ############################################################################
 
 
-
-PLUGIN_NAME = "Testability Driver Qt SUT plugin"
-GEM_NAME = 'testability-driver-qt-sut-plugin'
-GEM_SUMMARY = 'Testability Driver - Testability Driver Interface Qt SUT plugin'
+PLUGIN_NAME = "cuTeDriver Qt SUT plugin"
+GEM_NAME = 'cutedriver-qt-sut-plugin'
+GEM_SUMMARY = 'cuTeDriver Interface Qt SUT plugin'
 PLUGIN_VERSION = "0.8.4"
-

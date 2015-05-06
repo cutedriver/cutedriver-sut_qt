@@ -63,9 +63,9 @@ spec = Gem::Specification.new{ | s |
   s.platform      =   Gem::Platform::RUBY
   s.name          =   GEM_NAME
   s.version       =   "#{ @__gem_version }"
-  s.author        =   "TDriver team"
-  s.email         =   "testabilitydriver@nokia.com"
-  s.homepage      =   "http://gitorious.org/tdriver"
+  s.author        =   "TDriver team & cuTeDriver team"
+  s.email         =   "antti.korventausta@nomovok.com"
+  s.homepage      =   "https://github.com/nomovok-opensource/cutedriver-sut_qt"
   s.summary       =   GEM_SUMMARY
   s.require_path  =   "lib/testability-driver-plugins/"
   s.files         =   FileList[ 'env.rb', 'lib/**/*', 'xml/**/*' ].to_a
@@ -187,7 +187,7 @@ def run_tdriver_devtools( params, tests )
 
     rescue LoadError
 
-      abort("Unable to proceed due to TDriver not found or is too old! (required 0.9.2 or later)")
+      abort("Unable to proceed due to TDriver/cuTeDriver not found or is too old! (required 0.9.2 or later)")
 
     end
 
