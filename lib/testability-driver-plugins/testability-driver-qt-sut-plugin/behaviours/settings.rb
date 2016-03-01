@@ -1,20 +1,20 @@
 ############################################################################
-## 
-## Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies). 
-## All rights reserved. 
-## Contact: Nokia Corporation (testabilitydriver@nokia.com) 
-## 
-## This file is part of TDriver. 
-## 
-## If you have questions regarding the use of this file, please contact 
-## Nokia at testabilitydriver@nokia.com . 
-## 
-## This library is free software; you can redistribute it and/or 
-## modify it under the terms of the GNU Lesser General Public 
-## License version 2.1 as published by the Free Software Foundation 
-## and appearing in the file LICENSE.LGPL included in the packaging 
-## of this file. 
-## 
+##
+## Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies).
+## All rights reserved.
+## Contact: Nokia Corporation (testabilitydriver@nokia.com)
+##
+## This file is part of TDriver.
+##
+## If you have questions regarding the use of this file, please contact
+## Nokia at testabilitydriver@nokia.com .
+##
+## This library is free software; you can redistribute it and/or
+## modify it under the terms of the GNU Lesser General Public
+## License version 2.1 as published by the Free Software Foundation
+## and appearing in the file LICENSE.LGPL included in the packaging
+## of this file.
+##
 ############################################################################
 
 module MobyBehaviour
@@ -48,19 +48,19 @@ module MobyBehaviour
 
       # == description
 	  # Sets the given settings to the settings storage defined in the setting indentifiers.
-	  # QSettings documentation will give more information on how the settigns are created 
+	  # QSettings documentation will give more information on how the settigns are created
 	  # and accessed.
-	  # 
+	  #
       # == arguments
 	  # identifiers
 	  #  Hash
       #   description: Idenfifiers for the settings. See QSettings documentations for details on how
-	  #                settings are accessed. You can use either direct file name or organization and 
+	  #                settings are accessed. You can use either direct file name or organization and
 	  #                application name way to access and edit the settings.
-	  #                See [link="#identifier_params_table1"]file path access [/link] and 
+	  #                See [link="#identifier_params_table1"]file path access [/link] and
 	  #                [link="#identifier_params_table2"]registry access [/link] on how
 	  #                specify the idenfitication details for the settings to be accessed.
-	  #                
+	  #
       #   example:     File name: {:fileName => '/etc/init/settings.ini', :format => 'Ini'}
 	  #                Registry: {:organization => 'Tdriver', :application => 'qttasserver'}
 	  #
@@ -94,15 +94,15 @@ module MobyBehaviour
       # == exceptions
       # ArgumentError
       #  description:  In case the given parameters are not valid.
-      #    
+      #
 	  def set_settings(identifiers, values)
 
 		begin
 		  raise ArgumentError.new("No values to set") unless values
 
 		  params = generate_fixture_params(identifiers, values)
-		  
-		  fixture('setting', 'set', params)		  
+
+		  fixture('setting', 'set', params)
 
 		rescue Exception => e
 
@@ -115,22 +115,22 @@ module MobyBehaviour
 
 		nil
 	  end
-  
+
 
       # == description
-	  # Remove the settings corresponding to the given keys from the settings idenfitied by 
+	  # Remove the settings corresponding to the given keys from the settings idenfitied by
 	  # the identifiers.
-	  # 
+	  #
       # == arguments
 	  # identifiers
 	  #  Hash
       #   description: Idenfifiers for the settings. See QSettings documentations for details on how
-	  #                settings are accessed. You can use either direct file name or organization and 
+	  #                settings are accessed. You can use either direct file name or organization and
 	  #                application name way to access and edit the settings.
-	  #                See [link="#identifier_params_table1"]file path access [/link] and 
+	  #                See [link="#identifier_params_table1"]file path access [/link] and
 	  #                [link="#identifier_params_table2"]registry access [/link] on how
 	  #                specify the idenfitication details for the settings to be accessed.
-	  #                
+	  #
       #   example:     File name: {:fileName => '/etc/init/settings.ini', :format => 'Ini'}
 	  #                Registry: {:organization => 'Tdriver', :application => 'qttasserver'}
 	  #
@@ -147,15 +147,15 @@ module MobyBehaviour
       # == exceptions
       # ArgumentError
       #  description:  In case the given parameters are not valid.
-      #    
+      #
 	  def remove_settings(identifiers, setting_keys)
 		begin
 		  raise ArgumentError.new("No settings to remove") unless setting_keys
-		  
+
 		  params = generate_fixture_params(identifiers, nil)
 		  setting_keys.each{|value| params[value.to_sym] = ''}
-		  
-		  fixture('setting', 'remove', params)		  
+
+		  fixture('setting', 'remove', params)
 
 		rescue Exception => e
 
@@ -167,23 +167,23 @@ module MobyBehaviour
 		$logger.behaviour "PASS;Operation remove settings executed successfully \"#{identifiers.to_s}\", \"#{setting_keys.to_s}\".;remove_settings;"
 
 		nil
-				  
+
 	  end
 
       # == description
-	  # Read the setting values corresponding to the given keys from the settings idenfitied by 
+	  # Read the setting values corresponding to the given keys from the settings idenfitied by
 	  # the identifiers.
-	  # 
+	  #
       # == arguments
 	  # identifiers
 	  #  Hash
       #   description: Idenfifiers for the settings. See QSettings documentations for details on how
-	  #                settings are accessed. You can use either direct file name or organization and 
+	  #                settings are accessed. You can use either direct file name or organization and
 	  #                application name way to access and edit the settings.
-	  #                See [link="#identifier_params_table1"]file path access [/link] and 
+	  #                See [link="#identifier_params_table1"]file path access [/link] and
 	  #                [link="#identifier_params_table2"]registry access [/link] on how
 	  #                specify the idenfitication details for the settings to be accessed.
-	  #                
+	  #
       #   example:     File name: {:fileName => '/etc/init/settings.ini', :format => 'Ini'}
 	  #                Registry: {:organization => 'Tdriver', :application => 'qttasserver'}
 	  #
@@ -200,7 +200,7 @@ module MobyBehaviour
       # == exceptions
       # ArgumentError
       #  description:  In case the given parameters are not valid.
-      #    
+      #
 	  def read_settings(identifiers, setting_keys)
 		hash = nil
 		begin
@@ -208,9 +208,10 @@ module MobyBehaviour
 
 		  params = generate_fixture_params(identifiers, nil)
 		  setting_keys.each{|value| params[value.to_sym] = ''}
-		  
-		  hash = eval(fixture('setting', 'read', params))		  
-		  
+
+      result_string =fixture('setting', 'read', params)
+		  hash = JSON.parse(result_string)
+
 		rescue Exception => e
 
 		  $logger.behaviour "FAIL;Failed read settings \"#{identifiers.to_s}\", \"#{setting_keys.to_s}\".;read_settings;"
@@ -225,19 +226,19 @@ module MobyBehaviour
 	  end
 
       # == description
-	  # Read the all the setting values from the settings idenfitied by 
+	  # Read the all the setting values from the settings idenfitied by
 	  # the identifiers.
-	  # 
+	  #
       # == arguments
 	  # identifiers
 	  #  Hash
       #   description: Idenfifiers for the settings. See QSettings documentations for details on how
-	  #                settings are accessed. You can use either direct file name or organization and 
+	  #                settings are accessed. You can use either direct file name or organization and
 	  #                application name way to access and edit the settings.
-	  #                See [link="#identifier_params_table1"]file path access [/link] and 
+	  #                See [link="#identifier_params_table1"]file path access [/link] and
 	  #                [link="#identifier_params_table2"]registry access [/link] on how
 	  #                specify the idenfitication details for the settings to be accessed.
-	  #                
+	  #
       #   example:     File name: {:fileName => '/etc/init/settings.ini', :format => 'Ini'}
 	  #                Registry: {:organization => 'Tdriver', :application => 'qttasserver'}
 	  #
@@ -250,14 +251,15 @@ module MobyBehaviour
       # == exceptions
       # ArgumentError
       #  description:  In case the given parameters are not valid.
-      #    
+      #
 	  def read_all_settings(identifiers)
 		hash = nil
 		begin
 
 		  params = generate_fixture_params(identifiers, nil)
-		  hash = eval(fixture('setting', 'readAll', params))		  
-		  
+      result_string =fixture('setting', 'readAll', params)
+		  hash = JSON.parse(result_string)
+
 		rescue Exception => e
 
 		  $logger.behaviour "FAIL;Failed read all settings \"#{identifiers.to_s}\".;read_all_settings;"
@@ -271,13 +273,13 @@ module MobyBehaviour
 
 	  end
 
-	  private 
-	  
+	  private
+
 	  def generate_fixture_params(identifiers, params)
 
-		raise ArgumentError.new("No enough information to access settings. Define filename or organization") unless identifiers[:fileName] or identifiers[:organization]		
+		raise ArgumentError.new("No enough information to access settings. Define filename or organization") unless identifiers[:fileName] or identifiers[:organization]
 		raise ArgumentError.new("Cannot define both fileName and organization.") if identifiers[:fileName] and identifiers[:organization]
-		
+
 		fixture_params = Hash.new
 		fixture_params[:settingFileName] = identifiers[:fileName] if identifiers[:fileName]
 		fixture_params[:settingOrganization] = identifiers[:organization] if identifiers[:organization]
