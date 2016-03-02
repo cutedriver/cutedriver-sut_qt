@@ -209,7 +209,8 @@ module MobyBehaviour
 		  params = generate_fixture_params(identifiers, nil)
 		  setting_keys.each{|value| params[value.to_sym] = ''}
 		  
-		  hash = eval(fixture('setting', 'read', params))		  
+		  result_string =fixture('setting', 'read', params)
+		  hash = JSON.parse(result_string)		  
 		  
 		rescue Exception => e
 
@@ -256,7 +257,8 @@ module MobyBehaviour
 		begin
 
 		  params = generate_fixture_params(identifiers, nil)
-		  hash = eval(fixture('setting', 'readAll', params))		  
+		  result_string =fixture('setting', 'readAll', params)
+		  hash = JSON.parse(result_string)		  
 		  
 		rescue Exception => e
 
