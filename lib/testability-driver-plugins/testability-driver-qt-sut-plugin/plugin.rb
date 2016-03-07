@@ -26,6 +26,7 @@ include TDriverVerify
 
 require 'socket'
 require 'zlib'
+require 'json'
 
 module MobyPlugin
 
