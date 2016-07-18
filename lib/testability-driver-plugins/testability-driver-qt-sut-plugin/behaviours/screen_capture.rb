@@ -137,10 +137,10 @@ module MobyBehaviour
       #   description: Path to image being searched for. Must not be empty.
       #   example: 'image_data/icon_help.png'
       #  Magick::Image
-      #   description: RMagick Image object to be searched for. You must 'require RMagick' in your script prior to using this.
+      #   description: RMagick Image object to be searched for. You must 'require rmagick' in your script prior to using this.
       #   example: Magick::Image.read('image_data/icon_help.png').first
       #  Magick::ImageList
-      #   description: RMagick ImageList object where the current image is the one to be searched for. You must 'require RMagick' in your script prior to using this.
+      #   description: RMagick ImageList object where the current image is the one to be searched for. You must 'require rmagick' in your script prior to using this.
       #   example: Magick::ImageList.new('image_data/icon_help.png')
       #
 			# tolerance
@@ -167,7 +167,7 @@ module MobyBehaviour
 			# RuntimeError:: No image could be loaded from the path given in image_or_path
 				begin
 
-					require 'RMagick'
+					require 'rmagick'
 
 					raise ArgumentError.new("The tolerance argument was not an Integer in the [0,100] range.") unless tolerance.kind_of? Integer and tolerance >= 0 and tolerance <= 100
 
@@ -226,10 +226,10 @@ module MobyBehaviour
       #   description: Path to image being searched for. Must not be empty.
       #   example: 'image_data/icon_help.png'
       #  Magick::Image
-      #   description: RMagick Image object to be searched for. You must 'require RMagick' in your script prior to using this.
+      #   description: RMagick Image object to be searched for. You must 'require rmagick' in your script prior to using this.
       #   example: Magick::Image.read('image_data/icon_help.png').first
       #  Magick::ImageList
-      #   description: RMagick ImageList object where the current image is the one to be searched for. You must 'require RMagick' in your script prior to using this.
+      #   description: RMagick ImageList object where the current image is the one to be searched for. You must 'require rmagick' in your script prior to using this.
       #   example: Magick::ImageList.new('image_data/icon_help.png')
       #
 			# tolerance
