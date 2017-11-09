@@ -686,6 +686,65 @@
 
     </behaviour>
 
+    <behaviour name="QtCpu" object_type="sut;application" sut_type="QT" env="qt" input_type="*" version="*">
+        <module name="MobyBehaviour::QT::Cpu" />
+
+            <methods>
+                <method name="start_cpu_measurement">
+                    <description>Start measurement of cpu</description>
+                    <example>start_cpu_measurement</example>
+                </method>
+                <method name="stop_cpu_measurement">
+                    <description>Stop measurement of cpu and return the data.</description>
+                    <example>stop_cpu_measurement</example>
+                </method>
+            </methods>
+    </behaviour>
+
+    <behaviour name="QtMem" object_type="sut;application" sut_type="QT" env="qt" input_type="*" version="*">
+        <module name="MobyBehaviour::QT::Mem" />
+
+            <methods>
+                <method name="start_mem_measurement">
+                    <description>Start measurement of mem</description>
+                    <example>start_mem_measurement</example>
+                </method>
+                <method name="stop_mem_measurement">
+                    <description>Stop measurement of mem and return the data.</description>
+                    <example>stop_mem_measurement</example>
+                </method>
+            </methods>
+    </behaviour>
+
+    <behaviour name="QtGpu" object_type="sut;application" sut_type="QT" env="qt" input_type="*" version="*">
+        <module name="MobyBehaviour::QT::Gpu" />
+
+            <methods>
+                <method name="start_gpu_measurement">
+                    <description>Start measurement of gpu</description>
+                    <example>start_gpu_measurement</example>
+                </method>
+                <method name="stop_gpu_measurement">
+                    <description>Stop measurement of gpu and return the data.</description>
+                    <example>stop_gpu_measurement</example>
+                </method>
+            </methods>
+    </behaviour>
+
+    <behaviour name="QtPwr" object_type="sut;application" sut_type="QT" env="qt" input_type="*" version="*">
+        <module name="MobyBehaviour::QT::Pwr" />
+
+            <methods>
+                <method name="start_pwr_measurement">
+                    <description>Start measurement of pwr</description>
+                    <example>start_pwr_measurement</example>
+                </method>
+                <method name="stop_pwr_measurement">
+                    <description>Stop measurement of pwr and return the data.</description>
+                    <example>stop_pwr_measurement</example>
+                </method>
+            </methods>
+    </behaviour>
 
     <behaviour name="Settings" object_type="sut" sut_type="QT" env="qt" input_type="*" version="*">
 
